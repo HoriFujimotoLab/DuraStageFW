@@ -39,8 +39,74 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main_exp.c">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ctrl_math.c">
+      <Filter>Source Files\control</Filter>
     </ClCompile>
+    <ClCompile Include="current_ctrl.c">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_ctrl.c">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="motor_enc.c">
+      <Filter>Source Files\hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="motor_pem.c">
+      <Filter>Source Files\hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="stage_lin.c">
+      <Filter>Source Files\hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="stage_adc.c">
+      <Filter>Source Files\hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="system_data.c">
+      <Filter>Source Files\system</Filter>
+    </ClCompile>
+    <ClCompile Include="system_fsm.c">
+      <Filter>Source Files\system</Filter>
+    </ClCompile>
+    <ClCompile Include="main_exp.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ctrl_math.h">
+      <Filter>Header Files\control</Filter>
+    </ClInclude>
+    <ClInclude Include="current_ctrl.h">
+      <Filter>Header Files\control</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_ctrl.h">
+      <Filter>Header Files\control</Filter>
+    </ClInclude>
+    <ClInclude Include="motor_enc.h">
+      <Filter>Header Files\hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="motor_pem.h">
+      <Filter>Header Files\hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="stage_lin.h">
+      <Filter>Header Files\hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="stage_adc.h">
+      <Filter>Header Files\hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="system_data.h">
+      <Filter>Header Files\system</Filter>
+    </ClInclude>
+    <ClInclude Include="system_fsm.h">
+      <Filter>Header Files\system</Filter>
+    </ClInclude>
+    <ClInclude Include="data\current_ctrl_par.h">
+      <Filter>Resource Files\parameters</Filter>
+    </ClInclude>
+    <ClInclude Include="data\motion_ctrl_par.h">
+      <Filter>Resource Files\parameters</Filter>
+    </ClInclude>
+    <ClInclude Include="data\Rfreqref.h">
+      <Filter>Resource Files\references</Filter>
+    </ClInclude>
+    <ClInclude Include="data\Rtimeref.h">
+      <Filter>Resource Files\references</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -142,7 +142,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ctrl_math.c" />
+    <ClCompile Include="current_ctrl.c" />
     <ClCompile Include="main_exp.c" />
+    <ClCompile Include="motion_ctrl.c" />
+    <ClCompile Include="motor_enc.c" />
+    <ClCompile Include="motor_pem.c" />
+    <ClCompile Include="stage_adc.c" />
+    <ClCompile Include="stage_lin.c" />
+    <ClCompile Include="system_data.c" />
+    <ClCompile Include="system_fsm.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ctrl_math.h" />
+    <ClInclude Include="current_ctrl.h" />
+    <ClInclude Include="data\current_ctrl_par.h" />
+    <ClInclude Include="data\motion_ctrl_par.h" />
+    <ClInclude Include="data\Rfreqref.h" />
+    <ClInclude Include="data\Rtimeref.h" />
+    <ClInclude Include="motion_ctrl.h" />
+    <ClInclude Include="motor_enc.h" />
+    <ClInclude Include="motor_pem.h" />
+    <ClInclude Include="stage_adc.h" />
+    <ClInclude Include="stage_lin.h" />
+    <ClInclude Include="system_data.h" />
+    <ClInclude Include="system_fsm.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
