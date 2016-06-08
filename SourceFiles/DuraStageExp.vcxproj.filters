@@ -13,5 +13,34 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\control">
+      <UniqueIdentifier>{42be7df6-a214-4098-a730-8e5edb6320d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\system">
+      <UniqueIdentifier>{26ac2b6a-8a27-494a-b97f-9776c3ba6c94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hardware">
+      <UniqueIdentifier>{0722c18b-5b6f-458a-aa1c-d92b0c2e5e5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\parameters">
+      <UniqueIdentifier>{5ec15089-51da-4b43-a981-3c722acf70dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\references">
+      <UniqueIdentifier>{aa0dac86-fb99-408c-aa33-5a08614d5a40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\control">
+      <UniqueIdentifier>{412963f6-4e84-4261-9155-893275f8e658}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\hardware">
+      <UniqueIdentifier>{a3da67e2-8afb-43f9-ac61-790c77ab5afa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\system">
+      <UniqueIdentifier>{a481d967-0df9-41d5-bf7b-c10083567902}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main_exp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
