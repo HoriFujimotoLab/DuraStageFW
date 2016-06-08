@@ -1,0 +1,10 @@
+[COMPONENT]
+LIB	""	# Create:Wed Jun 08 18:33:17 2016
+OBJ	""	# Create:Wed Jun 08 18:33:17 2016
+HEADER	""	# Create:Wed Jun 08 18:33:17 2016
+SRC	"main_exp.c"	# Create:Wed Jun 08 18:33:17 2016
+[CONFIGURE]
+PEOS_VER	"1_16"	# Create:Wed Jun 08 18:33:17 2016
+PROTECT	"OFF"	# Create:Wed Jun 08 18:33:17 2016
+STOP_RECONF	"OFF"	# Create:Wed Jun 08 18:33:17 2016
+TARGET_TYPE	"EXP3C6713"	# Create:Wed Jun 08 18:33:17 2016

@@ -15,3 +15,7 @@ Firmware to run the experimental multi-axis machine tool stage of Nano-team.
 ### Visual Studio Solution
 1. **Sim Project** : Software-In-the-Loop project for control code simulation
 2. **Exp Project** : Experimental firmware for embedded system (no PC build)
+
+### MyWay Projects
+1. **Pil Project** : Processor-In-the-Loop project for code timing
+2. **Exp Project** : Experimental firmware for embedded system

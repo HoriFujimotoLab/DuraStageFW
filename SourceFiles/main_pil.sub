@@ -1,0 +1,4 @@
+EXTLIBS	+= 
+EXOBJS	+= 
+OBJS	+= main_pil.obj
+main_pil.obj: 
