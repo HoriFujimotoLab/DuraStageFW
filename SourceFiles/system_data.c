@@ -32,7 +32,7 @@ enum fric frictype_e = FRIC_OFF;
 float idc_adx, theta_ex;	// vdc_adx,
 float iu_adx, iw_adx, ia_adx, ib_adx, id_adx, iq_adx;
 float vu_adx, vw_adx, va_adx, vb_adx, vd_adx, vq_adx;
-float vdc_ady, idc_ady, theta_ey;
+float vdc_adx, vdc_ady, idc_ady, theta_ey;
 float iu_ady, iw_ady, ia_ady, ib_ady, id_ady, iq_ady;
 float vu_ady, vw_ady, va_ady, vb_ady, vd_ady, vq_ady;
 float va_ref, vb_ref, vu_ref, vv_ref, vw_ref;

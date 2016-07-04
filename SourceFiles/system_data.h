@@ -74,7 +74,7 @@ extern enum fric {
 extern float idc_adx, theta_ex; //vdc_adx, 
 extern float iu_adx, iw_adx, ia_adx, ib_adx, id_adx, iq_adx;
 extern float vu_adx, vw_adx, va_adx, vb_adx, vd_adx, vq_adx;
-extern float vdc_ady, idc_ady, theta_ey;
+extern float vdc_adx, vdc_ady, idc_ady, theta_ey;
 extern float iu_ady, iw_ady, ia_ady, ib_ady, id_ady, iq_ady;
 extern float vu_ady, vw_ady, va_ady, vb_ady, vd_ady, vq_ady;
 extern float va_ref, vb_ref, vu_ref, vv_ref, vw_ref;

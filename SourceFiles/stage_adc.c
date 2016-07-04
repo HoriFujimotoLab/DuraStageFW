@@ -7,7 +7,7 @@ Sensor:		torque sensor (unipulse), other (temp)
 Author:		Thomas Beauduin, University of Tokyo, March 2016
 *************************************************************************************/
 
-#include	"setup_adc.h"
+#include	"stage_adc.h"
 #include	<mwio3.h>
 
 // MODULE PAR
