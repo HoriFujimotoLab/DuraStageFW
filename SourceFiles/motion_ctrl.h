@@ -11,10 +11,18 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 
 #include	"system_data.h"
 
+/*	---------------------
+**	DES:	generate q current reference trajectory
+**	INP:	reftype_e	: reference type (enumerate)
+**			Aref	: amplitude of reference signal
+**	OUT:	iq_ref	: calculated motion reference
+*/
+void direct_qcurrent_ctrl(int reftype_e, float Aref, float Fref, float *iq_ref);
+
 /*	MOTION REF GENERATION
 **	---------------------
 **	DES:	generate reference trajectory
-**	INP:	iqref_e	: reference type (enumerate)
+**	INP:	iqtype_e	: reference type (enumerate)
 **			Aref	: amplitude of reference signal
 **	OUT:	x_ref	: calculated motion reference
 */

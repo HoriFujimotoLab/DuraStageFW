@@ -12,13 +12,13 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 // MOTOR PAR
 #define		Pp		(4.0)					// pole pairs amount	[-]
 #define		Kt		(0.564)					// Torque constant		[Nm/A]
-#define		Ke		(0.172668006987608)		// Voltage constant		[Nm/V]
-#define		Rs		(0.156666666666667)		// Stator resistance	[Ohm]
-#define		Ls		(0.002280000000000)		// Stator inductance	[H]
-#define		OVC_LIM	(34.0)					// overcurrent limit	[A]
+#define		Ke		(0.172668)		// Voltage constant		[Nm/V]
+#define		Rs		(0.415)		// Stator resistance	[Ohm]
+#define		Ls		(0.0019225)		// Stator inductance	[H]
+#define		OVC_LIM	(12.0)					// overcurrent limit	[A]
 #define		OVV_LIM	(380.0)					// overvorltage limit	[V]
 #define		OVS_LIM	(450.0)					// overspeed limit		[rad/s]
-#define		I_PK	(25.0)					// ctrl out saturation	[A]
+#define		I_PK	(12.0)					// ctrl out saturation	[A]
 
 // INV PAR
 #define		FC		(10000.0)				// carrier frequency	[Hz]
@@ -82,6 +82,6 @@ extern float va_ref, vb_ref, vu_ref, vv_ref, vw_ref;
 extern float  theta_mox, theta_mdx, omega_mx, omega_max; //theta_mx,
 extern float theta_my, theta_moy, theta_mdy, omega_my, omega_may;
 extern float torque_ad, temp1, temp2, temp3;
-extern int test;
+extern int test, test1, test2, test3, test4, test5, test6, test7;
 
 #endif

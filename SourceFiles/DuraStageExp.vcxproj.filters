@@ -63,10 +63,10 @@
     <ClCompile Include="system_data.c">
       <Filter>Source Files\system</Filter>
     </ClCompile>
+    <ClCompile Include="main_exp.c" />
     <ClCompile Include="system_fsm.c">
       <Filter>Source Files\system</Filter>
     </ClCompile>
-    <ClCompile Include="main_exp.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ctrl_math.h">
@@ -96,16 +96,16 @@
     <ClInclude Include="system_fsm.h">
       <Filter>Header Files\system</Filter>
     </ClInclude>
-    <ClInclude Include="data\current_ctrl_par.h">
+    <ClInclude Include="current_ctrl_par.h">
       <Filter>Resource Files\parameters</Filter>
     </ClInclude>
-    <ClInclude Include="data\motion_ctrl_par.h">
+    <ClInclude Include="motion_ctrl_par.h">
       <Filter>Resource Files\parameters</Filter>
     </ClInclude>
-    <ClInclude Include="data\Rfreqref.h">
+    <ClInclude Include="Rfreqref.h">
       <Filter>Resource Files\references</Filter>
     </ClInclude>
-    <ClInclude Include="data\Rtimeref.h">
+    <ClInclude Include="Rtimeref.h">
       <Filter>Resource Files\references</Filter>
     </ClInclude>
   </ItemGroup>

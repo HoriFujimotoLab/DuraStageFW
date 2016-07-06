@@ -23,9 +23,9 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 
 #define		FWE_LED		0x0100			// 1. firmware error		(DO8)
 #define		OVC_LED		0x0200			// 2. overcurrent error		(DO9)
-#define		OVV_LED		0x0400			// 3. overvoltage error		(DO10)
+#define		OVV_LED		0x0400			// 3. overvoltage error		(DO10) //201607042134 error
 #define		OVS_LED		0x0800			// 4. overspeed error		(DO11)
-#define		HWE_LED		0x1000			// 5. inv hardware error	(DO12)
+#define		HWE_LED		0x1000			// 5. inv hardware error	(DO12) 
 #define		SSE_LED		0x2000			// 6. setup sensor error	(DO13)
 
 // MODULE PAR
@@ -41,39 +41,46 @@ void system_fsm_reset(void);
 
 void system_fsm_mode(void)
 {
-	if (time/FS >= SWT_PRT){
-		din = pev_pio_in(PEV_BDN); don = 0;	time = 0;					// DI read, DO reset
-	}
+	//what is var "time"???
+	//if (time/FS >= SWT_PRT){
+	din = pev_pio_in(PEV_BDN); don = 0;	time = 0;					// DI read, DO reset
+	test = din; //first din value
+	//}
+	
 	switch (sysmode_e)
 	{
 	case SYS_STP:
 		if (INI_SW == (din & INI_SW)){									// init switch on
 			pev_pio_out(PEV_BDN, don);									// reset relays				
 			pev_inverter_start_pwm(PEV_BDN, 0);							// drive inv's on
-			pev_inverter_start_pwm(PEV_BDN, 1);
+			//pev_inverter_start_pwm(PEV_BDN, 1);			//not using y now
 			sysmode_e = SYS_INI;
 		}
 		if (INI_SW == (din & INI_SW) && RUN_SW == (din & RUN_SW)){		// avoid direct init
 			err = err | FWE_LED; sysmode_e = SYS_ERR;					// firmware init err
+			//ok //test1 = 1; //direct init error
 		}
 		break;
 
 	case SYS_INI:
 		system_fsm_err();												// check for errors
 		pev_pio_out(PEV_BDN, don);										// switch relays
+		test2 = don; //debug
 		if (err != 0) {													// error detected	
 			pev_inverter_stop_pwm(PEV_BDN, 0);							// error mode change
-			pev_inverter_stop_pwm(PEV_BDN, 1);
+			//pev_inverter_stop_pwm(PEV_BDN, 1);	//not using y now
 			sysmode_e = SYS_ERR; 
+			test3 = 1; //here
 		}		
 		if (INI_SW != (din & INI_SW)) {									// ini switch off
 			system_fsm_reset();											// reset firmware
 			pev_inverter_stop_pwm(PEV_BDN, 0);							// revert to stp mode
-			pev_inverter_stop_pwm(PEV_BDN, 1);
+			//pev_inverter_stop_pwm(PEV_BDN, 1);
 			sysmode_e = SYS_STP;
 		}
 		if (RUN_SW == (din & RUN_SW)) {									// run switch on
 			sysmode_e = SYS_RUN;
+			//msr = 0; //start msr: motion control
 		}
 		break;
 
@@ -82,7 +89,7 @@ void system_fsm_mode(void)
 		pev_pio_out(PEV_BDN, don);										// switch relays
 		if (err != 0) {													// error detected
 			pev_inverter_stop_pwm(PEV_BDN, 0);							// error mode change
-			pev_inverter_stop_pwm(PEV_BDN, 1);
+			//pev_inverter_stop_pwm(PEV_BDN, 1);
 			sysmode_e = SYS_ERR; 
 		}
 		if (RUN_SW != (din & RUN_SW)) { sysmode_e = SYS_INI; }			// firmware reset
@@ -118,6 +125,7 @@ void system_fsm_err(void)
 	if (THX_DI == (din & THX_DI))	{ err = err | HWE_LED; }			// 5.
 //	if (HWY_DI == (din & HWY_DI))	{ err = err | HWE_LED; }			// 5.
 //	if (THY_DI == (din & THY_DI))	{ err = err | HWE_LED; }			// 5.
+	test4 = err;
 }
 
 
@@ -136,6 +144,6 @@ void system_fsm_reset(void)
 void system_fsm_init(void)
 {
 	pev_inverter_stop_pwm(PEV_BDN, 0); 
-	pev_inverter_stop_pwm(PEV_BDN, 1);
+	//pev_inverter_stop_pwm(PEV_BDN, 1);
 	sysmode_e = SYS_STP;
 }

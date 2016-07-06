@@ -8,10 +8,9 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 *************************************************************************************/
 #include "current_ctrl.h"
 #include "ctrl_math.h"
-#include "data/current_ctrl_par.h"
+#include "current_ctrl_par.h"
 
 double xff_q = 0.0, xfb_d = 0.0, xfb_q = 0.0;
-
 
 void current_ctrl_zcpi(float iq_ref, float id_ad, float iq_ad, float *vd_ref, float *vq_ref)
 {
@@ -93,3 +92,4 @@ void current_ctrl_ab2uvw(float a, float b, float *u, float *v, float *w)
 	*v = -TSQRT1_6 * a + TSQRT1_2 * b;
 	*w = -TSQRT1_6 * a - TSQRT1_2 * b;
 }
+

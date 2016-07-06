@@ -8,14 +8,25 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 *************************************************************************************/
 #include "motion_ctrl.h"
 #include "ctrl_math.h"
-#include "data/motion_ctrl_par.h"
-#include "data/Rfreqref.h"
-#include "data/Rtimeref.h"
+#include "motion_ctrl_par.h"
+#include "Rfreqref.h"
+#include "Rtimeref.h"
 
 int ref = 0; double t = 0.0;
 static float xvpi[1] = { 0.0 };
 static float xpid[2] = { 0.0 };
 
+
+void direct_qcurrent_ctrl(int reftype_e, float Aref, float Fref, float *iq_ref){
+	switch (reftype_e)
+	{
+	case 0:	*iq_ref = 0.0;							break;
+	case 1:	*iq_ref = Aref;							break;
+	case 2:	*iq_ref = Aref*sin(Fref*PI(2)*t);
+		t += (TS*1.0e-6);							break;
+	case 5:											break;
+	}
+}
 
 void motion_ctrl_ref(int reftype_e, float Aref, float Fref, float *x_ref)
 {
