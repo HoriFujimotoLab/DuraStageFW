@@ -1,15 +1,21 @@
 //MOTOR CTRL PARAMETERS:
+//FOR DURA
+
 //Zero cancell FF
-float	Affi = 6.858846251869654e-01;
-float	Bffi = 5.000000000000000e-01;
-float	Cffi = 5.295622809321361e-01;
-float	Dffi = 1.570576874065174e-01;
+//no FF
+float	Affi = 0.0;
+float	Bffi = 0.0;
+float	Cffi = 0.0;
+float	Dffi = 1.0;
 
 //Pole-Place PI
-float	Afbi = 1.000000000000000e+00;
-float	Bfbi = 4.000000000000000e+00;
-float	Cfbi = 2.250269803448374e+00;
-float	Dfbi = 2.865532837783266e+01;
+//Bw:191 Hz(1200 rad/s), Ts: 10 kHz (100us)
+//電流PI制御器と速度PI制御器の各行列
+
+float	Afbi = 1.00000000000000000000e+00;
+float	Bfbi = 5.00000000000000000000e-01;
+float	Cfbi = 6.03185789489240070000e-01;
+float	Dfbi = 3.76991118430775220000e+00;
 
 //Dead-Time SP
 float	ihys	=	5.0000000000e-02;

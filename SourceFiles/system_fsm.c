@@ -21,11 +21,11 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 
 #define		RST_DO		0x0002			// inv reset relay output	(DO1)
 
-#define		FWE_LED		0x0100			// 1. firmware error		(DO8)
+#define		FWE_LED		0x0100			// 1. firmware error		(DO8) 
 #define		OVC_LED		0x0200			// 2. overcurrent error		(DO9)
-#define		OVV_LED		0x0400			// 3. overvoltage error		(DO10) //201607042134 error
+#define		OVV_LED		0x0400			// 3. overvoltage error		(DO10) 
 #define		OVS_LED		0x0800			// 4. overspeed error		(DO11)
-#define		HWE_LED		0x1000			// 5. inv hardware error	(DO12) 
+#define		HWE_LED		0x1000			// 5. inv hardware error	(DO12) //if inv power is not supplied 
 #define		SSE_LED		0x2000			// 6. setup sensor error	(DO13)
 
 // MODULE PAR
@@ -70,7 +70,7 @@ void system_fsm_mode(void)
 			pev_inverter_stop_pwm(PEV_BDN, 0);							// error mode change
 			//pev_inverter_stop_pwm(PEV_BDN, 1);	//not using y now
 			sysmode_e = SYS_ERR; 
-			test3 = 1; //here
+			//test3 = 1; //here
 		}		
 		if (INI_SW != (din & INI_SW)) {									// ini switch off
 			system_fsm_reset();											// reset firmware
@@ -125,7 +125,7 @@ void system_fsm_err(void)
 	if (THX_DI == (din & THX_DI))	{ err = err | HWE_LED; }			// 5.
 //	if (HWY_DI == (din & HWY_DI))	{ err = err | HWE_LED; }			// 5.
 //	if (THY_DI == (din & THY_DI))	{ err = err | HWE_LED; }			// 5.
-	test4 = err;
+	test4 = err; //error check
 }
 
 
@@ -146,4 +146,10 @@ void system_fsm_init(void)
 	pev_inverter_stop_pwm(PEV_BDN, 0); 
 	//pev_inverter_stop_pwm(PEV_BDN, 1);
 	sysmode_e = SYS_STP;
+
+	//fail safe
+	din = pev_pio_in(PEV_BDN);
+	if (INI_SW == (din & INI_SW) || RUN_SW == (din & RUN_SW)) {		// avoid direct init
+		err = err | FWE_LED; sysmode_e = SYS_ERR;					// firmware init err
+	}
 }

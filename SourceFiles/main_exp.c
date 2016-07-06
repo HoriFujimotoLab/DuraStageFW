@@ -73,7 +73,7 @@ void system_cint5(void)
 	setup_adc_read(0, &vdc_adx, &idc_adx, &iu_adx, &iw_adx);
 	//setup_adc_read(1, &vdc_ady, &idc_ady, &iu_ady, &iw_ady); //y-axis
 
-	//mode iq=Aref*sin(Fref:2*pi*t)
+	//mode iqx=Aref*sin(Fref:2*pi*t)
 	if (test7 != 0) {
 		direct_qcurrent_ctrl(reftype_e, Aref, Fref, &iq_refx);
 	}

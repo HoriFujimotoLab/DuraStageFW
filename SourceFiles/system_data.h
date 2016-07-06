@@ -11,11 +11,12 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 
 // MOTOR PAR
 #define		Pp		(4.0)					// pole pairs amount	[-]
-#define		Kt		(0.564)					// Torque constant		[Nm/A]
-#define		Ke		(0.172668)		// Voltage constant		[Nm/V]
-#define		Rs		(0.415)		// Stator resistance	[Ohm]
-#define		Ls		(0.0019225)		// Stator inductance	[H]
-#define		OVC_LIM	(12.0)					// overcurrent limit	[A]
+#define		Kt		    (0.412805442470582)		 // dq-Axis torque constant		[Nm/A] = CatalogValue/sqrt(3)
+#define		Ke		(0.412805442470582)		// dq-Axis voltage constant [V/(rad/s)]
+#define		Rs		(3.0)		// Stator resistance	[Ohm] /phase
+#define		Ls		(0.0030)		// Stator inductance	[H] =Lq=Ld
+
+#define		OVC_LIM	(30)					// overcurrent limit	[A] 
 #define		OVV_LIM	(380.0)					// overvorltage limit	[V]
 #define		OVS_LIM	(450.0)					// overspeed limit		[rad/s]
 #define		I_PK	(12.0)					// ctrl out saturation	[A]
@@ -25,9 +26,14 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define		TC		(100.0)                  // carrier sampling		[us]
 #define		DT		(3500.0)				// inv dead time		[ns]
 
+/*
 // STAGE PAR
 #define		TS		(400.0)   				// system sampling		[us]
 #define		FS		(2500.0)          		// system frequency		[Hz]
+*/
+// CONTROL PAR
+#define		TS		(100.0)   				// system sampling		[us]
+#define		FS		(10000.0)          		// system frequency		[Hz]
 #define		NROFT	(50000.0)               // total number of msr	[-]			
 
 // MATH PAR

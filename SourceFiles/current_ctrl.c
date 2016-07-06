@@ -28,10 +28,9 @@ void current_ctrl_zcpi(float iq_ref, float id_ad, float iq_ad, float *vd_ref, fl
 }
 
 
-void current_ctrl_dec(float omega_m, float id_ad, float iq_ad, float *vd_ref, float *vq_ref)
-{
+void current_ctrl_dec(float omega_m, float id_ad, float iq_ad, float *vd_ref, float *vq_ref){
 	*vd_ref -= (omega_m * Pp * Ls * iq_ad);								// coupling compensation
-	*vq_ref += (omega_m * Pp * Ke);										// back-emf compensation
+	*vq_ref += omega_m * Pp * Ke ;				//decoupling(0) and  back-emf compensation
 }
 
 
