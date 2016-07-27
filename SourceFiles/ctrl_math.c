@@ -30,8 +30,11 @@ void ctrl_matrix_prod(float a[], float b[], float *c, int row_a, int col_a, int 
 {
 	int i, j, k;
 	for (i = 0; i < row_a; i++){
-		for (j = 0; j < col_b; j++){ float sum = 0;
-			for (k = 0; k < col_a; k++){ sum += a[i*col_a + k] * b[k*col_b + j]; }
+		for (j = 0; j < col_b; j++){
+			float sum = 0;
+			for (k = 0; k < col_a; k++){
+				sum += a[i*col_a + k] * b[k*col_b + j]; 
+			}
 			c[i*col_b + j] = sum;
 		}
 	}
@@ -47,4 +50,49 @@ void ctrl_matrix_add(float a[], float b[], float *c, int row, int col)
 		}
 	}
 }
+
+void ctrl_matrix_minus(float a[], float b[], float *c, int row, int col)
+{
+	int i, j;
+	for (i = 0; i < row; i++) {
+		for (j = 0; j < col; j++) {
+			c[i*col + j] = a[i*col + j] - b[i*col + j];
+		}
+	}
+}
+
+void ctrl_matrix_cnst_mlpy(float *c, float p, int row_c, int col_c) {
+	int i, j;
+	for (i = 0; i < row_c; i++) {
+		for (j = 0; j<col_c; j++) {
+			c[row_c*i + j] *= p;
+		}
+	}
+}
+
+
+void eye_matrix(float *e, int n, float value) {
+	int i, j;
+	for (i = 0; i < n; i++) {
+		for (j = 0; j < n; j++) {
+			if (i == j) {
+				e[i*n + j] = value;
+			}
+			else {
+				e[i*n + j] = 0;
+			}
+		}
+	}
+}
+
+/*
+void transpose_matrix(float *c, float *c_T,  int row_c, int col_c) {
+	int i, j;
+	for (i = 0; i < row_c; i++) {
+		for (j = 0; j < col_c; j++) {
+			c_T[j*row_c + i] = c[i*row_c + j];
+		}
+	}
+}
+*/
 

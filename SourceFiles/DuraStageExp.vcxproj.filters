@@ -67,6 +67,9 @@
     <ClCompile Include="system_fsm.c">
       <Filter>Source Files\system</Filter>
     </ClCompile>
+    <ClCompile Include="adaptive_ctrl.c">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ctrl_math.h">
@@ -107,6 +110,9 @@
     </ClInclude>
     <ClInclude Include="Rtimeref.h">
       <Filter>Resource Files\references</Filter>
+    </ClInclude>
+    <ClInclude Include="adaptive_ctrl.h">
+      <Filter>Header Files\control</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

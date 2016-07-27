@@ -36,8 +36,27 @@ void motion_ctrl_ref(int reftype_e, float Aref, float Fref, float *x_ref);
 **			omega_m	: angular velocity measurement
 **	OUT:	iq_ref	: calculated current reference
 */
-void motion_ctrl_vpi(float vm_ref, float omega_m, float *iq_ref);
+void motion_ctrl_vpi(int axis, float vm_ref, float omega_m, float *iq_ref);
 
+/*	P POSITION CTRL
+**	------------------------
+**	DES:	p control of motor posistion
+**	INP:	x_ref	: position reference
+**			x_m	: position measurement
+**	OUT:	velocity reference	
+*/
+float motion_ctrl_pos(float x_ref, float x_m);
+
+/*	P-PI POSITION CTRL PACKAGE
+**	------------------------
+**	DES:	p-pi control of motor angle
+**	INP:	axis: X or Y axis
+				omega_m: angular velocity mesurement
+				theta_ref: angular position reference
+				theta_m: angular position mesurement
+**	OUT:	iq_ref	: calculated current reference
+*/
+void motion_ctrl_pack_pos(int axis, float omega_m, float theta_ref, float theta_m, float *iq_ref);
 
 /*	PID ANGULAR POSITION CTRL
 **	-------------------------

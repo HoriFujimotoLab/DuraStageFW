@@ -19,6 +19,7 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define		R_VS	(400.0)				// DC voltage sensor	[V]  (400V/5V)
 #define		R_TS	(20.0)				// Unipulse T sensor	[Nm] (100%/5V)
 #define		R_SV	(1.0)				// Servo Analyzer		[%]  (100%/5V)
+#define		R_ACC (1000.0)		//accelometer [10m/s^2/5V]
 #define		R_EX	(31.25)
 
 // ADC OFFSETS (see notes)
@@ -28,6 +29,9 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 // MODULE VAR
 float ad_avg[12] = { 0.0 };				// MW-ADC average offsets
 
+//DAC BOARD
+#define		DAC_BDN		0U
+#define  RNG	(10)         /* Å}10 Å® Å}10 [V] */
 
 void setup_adc_init(void)
 {
@@ -40,7 +44,7 @@ void setup_adc_init(void)
 	adc_ad_init(ADC_BDN);												// init ADC board
 	adc_ad_set_range(ADC_BDN, 0, R_VS, R_IS, R_IS, R_IS);				// grp 0 range settings
 	adc_ad_set_range(ADC_BDN, 1, R_VS, R_IS, R_IS, R_IS);				// grp 1 range settings
-	adc_ad_set_range(ADC_BDN, 2, R_TS, R_SV, R_SV, R_SV);				// grp 2 range settings
+	adc_ad_set_range(ADC_BDN, 2, R_TS, R_ACC, R_ACC, R_ACC);				// grp 2 range settings
 	
 	// AVG CALC
 	for (i = 0; i < 3; i++){
@@ -78,3 +82,16 @@ void setup_adc_read(int grp_ad, float *ad0, float *ad1, float *ad2, float *ad3)
 **			sampling (30min), removal of bnc cables, offset msr
 */
 
+void setup_dac_init(void) {
+	int i = 0;
+	dac_da_init(DAC_BDN);                  //initilize dac board
+	for (i=0; i < 8; i++) { //ch <= 7
+		dac_da_set_range(DAC_BDN, i, RNG);   //range set Channel 3(21pin for Torque/Velocity Command for Servo Driver)
+	}
+}
+
+void setup_spindle_enc_init(void) {
+	pev_abz_set_mode(PEV_BDN, 2);					/* Select 'Defferential input mode'		*/
+	pev_abz_disable_int6(PEV_BDN);					/* Permission of Z interrupt			*/
+	pev_abz_disable_clear(PEV_BDN);
+}

@@ -30,5 +30,21 @@ void setup_adc_init(void);
 */
 void setup_adc_read(int grp_ad, float *ad0, float *ad1, float *ad2, float *ad3);
 
+/*
+INIT CONVERSION & BOARD
+**	-----------------------
+**	DES:	initiate dac board 
+**			necessary at program init before reading
+*/
+void setup_dac_init(void);
+
+/*
+INIT CONVERSION & BOARD
+**	-----------------------
+**	DES:	initiate PEV board (ENCORDER)
+**			necessary at program init before reading
+*/
+void setup_spindle_enc_init(void);
+
 
 #endif

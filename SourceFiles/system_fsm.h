@@ -30,6 +30,7 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 */
 #include	"current_ctrl.h"
 #include	"motion_ctrl.h"
+#include "adaptive_ctrl.h"
 #include	<math.h>
 
 

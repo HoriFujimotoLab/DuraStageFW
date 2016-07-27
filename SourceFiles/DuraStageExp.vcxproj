@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="adaptive_ctrl.c" />
     <ClCompile Include="ctrl_math.c" />
     <ClCompile Include="current_ctrl.c" />
     <ClCompile Include="main_exp.c" />
@@ -154,6 +155,7 @@
     <ClCompile Include="system_fsm.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="adaptive_ctrl.h" />
     <ClInclude Include="ctrl_math.h" />
     <ClInclude Include="current_ctrl.h" />
     <ClInclude Include="current_ctrl_par.h" />

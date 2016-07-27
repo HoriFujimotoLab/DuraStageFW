@@ -18,7 +18,7 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 **			id/q_ad	: dq-axis measured current 
 **	OUT:	vd/q_ref: dq-axis reference voltage 
 */
-void current_ctrl_zcpi(float iq_ref, float id_ad, float iq_ad, float *vd_ref, float *vq_ref);
+void current_ctrl_zcpi(int axis, float iq_ref, float id_ad, float iq_ad, float *vd_ref, float *vq_ref);
 
 
 /*	DQ DECOUPLING CTRL

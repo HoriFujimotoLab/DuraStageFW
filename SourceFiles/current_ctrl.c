@@ -10,21 +10,21 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #include "ctrl_math.h"
 #include "current_ctrl_par.h"
 
-double xff_q = 0.0, xfb_d = 0.0, xfb_q = 0.0;
+double xff_q[2] = { 0.0, 0.0 }, xfb_d[2] = { 0.0, 0.0 }, xfb_q[2] = { 0.0, 0.0 };
 
-void current_ctrl_zcpi(float iq_ref, float id_ad, float iq_ad, float *vd_ref, float *vq_ref)
+void current_ctrl_zcpi(int axis, float iq_ref, float id_ad, float iq_ad, float *vd_ref, float *vq_ref)
 {
 	double iq_ff, id_er, iq_er;
 	
-	iq_ff = Cffi * xff_q + Dffi * (double)iq_ref;						// input shaping
-	xff_q = Affi * xff_q + Bffi * (double)iq_ref;
+	iq_ff = Cffi * xff_q[axis] + Dffi * (double)iq_ref;						// input shaping
+	xff_q[axis] = Affi * xff_q[axis] + Bffi * (double)iq_ref;
 	
 	id_er = 0.0 - (double)id_ad;										// dq-axis feedback
 	iq_er = iq_ff - (double)iq_ad;
-	*vd_ref = (float)(Cfbi * xfb_d + Dfbi * id_er);
-	xfb_d = Afbi * xfb_d + Bfbi * id_er;
-	*vq_ref = (float)(Cfbi * xfb_q + Dfbi * iq_er);
-	xfb_q = Afbi * xfb_q + Bfbi * iq_er;
+	*vd_ref = (float)(Cfbi * xfb_d[axis] + Dfbi * id_er);
+	xfb_d[axis] = Afbi * xfb_d[axis] + Bfbi * id_er;
+	*vq_ref = (float)(Cfbi * xfb_q[axis] + Dfbi * iq_er);
+	xfb_q[axis] = Afbi * xfb_q[axis] + Bfbi * iq_er;
 }
 
 
@@ -53,7 +53,10 @@ void current_ctrl_dtc(float iq_ref, float theta_e, float vdc_ad, float *vu_ref, 
 
 void current_ctrl_reset(void)
 {
-	xff_q = 0.0; xfb_d = 0.0; xfb_q = 0.0;
+	int i;
+	for (i = 0; i < 2; i++) {
+		xff_q[i] = 0.0; xfb_d[i] = 0.0; xfb_q[i] = 0.0;
+	}
 }
 
 

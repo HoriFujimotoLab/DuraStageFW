@@ -27,9 +27,11 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 #define		OVS_LED		0x0800			// 4. overspeed error		(DO11)
 #define		HWE_LED		0x1000			// 5. inv hardware error	(DO12) //if inv power is not supplied 
 #define		SSE_LED		0x2000			// 6. setup sensor error	(DO13)
+#define		OVR_LED		0x4000			// 7. stage overrun error	(DO14)
+
 
 // MODULE PAR
-#define		PEV_BDN		0				// pev board number
+//#define		PEV_BDN		0				// pev board number
 #define		SWT_PRT		0.2				// switch protection time
 
 // MODULE VAR & FUNC
@@ -52,13 +54,12 @@ void system_fsm_mode(void)
 	case SYS_STP:
 		if (INI_SW == (din & INI_SW)){									// init switch on
 			pev_pio_out(PEV_BDN, don);									// reset relays				
-			pev_inverter_start_pwm(PEV_BDN, 0);							// drive inv's on
-			//pev_inverter_start_pwm(PEV_BDN, 1);			//not using y now
+			pev_inverter_start_pwm(PEV_BDN, XAXIS);							// drive inv's on
+			pev_inverter_start_pwm(PEV_BDN, YAXIS);			
 			sysmode_e = SYS_INI;
 		}
 		if (INI_SW == (din & INI_SW) && RUN_SW == (din & RUN_SW)){		// avoid direct init
 			err = err | FWE_LED; sysmode_e = SYS_ERR;					// firmware init err
-			//ok //test1 = 1; //direct init error
 		}
 		break;
 
@@ -67,15 +68,14 @@ void system_fsm_mode(void)
 		pev_pio_out(PEV_BDN, don);										// switch relays
 		test2 = don; //debug
 		if (err != 0) {													// error detected	
-			pev_inverter_stop_pwm(PEV_BDN, 0);							// error mode change
-			//pev_inverter_stop_pwm(PEV_BDN, 1);	//not using y now
+			pev_inverter_stop_pwm(PEV_BDN, XAXIS);							// error mode change
+			pev_inverter_stop_pwm(PEV_BDN, YAXIS);	
 			sysmode_e = SYS_ERR; 
-			//test3 = 1; //here
 		}		
 		if (INI_SW != (din & INI_SW)) {									// ini switch off
 			system_fsm_reset();											// reset firmware
-			pev_inverter_stop_pwm(PEV_BDN, 0);							// revert to stp mode
-			//pev_inverter_stop_pwm(PEV_BDN, 1);
+			pev_inverter_stop_pwm(PEV_BDN, XAXIS);							// revert to stp mode
+			pev_inverter_stop_pwm(PEV_BDN, YAXIS);
 			sysmode_e = SYS_STP;
 		}
 		if (RUN_SW == (din & RUN_SW)) {									// run switch on
@@ -88,8 +88,8 @@ void system_fsm_mode(void)
 		system_fsm_err();												// check for errors
 		pev_pio_out(PEV_BDN, don);										// switch relays
 		if (err != 0) {													// error detected
-			pev_inverter_stop_pwm(PEV_BDN, 0);							// error mode change
-			//pev_inverter_stop_pwm(PEV_BDN, 1);
+			pev_inverter_stop_pwm(PEV_BDN, XAXIS);							// error mode change
+			pev_inverter_stop_pwm(PEV_BDN, YAXIS);
 			sysmode_e = SYS_ERR; 
 		}
 		if (RUN_SW != (din & RUN_SW)) { sysmode_e = SYS_INI; }			// firmware reset
@@ -111,21 +111,29 @@ void system_fsm_mode(void)
 void system_fsm_err(void)
 {	
 	if (firmerr != 0)				{ err = err | FWE_LED; }			// 1. firmware error
-	if (fabsf(iu_adx) > OVC_LIM)	{ err = err | OVC_LED; }			// 2. overcurrent
-	if (fabsf(iw_adx) > OVC_LIM)	{ err = err | OVC_LED; }			// 2.
-	if (fabsf(idc_adx) > OVC_LIM)	{ err = err | OVC_LED; }			// 2.
-//	if (fabsf(iu_ady) > OVC_LIM)	{ err = err | OVC_LED; }			// 2.
-//	if (fabsf(iw_ady) > OVC_LIM)	{ err = err | OVC_LED; }			// 2.
-//	if (fabsf(idc_ady) > OVC_LIM)	{ err = err | OVC_LED; }			// 2.
-	if (fabsf(vdc_adx) > OVV_LIM)	{ err = err | OVV_LED; }			// 3. overvoltage
-//	if (fabsf(vdc_ady) > OVV_LIM)	{ err = err | OVV_LED; }			// 3.
-	if (fabsf(omega_max) > OVS_LIM)	{ err = err | OVS_LED; }			// 4. overspeed
-//	if (fabsf(omega_may) > OVS_LIM)	{ err = err | OVS_LED; }			// 4.
-	if (HWX_DI == (din & HWX_DI))	{ err = err | HWE_LED; }			// 5. hardware error
-	if (THX_DI == (din & THX_DI))	{ err = err | HWE_LED; }			// 5.
-//	if (HWY_DI == (din & HWY_DI))	{ err = err | HWE_LED; }			// 5.
-//	if (THY_DI == (din & THY_DI))	{ err = err | HWE_LED; }			// 5.
-	test4 = err; //error check
+	switch (xymode) {
+	case XMODE:
+		if (fabsf(iu_adx) > OVC_LIM) { err = err | OVC_LED; }			// 2. overcurrent
+		if (fabsf(iw_adx) > OVC_LIM) { err = err | OVC_LED; }			// 2.
+		if (fabsf(idc_adx) > OVC_LIM) { err = err | OVC_LED; }			// 2.
+		if (fabsf(vdc_adx) > OVV_LIM) { err = err | OVV_LED; }			// 3. overvoltage
+		if (fabsf(omega_max) > OVS_LIM) { err = err | OVS_LED; }			// 4. overspeed
+		if (HWX_DI == (din & HWX_DI)) { err = err | HWE_LED; }			// 5. hardware error
+		if (THX_DI == (din & THX_DI)) { err = err | HWE_LED; }			// 5.
+		break;
+	case YMODE:
+		if (fabsf(iu_ady) > OVC_LIM) { err = err | OVC_LED; }			// 2.
+		if (fabsf(iw_ady) > OVC_LIM) { err = err | OVC_LED; }			// 2.
+		if (fabsf(idc_ady) > OVC_LIM) { err = err | OVC_LED; }			// 2.
+		if (fabsf(vdc_ady) > OVV_LIM) { err = err | OVV_LED; }			// 3.
+		if (fabsf(omega_may) > OVS_LIM) { err = err | OVS_LED; }			// 4.
+		if (HWY_DI == (din & HWY_DI)) { err = err | HWE_LED; }			// 5.
+		if (THY_DI == (din & THY_DI)) { err = err | HWE_LED; }			// 5.
+		break;
+	}
+
+	//if (isoverrun) { err = err | OVR_LED; } //6.overrun error
+	test1 = err; //error check
 }
 
 
@@ -144,7 +152,7 @@ void system_fsm_reset(void)
 void system_fsm_init(void)
 {
 	pev_inverter_stop_pwm(PEV_BDN, 0); 
-	//pev_inverter_stop_pwm(PEV_BDN, 1);
+	pev_inverter_stop_pwm(PEV_BDN, 1);
 	sysmode_e = SYS_STP;
 
 	//fail safe

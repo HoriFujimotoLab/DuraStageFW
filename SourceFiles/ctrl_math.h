@@ -43,7 +43,11 @@ void ctrl_math_output(float C[], float x[], float D[], float u[], float *y, int 
 */
 void ctrl_matrix_prod(float a[], float b[], float *c, int row_a, int col_a, int col_b);
 void ctrl_matrix_add(float a[], float b[], float *c, int row, int col);
-
+void ctrl_matrix_minus(float a[], float b[], float *c, int row, int col);
+//construct regular matrix, multiplied value
+void eye_matrix(float *e, int n, float value);
+//multiply p 
+void ctrl_matrix_cnst_mlpy(float *c, float p, int row_c, int col_c);
 
 /* PRECALC MATH CONST
 ** ------------------

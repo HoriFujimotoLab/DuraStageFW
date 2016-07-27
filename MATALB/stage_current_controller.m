@@ -3,8 +3,8 @@ close all;
 
 %make stage current controller
 R=3;
-Lq=3*10^-3;
-ts=10^-4; %sampling freq
+Lq=3.1*10^-3;
+ts=125*10^-6; %sampling freq
 
 taue=Lq/R;
 
@@ -24,11 +24,10 @@ ss_ctrl_d=c2d(Gc,ts);
 FILENAME = 'current_controler.txt';
 FID = fopen(FILENAME,'w');
 
-fprintf(FID,'//電流PI制御器と速度PI制御器の各行列\n\n');
-    fprintf(FID,'float\tAfbi\t=\t%.20e;\n',Afbi);
-    fprintf(FID,'float\tBfbi\t=\t%.20e;\n',Bfbi);
-    fprintf(FID,'float\tCfbi\t=\t%.20e;\n',Cfbi);
-    fprintf(FID,'float\tDfbi\t=\t%.20e;\n\n',Dfbi);
+fprintf(FID,'float\tAfbi\t=\t%.20e;\n',Afbi);
+fprintf(FID,'float\tBfbi\t=\t%.20e;\n',Bfbi);
+fprintf(FID,'float\tCfbi\t=\t%.20e;\n',Cfbi);
+fprintf(FID,'float\tDfbi\t=\t%.20e;\n\n',Dfbi);
 fclose(FID);
 
 
