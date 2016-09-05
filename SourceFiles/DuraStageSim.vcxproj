@@ -18,6 +18,9 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main_pil.c" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3425F3E7-6FAD-46C0-B2EA-BD3DDA46CFB9}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
