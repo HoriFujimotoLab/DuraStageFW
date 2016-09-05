@@ -17,10 +17,11 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 #define		INI_SW		0x0100			// system init switch		(DI8)
 #define		RUN_SW		0x0200			// system run switch		(DI9)
 #define		ERR_SW		0x0400			// error override switch	(DI10)
-#define		OIL_SW		0x0800			// oil pump switch			(DI11)
+#define		OIL_SW		0x0800			// oil pump switch			(DI11) 
 
-#define		OIL_DO		0x0001			// Oilpump relay output		(DO0)
-#define		RST_DO		0x0002			// inv reset relay output	(DO1)
+#define		RST_DO		0x0001			// inv reset relay output	(DO1)
+#define		OIL_DO		0x0002			// Oilpump relay output		(DO2)
+//10 seconds move side to side
 
 #define		FWE_LED		0x0100			// 1. firmware error		(DO8) 
 #define		OVC_LED		0x0200			// 2. overcurrent error		(DO9)
