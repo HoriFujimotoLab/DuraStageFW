@@ -99,6 +99,9 @@ void test2(){
 #define sigma_w (1e-2)
 #define sigma_v (1e-8)
 
+#define myu (0.1)
+#define Ld ((int) 4)
+
 //in: phi[k], y[k], theta[k-1], P[k-1];
 //out: theta[k], P[k]
 void kalman_filter(float *phi, float y, float *theta, float *P) {
@@ -175,6 +178,12 @@ void test5(){
 
   ctrl_matrix_prod(a,b,c,1,2,1);
   print_matrix(c,1,1);
+}
+
+void NLMS_filter(){
+  float ahat;
+
+  ctrl_matrix_prod(P_m, phi, kalman_g, Nd, 1, 1);
 }
 
 int main(){

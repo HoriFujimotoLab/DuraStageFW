@@ -1,19 +1,18 @@
 //MOTOR CTRL PARAMETERS:
 //FOR DURA
 
-//Zero cancell FF
-//no FF
-float	Affi = 0.0;
-float	Bffi = 0.0;
-float	Cffi = 0.0;
-float	Dffi = 1.0;
 
-//Pole-Place PI
-//Bw:191 Hz(1200 rad/s), Ts: 10 kHz (100us)
+//PZC PI
+//Bw:800 Hz(5000 rad/s), Ts: 8 kHz (125us) with FF input shaping LPF 4000 Hz
 float	Afbi = 1.00000000000000000000e+00;
-float	Bfbi = 5.00000000000000000000e-01;
-float	Cfbi = 7.53982236861550530000e-01;
-float	Dfbi = 3.89557489045134410000e+00;
+float	Bfbi = 1.00000000000000000000e+00;
+float	Cfbi = 1.88495559215387590000e+00;
+float	Dfbi = 1.55822995618053760000e+01;
+
+float	Affi = 4.32139182637722370000e-02;
+float	Bffi = 1.00000000000000000000e+00;
+float	Cffi = 9.56786081736227700000e-01;
+float	Dffi = 0.00000000000000000000e+00;
 
 
 

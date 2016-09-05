@@ -14,12 +14,12 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define		Kt		    (0.412805442470582)		 // dq-Axis torque constant		[Nm/A] = CatalogValue/sqrt(3)
 #define		Ke		(0.412805442470582)		// dq-Axis voltage constant [V/(rad/s)]
 #define		Rs		(3.0)		// Stator resistance	[Ohm] /phase
-#define		Ls		(0.0031)		// Stator inductance	[H] =Lq=Ld
+#define		Ls		(0.00310)		// Stator inductance	[H] =Lq=Ld
 
 #define		OVC_LIM	(50.48)					// overcurrent limit	[A] 
 #define		OVV_LIM	(380.0)					// overvorltage limit	[V]
 #define		OVS_LIM	(450.0)					// overspeed limit		[rad/s]
-#define		I_PK	(30.0)					// ctrl out saturation	[A]
+#define		I_PK	(24.0)					// ctrl out saturation	[A]
 
 // INV PAR
 #define		FC		(8000.0)				// carrier frequency	[Hz]
@@ -49,6 +49,8 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 
 //adaptive
 #define Nd ((int) 2) //size of parameter
+#define Qn ((int) 4) //number of flutes
+#define CONTACT_THRESHOLD (100.0) //m^2/s^2
 
 //modes
 #define POS_MODE (1)
@@ -57,6 +59,18 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define OPOS_MODE (4)
 #define INC_MODE (5)
 #define MAIN_MODE (6)
+#define SCAN_MODE (7)
+#define ADAPTIVE_MODE (8)
+#define SHIMODA_A_MODE (9)
+#define SHIMODA_MAIN_MODE (10)
+#define EXPERIMENTAL_MODE (11)
+#define MAIN_MODE_V (12)
+#define ADAPTIVE_MODE_V (13)
+#define SHIMODA_MAIN_MODE_V (14)
+#define SHIMODA_A_MODE_V (15)
+
+//limit
+#define MAX_ACC (92)
 
 //XY modes
 #define XMODE (0)
@@ -125,6 +139,7 @@ extern float va_refy, vb_refy, vu_refy, vv_refy, vw_refy;
 
 extern int count_sp, count_old_sp, r_count_sp;
 extern float omega_sp, omega_sp_ma, omega_sp_ma_rpm, omega_old_sp, theta_sp;
+extern float omega_sp_new_rpm;
 
 extern float  theta_mox, theta_mdx, omega_mx, omega_max; //theta_mx,
 extern float theta_my, theta_moy, theta_mdy, omega_my, omega_may;
@@ -134,10 +149,17 @@ extern float torque_ad, aspx, aspy, aspz;
 extern int test, test1, test2, test3, test4, test5, test6, test7;
 extern int cmode, xymode, kmode;
 extern float aux1, aux2, aux3, aux4, aux5, aux6, aux7;
-extern float fchat_a;
+extern float fchat_a, fchat_a_ma;
+extern float threshold, flag_threshold, contact_threshold, beta_SHIMODA;
 
 extern float phi_sp[Nd], theta_par_est[Nd], P_var[Nd*Nd];
-extern float aspx_hf[2];
+extern float aspx_hf, epsilon_sp, epsilon_sp_max;
+extern int rho_sp;
+
+extern float feedpertooth;
+
+extern int ontimer;
+extern float limit_time, ctime;
 
 extern int isoverrun;
 

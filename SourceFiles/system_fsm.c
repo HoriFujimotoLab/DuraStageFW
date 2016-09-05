@@ -27,8 +27,7 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 #define		OVS_LED		0x0800			// 4. overspeed error		(DO11)
 #define		HWE_LED		0x1000			// 5. inv hardware error	(DO12) //if inv power is not supplied 
 #define		SSE_LED		0x2000			// 6. setup sensor error	(DO13)
-#define		OVR_LED		0x4000			// 7. stage overrun error	(DO14)
-
+#define		OVA_LED		0x4000			// 7. over acc error	(DO14)
 
 // MODULE PAR
 //#define		PEV_BDN		0				// pev board number
@@ -39,7 +38,6 @@ int din, don, err = 0;
 int firmerr = 0, senserr = 0;
 void system_fsm_err(void);
 void system_fsm_reset(void);
-
 
 void system_fsm_mode(void)
 {
@@ -118,8 +116,8 @@ void system_fsm_err(void)
 		if (fabsf(idc_adx) > OVC_LIM) { err = err | OVC_LED; }			// 2.
 		if (fabsf(vdc_adx) > OVV_LIM) { err = err | OVV_LED; }			// 3. overvoltage
 		if (fabsf(omega_max) > OVS_LIM) { err = err | OVS_LED; }			// 4. overspeed
-		if (HWX_DI == (din & HWX_DI)) { err = err | HWE_LED; }			// 5. hardware error
-		if (THX_DI == (din & THX_DI)) { err = err | HWE_LED; }			// 5.
+		if (HWX_DI == (din & HWY_DI)) { err = err | HWE_LED; }			// 5. hardware error
+		if (THX_DI == (din & THY_DI)) { err = err | HWE_LED; }			// 5.
 		break;
 	case YMODE:
 		if (fabsf(iu_ady) > OVC_LIM) { err = err | OVC_LED; }			// 2.
@@ -131,6 +129,7 @@ void system_fsm_err(void)
 		if (THY_DI == (din & THY_DI)) { err = err | HWE_LED; }			// 5.
 		break;
 	}
+	//if (fabsf(aspx) > MAX_ACC) { err = err | OVA_LED; }			// 4. overspeed //over acceleartion
 
 	//if (isoverrun) { err = err | OVR_LED; } //6.overrun error
 	test1 = err; //error check

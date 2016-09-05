@@ -32,15 +32,3 @@ fprintf(FID,'float Dvpi[2][1]={{%.20e}, {%.20e}};\n',Dfbi, Dfbi);
 fclose(FID);
 
 
-%{
-R=3; %true
-Lq=3*10^-3; %true
-
-Gp=tf(1,[Lq R],'InputDelay',10^(-6)*100);
-ss_p_d=c2d(Gp,ts);
-
-G=ss_p_d*ss_ctrl_d/(1+ss_p_d*ss_ctrl_d);
-bode(G)
-figure
-step(G)
-%}

@@ -45,6 +45,7 @@ float va_refy = 0.0, vb_refy = 0.0, vu_refy = 0.0, vv_refy = 0.0, vw_refy = 0.0;
 
 int count_sp = 0.0, count_old_sp = 0.0, r_count_sp=0.0;
 float omega_sp = 0.0, omega_sp_ma=0.0, omega_sp_ma_rpm=0.0, omega_old_sp = 0.0, theta_sp=0.0;
+float  omega_sp_new_rpm = 0.0;
 
 float theta_mox = 0.0, theta_mdx = 0.0, omega_mx = 0.0, omega_max = 0.0; //theta_mx,
 float theta_my = 0.0, theta_moy = 0.0, theta_mdy = 0.0, omega_my = 0.0, omega_may = 0.0;
@@ -54,10 +55,17 @@ float torque_ad = 0.0, aspx = 0.0, aspy = 0.0, aspz = 0.0;
 int test = 0.0, test1 = 0.0, test2 = 0.0, test3 = 0.0, test4 = 1, test5 = 0.0, test6 = 0.0, test7 = 0.0; //for debugging 
 int cmode = 0, xymode = 0, kmode=0;
 float aux1 = 0.0, aux2 = 0.0, aux3 = 0.0, aux4 = 0.0, aux5 = 0.0, aux6 = 0.0, aux7=0.0;
-float fchat_a = 0.0;
+float fchat_a = 0.0, fchat_a_ma=0.0; 
+float threshold = 50, flag_threshold = 0, contact_threshold = 25, beta_SHIMODA=0.975;
 
 float phi_sp[Nd] = { 0.0, 0.0 }, theta_par_est[Nd] = { 0.0, 0.0 }, P_var[Nd*Nd] = {1e-4, 0.0, 0.0, 1e-4};
-float  aspx_hf[2] = { 0.0, 0.0 };
+float  aspx_hf = 0.0, epsilon_sp=0.0, epsilon_sp_max=0.0;
+int rho_sp = 0;
+
+float feedpertooth=0.0;
+
+int ontimer = 0;
+float limit_time = 0.0, ctime=0.0;
 
 int isoverrun = 0;
 

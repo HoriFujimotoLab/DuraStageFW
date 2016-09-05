@@ -35,3 +35,9 @@ IN: b(=d1), c(=d2)
 OUT:dominant frequency
 */
 float dominant_freq(float b, float c);
+
+/*
+DES:calculate new stable spindle speed [rpm]
+*/
+void calc_new_speed(int *rho, float *omega_new_rpm, float fchat, float omega_sp_rpm, int q);
+

@@ -14,6 +14,8 @@ Author:		Shimoda Takaki, University of Tokyo, 2016
 
 #define INV2PITS (1.273239544735163e+03) //1/2/pi*FC
 
+#define RPM2HZ (0.016666666666667) //1/60
+
 
 void kalman_filter(float *phi, float y, float *theta, float *P) {
 	float  P_m[Nd*Nd], kalman_g[Nd], fm[1]; 
@@ -37,7 +39,7 @@ void kalman_filter(float *phi, float y, float *theta, float *P) {
 	ctrl_matrix_prod(temp4, P_m, P, Nd, Nd, Nd); //update P
 }
 
-
+//FS=2000 Hz loop
 float dominant_freq(float b, float c) //dominant freq of  z^2 / ( z^2 + b z + c ) 
 {
 	float  real, imag;
@@ -51,9 +53,18 @@ float dominant_freq(float b, float c) //dominant freq of  z^2 / ( z^2 + b z + c 
 										   //z=u+j*w
 										   //log(z)=log(abs(z)) + j*atan2(w,u)
 										   //use atan2f(imag, real)
-		fchat = atan2f(imag, real)*INV2PITS; //2/pi/ts
+		fchat = atan2f(imag, real)*INV2PITS; //2/pi/ts*FC
 		return fchat;
 	}
 
 	return 2000; //default
+}
+
+void calc_new_speed(int *rho, float *omega_new_rpm, float fchat,float omega_sp_rpm, int q) {
+	float fTPE;
+	fTPE = q*omega_sp_rpm*RPM2HZ;
+	if (fTPE > 0) { 
+		*rho = (int)(fchat / fTPE+0.5); 
+		*omega_new_rpm = fchat / (*rho) / q * 60;
+	}
 }

@@ -105,14 +105,14 @@
     <ClInclude Include="motion_ctrl_par.h">
       <Filter>Resource Files\parameters</Filter>
     </ClInclude>
-    <ClInclude Include="Rfreqref.h">
-      <Filter>Resource Files\references</Filter>
-    </ClInclude>
     <ClInclude Include="Rtimeref.h">
       <Filter>Resource Files\references</Filter>
     </ClInclude>
     <ClInclude Include="adaptive_ctrl.h">
       <Filter>Header Files\control</Filter>
+    </ClInclude>
+    <ClInclude Include="Rfreqref.h">
+      <Filter>Resource Files\references</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

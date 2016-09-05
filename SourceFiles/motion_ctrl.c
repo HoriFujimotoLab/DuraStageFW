@@ -81,11 +81,19 @@ void motion_ctrl_pid(float x_ref, float x_msr, float *iq_ref)
 
 void motion_ctrl_reset(void)
 {
-	int i;
+	int i, j;
 	for (i = 0; i < 2; i++) {
 		xvpi[i][1] = 0.0;
 	}
 	xpid[0] = 0.0; xpid[1] = 0.0;
 	dac_da_out(0, 3, 0);
-
+	for (i = 0; i < Nd; i++) {
+		phi_sp[i] = 0;
+		theta_par_est[i] =0;
+		for (j = 0; j < Nd; j++) {
+			if (i==j) P_var[i*Nd +j] =  1e-4;
+			else  P_var[i*Nd + j] = 0;
+		}
+	}
+	ctime = 0;
 }

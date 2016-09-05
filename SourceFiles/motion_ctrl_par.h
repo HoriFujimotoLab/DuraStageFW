@@ -1,14 +1,11 @@
 //MOTION CTRL PAR:
-
-
-
-//Velocity PI: Bw 40Hz, Ts 2 kHz
+//Velocity PI: Bw 80Hz, Ts 2 kHz
 float Avpi[2][1] = { { 1.00000000000000000000e+00 },{ 1.00000000000000000000e+00 } };
 float Bvpi[2][1] = { { 5.00000000000000000000e-01 },{ 5.00000000000000000000e-01 } };
 float Cvpi[2][1] = { { 4.92109618464414920000e-01 },{ 4.92109618464414920000e-01 } };
 float Dvpi[2][1] = { { 3.51506870331725140000e+00 },{ 3.51506870331725140000e+00 } };
 
-//Postion P based on Velocity PI, Bw:1 Hz, Ts2kHz
+//Postion P based on Velocity PI, Bw:0.5 Hz, Ts2kHz
 float Kxp = 3.14;
 
 //Position PID: Bw 40Hz, Ts 2kHz

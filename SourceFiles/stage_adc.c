@@ -19,7 +19,7 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define		R_VS	(400.0)				// DC voltage sensor	[V]  (400V/5V)
 #define		R_TS	(20.0)				// Unipulse T sensor	[Nm] (100%/5V)
 #define		R_SV	(1.0)				// Servo Analyzer		[%]  (100%/5V)
-#define		R_ACC (1000.0)		//accelometer [10m/s^2/5V]
+#define		R_ACC (92.4214)		//accelometer [(1 m/s/s)/(54.1 mV) / 0.5(GAIN) =  92.4214 m/s/s / 5V]
 #define		R_EX	(31.25)
 
 // ADC OFFSETS (see notes)
