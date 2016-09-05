@@ -19,6 +19,7 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 #define		ERR_SW		0x0400			// error override switch	(DI10)
 #define		OIL_SW		0x0800			// oil pump switch			(DI11)
 
+#define		OIL_DO		0x0001			// Oilpump relay output		(DO0)
 #define		RST_DO		0x0002			// inv reset relay output	(DO1)
 
 #define		FWE_LED		0x0100			// 1. firmware error		(DO8) 
@@ -42,10 +43,10 @@ void system_fsm_reset(void);
 void system_fsm_mode(void)
 {
 	//what is var "time"???
-	//if (time/FS >= SWT_PRT){
+	if (time/FS >= SWT_PRT){
 	din = pev_pio_in(PEV_BDN); don = 0;	time = 0;					// DI read, DO reset
 	test = din; //first din value
-	//}
+	}
 	
 	switch (sysmode_e)
 	{
@@ -90,6 +91,10 @@ void system_fsm_mode(void)
 			pev_inverter_stop_pwm(PEV_BDN, YAXIS);
 			sysmode_e = SYS_ERR; 
 		}
+		if (OIL_SW == (din & OIL_SW)) { 
+			pev_pio_set_bit(PEV_BDN, OIL_DO); }							// oil pump on
+		else { 
+			pev_pio_clr_bit(PEV_BDN, OIL_DO); }							// oil pump off
 		if (RUN_SW != (din & RUN_SW)) { sysmode_e = SYS_INI; }			// firmware reset
 		break;
 

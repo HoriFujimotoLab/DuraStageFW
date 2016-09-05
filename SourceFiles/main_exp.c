@@ -338,6 +338,7 @@ void system_cint5(void)
 	}	
 
 	watch_data_8ch();
+	time++;
 }
 
 
