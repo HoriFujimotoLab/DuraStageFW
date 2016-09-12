@@ -1,0 +1,23 @@
+* ======================================================================== *
+*  TEXAS INSTRUMENTS, INC.                                                 *
+*                                                                          *
+*  NAME                                                                    *
+*      DSPF_fltoq15 -- IEEE Single Precision floating point to Q15 format       *
+*                                                                          *
+*                                                                          *
+*  REVISION DATE                                                           *
+*      27-Nov-2002                                                         *
+*                                                                          *
+*  USAGE                                                                   *
+* ------------------------------------------------------------------------ *
+*          Copyright (C) 2002 Texas Instruments, Incorporated.             *
+*                          All Rights Reserved.                            *
+* ======================================================================== *
+        .global _DSPF_fltoq15
+
+* ======================================================================== *
+*  End of file: DSPF_fltoq15_h.asm                                              *
+* ------------------------------------------------------------------------ *
+*          Copyright (C) 2002 Texas Instruments, Incorporated.             *
+*                          All Rights Reserved.                            *
+* ======================================================================== *

@@ -1,0 +1,23 @@
+* ======================================================================== *
+*  TEXAS INSTRUMENTS, INC.                                                 *
+*                                                                          *
+*  NAME                                                                    *
+*      DSPF_dp_dotprod -- Dot Product of 2 Double Precision float vectors       *
+*                                                                          *
+*                                                                          *
+*  REVISION DATE                                                           *
+*      11-Sep-2003                                                         *
+*                                                                          *
+*  USAGE                                                                   *
+* ------------------------------------------------------------------------ *
+*          Copyright (C) 2003 Texas Instruments, Incorporated.             *
+*                          All Rights Reserved.                            *
+* ======================================================================== *
+        .global _DSPF_dp_dotprod
+
+* ======================================================================== *
+*  End of file: DSPF_dp_dotprod_h.asm                                           *
+* ------------------------------------------------------------------------ *
+*          Copyright (C) 2003 Texas Instruments, Incorporated.             *
+*                          All Rights Reserved.                            *
+* ======================================================================== *

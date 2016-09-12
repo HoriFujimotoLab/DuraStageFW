@@ -1,0 +1,93 @@
+/* ======================================================================= */
+/* TEXAS INSTRUMENTS, INC.                                                 */
+/*                                                                         */
+/* NAME                                                                    */
+/*     DSPF_dp_maxval -- Maximum Element of Double Precision Vector             */
+/*                                                                         */
+/*  USAGE                                                                   */
+/*                                                                          */
+/*       This routine has the following C prototype:                        */
+/*                                                                          */
+/*       double DSPF_dp_maxval(                                                  */
+/*                       const double* x,                                   */
+/*                       int nx                                             */
+/*                      )                                                   */
+/*                                                                          */
+/*            x :  Pointer to Input array.                                  */
+/*            nx:  Number of Inputs in the input Array.                     */
+/*                                                                          */
+/*                                                                          */
+/*  DESCRIPTION                                                             */
+/*                                                                          */
+/*       This routine finds out the maximum number in the                   */
+/*   input array.This code returns the maximum value                        */
+/*   in the array.                                                          */
+/*                                                                          */
+/*  TECHNIQUES                                                              */
+/*                                                                          */
+/*     1. The loop is unrolled six times.                                   */
+/*     2. Six maximums are maintained in each iteration.                    */
+/*                                                                          */
+/*  ASSUMPTIONS                                                             */
+/*                                                                          */
+/*      1. nx should be multiple of 2 and >= 2.                             */
+/*      2. NAN( Not a Number in Double Precision format) in the input is    */
+/*         disregarded.                                                     */
+/*                                                                          */
+/*  C CODE                                                                  */
+/*                                                                          */
+/*      This is the C equivalent of the assembly code.  Note that           */
+/*      the assembly code is hand optimized and restrictions may apply.     */
+/*                                                                          */
+/*      double DSPF_dp_maxval(const double* x, int nx)                           */
+/*      {                                                                   */
+/*         int i;                                                           */
+/*         double max;                                                      */
+/*         *((int *)&max) = 0x00000000;                                     */
+/*         *((int *)&max+1) = 0xfff00000;                                   */
+/*                                                                          */
+/*          for (i = 0; i < nx; i++)                                        */
+/*          if (x[i] > max)                                                 */
+/*           {                                                              */
+/*            max = x[i];                                                   */
+/*           }                                                              */
+/*                                                                          */
+/*          return max;                                                     */
+/*       }                                                                  */
+/*                                                                          */
+/*  NOTES                                                                   */
+/*                                                                          */
+/*      1. NAN( Not a Number in Double Precision format) in the input are   */
+/*         disregarded.                                                     */
+/*      2. Endian: This code is LITTLE ENDIAN.                              */
+/*      3. Interruptibility: This code is interrupt-tolerant but not        */
+/*                           interruptible.                                 */
+/*                                                                          */
+/*  CYCLES                                                                  */
+/*                                                                          */
+/*      7*ceil(nx/6) + 31                                                   */
+/*      For nx=60, cycles=101.                                              */
+/*      For nx=34, cycles=73.                                               */
+/*                                                                          */
+/*  CODESIZE                                                                */
+/*      672 bytes                                                           */
+/*                                                                          */
+/* ------------------------------------------------------------------------ */
+/*            Copyright (c) 2004 Texas Instruments, Incorporated.           */
+/*                           All Rights Reserved.                           */
+/* ======================================================================== */
+#ifndef DSPF_DP_MAXVAL_H_
+#define DSPF_DP_MAXVAL_H_ 1
+
+double DSPF_dp_maxval(
+                const double* x,
+                int nx
+               );
+
+#endif
+/* ======================================================================== */
+/*  End of file:  DSPF_dp_maxval.h                                               */
+/* ------------------------------------------------------------------------ */
+/*            Copyright (c) 2004 Texas Instruments, Incorporated.           */
+/*                           All Rights Reserved.                           */
+/* ======================================================================== */

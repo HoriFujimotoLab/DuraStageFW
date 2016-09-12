@@ -1,0 +1,24 @@
+* ======================================================================== *
+*  TEXAS INSTRUMENTS, INC.                                                 *
+*                                                                          *
+*  NAME                                                                    *
+*      DSPF_sp_dotp_cplx -- Complex single precision floating point dot         *
+*      product                                                             *
+*                                                                          *
+*                                                                          *
+*  REVISION DATE                                                           *
+*      29-Dec-2002                                                         *
+*                                                                          *
+*  USAGE                                                                   *
+* ------------------------------------------------------------------------ *
+*          Copyright (C) 2002 Texas Instruments, Incorporated.             *
+*                          All Rights Reserved.                            *
+* ======================================================================== *
+        .global _DSPF_sp_dotp_cplx
+
+* ======================================================================== *
+*  End of file: DSPF_sp_dotp_cplx_h.asm                                         *
+* ------------------------------------------------------------------------ *
+*          Copyright (C) 2002 Texas Instruments, Incorporated.             *
+*                          All Rights Reserved.                            *
+* ======================================================================== *

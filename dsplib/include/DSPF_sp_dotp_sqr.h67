@@ -1,0 +1,23 @@
+* ======================================================================== *
+*  TEXAS INSTRUMENTS, INC.                                                 *
+*                                                                          *
+*  NAME                                                                    *
+*      DSPF_sp_dotp_sqr -- Single Precision dot product and sum of square       *
+*                                                                          *
+*                                                                          *
+*  REVISION DATE                                                           *
+*      23-Nov-2002                                                         *
+*                                                                          *
+*  USAGE                                                                   *
+* ------------------------------------------------------------------------ *
+*          Copyright (C) 2002 Texas Instruments, Incorporated.             *
+*                          All Rights Reserved.                            *
+* ======================================================================== *
+        .global _DSPF_sp_dotp_sqr
+
+* ======================================================================== *
+*  End of file: DSPF_sp_dotp_sqr_h.asm                                          *
+* ------------------------------------------------------------------------ *
+*          Copyright (C) 2002 Texas Instruments, Incorporated.             *
+*                          All Rights Reserved.                            *
+* ======================================================================== *

@@ -1,0 +1,118 @@
+/* ======================================================================= */
+/* TEXAS INSTRUMENTS, INC.                                                 */
+/*                                                                         */
+/* NAME                                                                    */
+/*     DSPF_dp_convol -- Double Precision convolution                           */
+/*                                                                         */
+/* USAGE                                                                    */
+/*    This routine has the following C prototype:                           */
+/*                                                                          */
+/*    void DSPF_dp_convol                                                        */
+/*         (                                                                */
+/*               double *x, //x: Pointer to input samples//                 */
+/*               double *h, //h: Pointer to impulse response samples//      */
+/*               double *r, //r: Pointer to output samples//                */
+/*               int   nh, //nh: Number of impulse response samples//       */
+/*               int   nr  //nr: Number of output samples//                 */
+/*         )                                                                */
+/*                                                                          */
+/*          x = pointer to real input vector of size = nr+nh-1              */
+/*          a typically contains input data (x) padded with                 */
+/*          consecutive nh - 1  zeros at the beginning and end.             */
+/*          h = pointer to real input vector of size nh in forward order.   */
+/*          h typically contains the filter coefs.                          */
+/*          r = Pointer to real output vector of size nr                    */
+/*          nh= Number of elements in vector b. NOTE: nh <= nr  nh is       */
+/*          typically noted as m in convol formulas. nh must be a           */
+/*          MULTIPLE of 2                                                   */
+/*          nr= Number of elements in vector r. nr must be a MULTIPLE of 4  */
+/*                                                                          */
+/*  DESCRIPTION                                                             */
+/*                                                                          */
+/*          This function calculates the full-length convolution of real    */
+/*          vectors x and h using time-domain techniques. The result is     */
+/*          placed in real vector r.                                        */
+/*                                                                          */
+/*          It is assumed that input vector x is padded with nh-1 no of     */
+/*          zeros in the beginning and end.                                 */
+/*                                                                          */
+/*          It is assumed that the length of the input vector h, nh, is a   */
+/*          multiple of 2 and the length of the output vector r, nr, is a   */
+/*          multiple of 4. nh is greater than or equal to 4 and nr is       */
+/*          greater than or equal to nh. The routine computes 4 output      */
+/*          samples at a time.                                              */
+/*                                                                          */
+/*                                                                          */
+/*  TECHNIQUES                                                              */
+/*                                                                          */
+/*          1. The inner loop is unrolled twice and the outer loop is       */
+/*             unrolled four times.                                         */
+/*                                                                          */
+/*  ASSUMPTIONS                                                             */
+/*                                                                          */
+/*          1. nh is a multiple of 2 and greater than or equal to 4         */
+/*          2. nr is a multiple of 4                                        */
+/*                                                                          */
+/*  C CODE                                                                  */
+/*          This is the C equivalent of the assembly code.  Note that       */
+/*          the assembly code is hand optimized and restrictions may        */
+/*          apply.                                                          */
+/*                                                                          */
+/*                                                                          */
+/*          void DSPF_dp_convol(double *x, double *h, double *r, short nh,       */
+/*                         short nr)                                        */
+/*          {                                                               */
+/*            short   octr, ictr;                                           */
+/*            double  acc ;                                                 */
+/*                                                                          */
+/*            for (octr = nr ; octr > 0 ; octr--)                           */
+/*            {                                                             */
+/*              acc = 0 ;                                                   */
+/*                                                                          */
+/*              for (ictr = nh ; ictr > 0 ; ictr--)                         */
+/*              {                                                           */
+/*             acc += x[nr-octr+nh-ictr]*h[(ictr-1)];                       */
+/*              }                                                           */
+/*              r[nr-octr] = acc;                                           */
+/*            }                                                             */
+/*          }                                                               */
+/*                                                                          */
+/*                                                                          */
+/* NOTES                                                                    */
+/*                                                                          */
+/*          1. Endian: This code is LITTLE ENDIAN.                          */
+/*          2. Interruptibility: This code is interrupt tolerant but not    */
+/*                       interruptible.                                     */
+/*                                                                          */
+/* CYCLES                                                                   */
+/*                                                                          */
+/*          2*(nh*nr) + 5/2*nr + 32                                         */
+/*          For nh=24 and nr=48, cycles=2456                                */
+/*          For nh=20 and nr=32, cycles=1392                                */
+/*                                                                          */
+/* CODESIZE                                                                 */
+/*                                                                          */
+/*          544 bytes                                                       */
+/* ------------------------------------------------------------------------ */
+/*            Copyright (c) 2004 Texas Instruments, Incorporated.           */
+/*                           All Rights Reserved.                           */
+/* ======================================================================== */
+#ifndef DSPF_DP_CONVOL_H_
+#define DSPF_DP_CONVOL_H_ 1
+
+void DSPF_dp_convol
+     (
+           double *x, //x: Pointer to input samples//
+           double *h, //h: Pointer to impulse response samples//
+           double *r, //r: Pointer to output samples//
+           int   nh, //nh: Number of impulse response samples//
+           int   nr  //nr: Number of output samples//
+     );
+
+#endif
+/* ======================================================================== */
+/*  End of file:  DSPF_dp_convol.h                                               */
+/* ------------------------------------------------------------------------ */
+/*            Copyright (c) 2004 Texas Instruments, Incorporated.           */
+/*                           All Rights Reserved.                           */
+/* ======================================================================== */

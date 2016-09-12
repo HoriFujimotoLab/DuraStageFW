@@ -1,0 +1,23 @@
+* ======================================================================== *
+*  TEXAS INSTRUMENTS, INC.                                                 *
+*                                                                          *
+*  NAME                                                                    *
+*      DSPF_sp_maxidx -- Index of Maximum Element of Single Precision Vector    *
+*                                                                          *
+*                                                                          *
+*  REVISION DATE                                                           *
+*      31-Dec-2002                                                         *
+*                                                                          *
+*  USAGE                                                                   *
+* ------------------------------------------------------------------------ *
+*          Copyright (C) 2002 Texas Instruments, Incorporated.             *
+*                          All Rights Reserved.                            *
+* ======================================================================== *
+        .global _DSPF_sp_maxidx
+
+* ======================================================================== *
+*  End of file: DSPF_sp_maxidx_h.asm                                            *
+* ------------------------------------------------------------------------ *
+*          Copyright (C) 2002 Texas Instruments, Incorporated.             *
+*                          All Rights Reserved.                            *
+* ======================================================================== *

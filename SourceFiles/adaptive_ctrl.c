@@ -49,11 +49,11 @@ float dominant_freq(float b, float c) //dominant freq of  z^2 / ( z^2 + b z + c 
 
 	if (discriminant < 0) {
 		real = -b *0.50;
-		imag = sqrtf(-discriminant) *0.50; //sqrt(D)/2/a
+		imag = sqrtsp(-discriminant) *0.50; //sqrt(D)/2/a
 										   //z=u+j*w
 										   //log(z)=log(abs(z)) + j*atan2(w,u)
 										   //use atan2f(imag, real)
-		fchat = atan2f(imag, real)*INV2PITS; //2/pi/ts*FC
+		fchat = atan2sp(imag, real)*INV2PITS; //2/pi/ts*FC
 		return fchat;
 	}
 

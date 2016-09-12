@@ -1,0 +1,23 @@
+* ======================================================================== *
+*  TEXAS INSTRUMENTS, INC.                                                 *
+*                                                                          *
+*  NAME                                                                    *
+*      DSPF_sp_mat_mul -- Single Precision Matrix Multiplication                *
+*                                                                          *
+*                                                                          *
+*  REVISION DATE                                                           *
+*      14-Nov-2002                                                         *
+*                                                                          *
+*  USAGE                                                                   *
+* ------------------------------------------------------------------------ *
+*          Copyright (C) 2002 Texas Instruments, Incorporated.             *
+*                          All Rights Reserved.                            *
+* ======================================================================== *
+        .global _DSPF_sp_mat_mul
+
+* ======================================================================== *
+*  End of file: DSPF_sp_mat_mul_h.asm                                           *
+* ------------------------------------------------------------------------ *
+*          Copyright (C) 2002 Texas Instruments, Incorporated.             *
+*                          All Rights Reserved.                            *
+* ======================================================================== *

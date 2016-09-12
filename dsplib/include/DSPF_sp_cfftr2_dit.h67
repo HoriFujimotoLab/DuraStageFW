@@ -1,0 +1,24 @@
+* ======================================================================== *
+*  TEXAS INSTRUMENTS, INC.                                                 *
+*                                                                          *
+*  NAME                                                                    *
+*      DSPF_sp_cfftr2_dit -- Single Precision floating point radix-2 FFT with   *
+*      complex input                                                       *
+*                                                                          *
+*                                                                          *
+*  REVISION DATE                                                           *
+*      27-Dec-2002                                                         *
+*                                                                          *
+*  USAGE                                                                   *
+* ------------------------------------------------------------------------ *
+*          Copyright (C) 2002 Texas Instruments, Incorporated.             *
+*                          All Rights Reserved.                            *
+* ======================================================================== *
+        .global _DSPF_sp_cfftr2_dit
+
+* ======================================================================== *
+*  End of file: DSPF_sp_cfftr2_dit_h.asm                                        *
+* ------------------------------------------------------------------------ *
+*          Copyright (C) 2002 Texas Instruments, Incorporated.             *
+*                          All Rights Reserved.                            *
+* ======================================================================== *

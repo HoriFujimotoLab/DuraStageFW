@@ -1,0 +1,24 @@
+* ======================================================================== *
+*  TEXAS INSTRUMENTS, INC.                                                 *
+*                                                                          *
+*  NAME                                                                    *
+*      DSPF_dp_icfftr2 -- Double Precision Cache optimised radix-2 inverse      *
+*      FFT with complex input                                              *
+*                                                                          *
+*                                                                          *
+*  REVISION DATE                                                           *
+*      12-Feb-2004                                                         *
+*                                                                          *
+*  USAGE                                                                   *
+* ------------------------------------------------------------------------ *
+*          Copyright (C) 2004 Texas Instruments, Incorporated.             *
+*                          All Rights Reserved.                            *
+* ======================================================================== *
+        .global _DSPF_dp_icfftr2
+
+* ======================================================================== *
+*  End of file: DSPF_dp_icfftr2_h.asm                                           *
+* ------------------------------------------------------------------------ *
+*          Copyright (C) 2004 Texas Instruments, Incorporated.             *
+*                          All Rights Reserved.                            *
+* ======================================================================== *

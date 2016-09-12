@@ -49,6 +49,7 @@ void system_tint0(void)
 	// TEST CODE
 	// ---------
 
+	/*
 	ctrl_current_uw2ab(iu0_ad, iw0_ad, &ia0_ad, &ib0_ad);
 	ctrl_current_ab2dq(ia0_ad, ib0_ad, theta_e, &id0_ad, &iq0_ad);
 	//ctrl_current_pzcpi(Ai_pzcpi, Bi_pzcpi, Ci_pzcpi, Di_pzcpi, iq0_ref, id0_ad, iq0_ad, &vd0_ref, &vq0_ref);
@@ -57,10 +58,12 @@ void system_tint0(void)
 	ctrl_current_dq2ab(vd0_ref, vq0_ref, theta_e, &va0_ref, &vb0_ref);
 	ctrl_current_ab2uvw(va0_ref, vb0_ref, &vu0_ref, &vv0_ref, &vw0_ref);
 	hardw_inv_pwm(0, vu0_ref, vv0_ref, vw0_ref, vdc0_ad);
-
+	*/
 
 	// put the code you want to measure performance in here
 	// not important what is being calculated, output is always 0
+
+
 
 	// TIMER COUNT
 	// -----------

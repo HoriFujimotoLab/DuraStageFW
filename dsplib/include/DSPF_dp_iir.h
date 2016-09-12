@@ -1,0 +1,115 @@
+/* ======================================================================= */
+/* TEXAS INSTRUMENTS, INC.                                                 */
+/*                                                                         */
+/* NAME                                                                    */
+/*     DSPF_dp_iir -- Double Precision IIR filter (used in the VSELP vocoder)   */
+/*                                                                         */
+/*  USAGE                                                                   */
+/*                                                                          */
+/*   This routine is C callable, and has the following C prototype:         */
+/*                                                                          */
+/*      void DSPF_dp_iir    (double* restrict r1,                                */
+/*                      const double*    x,                                 */
+/*                      double* restrict r2,                                */
+/*                      const double*    h2,                                */
+/*                      const double*    h1,                                */
+/*                      int nr                                              */
+/*                     );                                                   */
+/*                                                                          */
+/*           r1[nr+4]   :  Delay element values (i/p and o/p)               */
+/*           x[nr]      :  Pointer to the input array                       */
+/*           r2[nr+4]   :  Pointer to the output array                      */
+/*           h2[5]      :  Auto-regressive filter coefficients              */
+/*           h1[5]      :  Moving average filter coefficients               */
+/*           nr         :  Number of output samples                         */
+/*                                                                          */
+/*  DESCRIPTION                                                             */
+/*                                                                          */
+/*    The IIR performs an auto-regressive moving-average (ARMA)             */
+/*    filter with 4 auto-regressive filter coefficients and 5               */
+/*    moving-average filter coefficients for nr output samples.             */
+/*    The output vector is stored in two locations. This routine            */
+/*    is used as a high pass filter in the VSELP vocoder. The               */
+/*    4 values in the r1 vector store the initial values of the             */
+/*    delays.                                                               */
+/*                                                                          */
+/*  TECHNIQUES                                                              */
+/*                                                                          */
+/*    1. The inner loop is completely unrolled so that two loops            */
+/*       become one loop.                                                   */
+/*    2. Register Sharing is used to make Optimum Utilisation of            */
+/*       available registers.                                               */
+/*                                                                          */
+/*  ASSUMPTIONS                                                             */
+/*                                                                          */
+/*    1. The value of 'nr' must be > 0.                                     */
+/*    2. Extraneous loads are allowed in the program.                       */
+/*                                                                          */
+/*                                                                          */
+/*  C CODE                                                                  */
+/*                                                                          */
+/*  This is the C equivalent of the Assembly Code without                   */
+/*  restrictions.                                                           */
+/*                                                                          */
+/*  Note that the assembly code is hand optimized and restrictions          */
+/*  may apply.                                                              */
+/*                                                                          */
+/*  void DSPF_dp_iir (double* restrict r1,                                       */
+/*               const double*    x,                                        */
+/*               double* restrict r2,                                       */
+/*               const double*    h2,                                       */
+/*               const double*    h1,                                       */
+/*               int nr                                                     */
+/*               )                                                          */
+/*   {                                                                      */
+/*      int i, j;                                                           */
+/*      double sum;                                                         */
+/*                                                                          */
+/*      for (i = 0; i < nr; i++)                                            */
+/*      {                                                                   */
+/*         sum = h2[0] * x[4+i];                                            */
+/*         for (j = 1; j <= 4; j++)                                         */
+/*            sum += h2[j] * x[4+i-j] - h1[j] * r1[4+i-j];                  */
+/*                                                                          */
+/*         r1[4+i] = sum;                                                   */
+/*         r2[i] = r1[4+i];                                                 */
+/*      }                                                                   */
+/*  }                                                                       */
+/*                                                                          */
+/*  NOTES                                                                   */
+/*                                                                          */
+/*     1. Endian: The code is LITTLE ENDIAN.                                */
+/*     2. Interruptibility: This code is interrupt-tolerant but not         */
+/*        interruptible.                                                    */
+/*                                                                          */
+/*  CYCLES                                                                  */
+/*                                                                          */
+/*     24*nr + 48                                                           */
+/*     eg. for nr = 32, cycles = 816.                                       */
+/*                                                                          */
+/*                                                                          */
+/*  CODESIZE                                                                */
+/*                                                                          */
+/*     608 bytes                                                            */
+/* ------------------------------------------------------------------------ */
+/*            Copyright (c) 2004 Texas Instruments, Incorporated.           */
+/*                           All Rights Reserved.                           */
+/* ======================================================================== */
+#ifndef DSPF_DP_IIR_H_
+#define DSPF_DP_IIR_H_ 1
+
+void DSPF_dp_iir        (double* restrict r1,
+                const double*    x,
+                double* restrict r2,
+                const double*    h2,
+                const double*    h1,
+                int nr
+               );
+
+#endif
+/* ======================================================================== */
+/*  End of file:  DSPF_dp_iir.h                                                  */
+/* ------------------------------------------------------------------------ */
+/*            Copyright (c) 2004 Texas Instruments, Incorporated.           */
+/*                           All Rights Reserved.                           */
+/* ======================================================================== */

@@ -68,6 +68,7 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define ADAPTIVE_MODE_V (13)
 #define SHIMODA_MAIN_MODE_V (14)
 #define SHIMODA_A_MODE_V (15)
+#define CHATTER_TEST_MODE (16)
 
 //limit
 #define MAX_ACC (92)
@@ -155,6 +156,7 @@ extern float threshold, flag_threshold, contact_threshold, beta_SHIMODA;
 extern float phi_sp[Nd], theta_par_est[Nd], P_var[Nd*Nd];
 extern float aspx_hf, epsilon_sp, epsilon_sp_max;
 extern int rho_sp;
+extern float chatter_rpm;
 
 extern float feedpertooth;
 

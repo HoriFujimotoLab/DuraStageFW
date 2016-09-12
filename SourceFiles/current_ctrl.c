@@ -76,15 +76,16 @@ void current_ctrl_ul2ab(float uv, float vw, float *a, float *b)
 
 void current_ctrl_ab2dq(float a, float b, float theta_e, float *d, float *q)
 {
-	*d =  cosf(theta_e) * a + sinf(theta_e) * b;
-	*q = -sinf(theta_e) * a + cosf(theta_e) * b;
+	*d =  cossp(theta_e) * a + sinsp(theta_e) * b;
+	*q = -sinsp(theta_e) * a + cossp(theta_e) * b;
 }
 
 
 void current_ctrl_dq2ab(float d, float q, float theta_e, float *a, float *b)
 {
-	*a = cosf(theta_e) * d - sinf(theta_e) * q;
-	*b = sinf(theta_e) * d + cosf(theta_e) * q;
+	*a = cossp(theta_e) * d - sinsp(theta_e) * q;
+	*b = sinsp(theta_e) * d + cossp(theta_e) * q;
+
 }
 
 

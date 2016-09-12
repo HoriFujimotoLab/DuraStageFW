@@ -1,0 +1,88 @@
+/* ======================================================================= */
+/* TEXAS INSTRUMENTS, INC.                                                 */
+/*                                                                         */
+/* NAME                                                                    */
+/*     DSPF_dp_minval -- Minimum Element of Double Precision Vector             */
+/*                                                                         */
+/*  USAGE                                                                   */
+/*                                                                          */
+/*       This routine has the following C prototype:                        */
+/*                                                                          */
+/*       double DSPF_dp_minval(                                                  */
+/*                       const double* x,                                   */
+/*                       int nx                                             */
+/*                      )                                                   */
+/*                                                                          */
+/*            x :  Pointer to Input array.                                  */
+/*            nx:  Number of Inputs in the input Array.                     */
+/*                                                                          */
+/*  DESCRIPTION                                                             */
+/*                                                                          */
+/*       This routine finds out and returns the minimum number              */
+/*   in the input array.                                                    */
+/*                                                                          */
+/*  TECHNIQUES                                                              */
+/*                                                                          */
+/*      1. The loop is unrolled six times.                                  */
+/*      2. Six minimums are maintained in each iteration.                   */
+/*                                                                          */
+/*  ASSUMPTIONS                                                             */
+/*                                                                          */
+/*      1. nx should be multiple of 2 and >= 2.                             */
+/*      2. NAN( Not a Number in Double Precision format) in the input are   */
+/*         disregarded.                                                     */
+/*                                                                          */
+/* C CODE                                                                   */
+/*                                                                          */
+/*      double DSPF_dp_minval(const double* x, int nx)                           */
+/*      {                                                                   */
+/*         int i;                                                           */
+/*         double min;                                                      */
+/*         *((int *)&min) = 0x00000000;                                     */
+/*         *((int *)&min+1) = 0x7ff00000;                                   */
+/*                                                                          */
+/*         for (i = 0; i < nx; i++)                                         */
+/*         if (x[i] < min)                                                  */
+/*         {                                                                */
+/*            min = x[i];                                                   */
+/*           }                                                              */
+/*                                                                          */
+/*         return min;                                                      */
+/*      }                                                                   */
+/*                                                                          */
+/*  NOTES                                                                   */
+/*                                                                          */
+/*  1. NAN( Not a Number in Double Precision format) in the input are       */
+/*     disregarded.                                                         */
+/*  2. Endian: This code is LITTLE ENDIAN.                                  */
+/*  3. Interruptibility: This code is interrupt tolerant but not            */
+/*     interruptible.                                                       */
+/*                                                                          */
+/*  CYCLES                                                                  */
+/*                                                                          */
+/*      7*ceil(nx/6) + 31                                                   */
+/*      For nx=60 cycles=101                                                */
+/*      For nx=34 cycles=73                                                 */
+/*                                                                          */
+/*  CODESIZE                                                                */
+/*                                                                          */
+/*      640 bytes                                                           */
+/* ------------------------------------------------------------------------ */
+/*            Copyright (c) 2004 Texas Instruments, Incorporated.           */
+/*                           All Rights Reserved.                           */
+/* ======================================================================== */
+#ifndef DSPF_DP_MINVAL_H_
+#define DSPF_DP_MINVAL_H_ 1
+
+double DSPF_dp_minval(
+                const double* x,
+                int nx
+               );
+
+#endif
+/* ======================================================================== */
+/*  End of file:  DSPF_dp_minval.h                                               */
+/* ------------------------------------------------------------------------ */
+/*            Copyright (c) 2004 Texas Instruments, Incorporated.           */
+/*                           All Rights Reserved.                           */
+/* ======================================================================== */

@@ -61,6 +61,7 @@ float threshold = 50, flag_threshold = 0, contact_threshold = 25, beta_SHIMODA=0
 float phi_sp[Nd] = { 0.0, 0.0 }, theta_par_est[Nd] = { 0.0, 0.0 }, P_var[Nd*Nd] = {1e-4, 0.0, 0.0, 1e-4};
 float  aspx_hf = 0.0, epsilon_sp=0.0, epsilon_sp_max=0.0;
 int rho_sp = 0;
+float chatter_rpm = 0;
 
 float feedpertooth=0.0;
 

@@ -1,0 +1,124 @@
+/* ======================================================================= */
+/* TEXAS INSTRUMENTS, INC.                                                 */
+/*                                                                         */
+/* NAME                                                                    */
+/*     DSPF_dp_lms -- Double Precision floating point LMS algorithm             */
+/*                                                                         */
+/* USAGE                                                                    */
+/*                                                                          */
+/*     This routine is C callable, and has the following C prototype:       */
+/*                                                                          */
+/*     double DSPF_dp_lms (double *x,                                            */
+/*                    double *h,                                             */
+/*                    double *desired,                                      */
+/*                    double *r,                                            */
+/*                    double adaptrate,                                     */
+/*                    double error,                                         */
+/*                    int nh,                                               */
+/*                    int nr                                                */
+/*                    )                                                     */
+/*                                                                          */
+/*      x        :  Pointer to input samples                                */
+/*      h        :  Pointer to the coefficient array                        */
+/*      desired  :  Pointer to the desired output array                     */
+/*      r        :  Pointer to filtered output array                        */
+/*      adaptrate:  Adaptation rate                                         */
+/*      error    :  Initial error                                           */
+/*      nh       :  Number of coefficients                                  */
+/*      nr       :  Number of output samples                                */
+/*                                                                          */
+/* DESCRIPTION                                                              */
+/*                                                                          */
+/*     The DSPF_dp_lms implements an LMS adaptive filter. Given an actual input  */
+/*     signal and a desired input signal, the filter produces an output     */
+/*     signal, the final coefficient values and returns the final output    */
+/*     error signal.                                                        */
+/*                                                                          */
+/* TECHNIQUES                                                               */
+/*                                                                          */
+/*   1. The inner loop is unrolled Two times to allow update of             */
+/*      two coefficients in the kernel.                                     */
+/*                                                                          */
+/*   2. The 'error' term needs to be computed in the outer loop             */
+/*      before a new iteration of the inner loop can start. As a            */
+/*      result the prolog cannot be placed in parallel with epilog          */
+/*      (after the loop kernel).                                            */
+/*                                                                          */
+/*  3. Register sharing is used to make optimal use of available            */
+/*      registers.                                                          */
+/*                                                                          */
+/*   ASSUMPTIONS                                                            */
+/*   1. The inner loop counter must be a multiple of 2 and >=2.             */
+/*   2. Little endianness is assumed.                                       */
+/*   3. Extraneous loads are allowed in the program.                        */
+/*   4. The coefficient array is assumed to be in reverse order,            */
+/*      i.e. h(nh-1) to h(0) hold coeffs. h0,h1,h2 etc.                     */
+/*                                                                          */
+/*   C CODE                                                                 */
+/*                                                                          */
+/*   This is the C equivalent of the Assembly Code without                  */
+/*   restrictions.                                                          */
+/*                                                                          */
+/*   Note that the assembly code is hand optimized and restrictions         */
+/*   may apply.                                                             */
+/*                                                                          */
+/*   double DSPF_dp_lms(double *x, double *h, double *y, int nh, double *d,  dou *e
+/*        int nr, double error)                                             */
+/*   {                                                                      */
+/*       int i,j;                                                           */
+/*       double sum;                                                        */
+/*                                                                          */
+/*       for (i = 0; i < nr; i++)                                           */
+/*       {                                                                  */
+/*        for (j = 0; j < nh; j++)                                          */
+/*        {                                                                 */
+/*           h[j] = h[j] + (ar*error*x[i+j-1]);                             */
+/*        }                                                                 */
+/*                                                                          */
+/*       sum = 0.0f;                                                        */
+/*        for (j = 0; j < nh; j++)                                          */
+/*        {                                                                 */
+/*          sum += h[j] * x[i+j];                                           */
+/*        }                                                                 */
+/*       y[i] = sum;                                                        */
+/*       error = d[i] - sum;                                                */
+/*      }                                                                   */
+/*      return error;                                                       */
+/*    }                                                                     */
+/*                                                                          */
+/* NOTES                                                                    */
+/*   1. Endian: This code is LITTLE ENDIAN.                                 */
+/*   2. Interruptibility: This code is interrupt-tolerant but not           */
+/*      interruptible.                                                      */
+/*                                                                          */
+/* CYCLES                                                                   */
+/*    (4*nh + 47) nr + 27                                                   */
+/*    eg. for nh = 24 and nr = 36                                           */
+/*    cycles = 5175                                                         */
+/*                                                                          */
+/* CODESIZE                                                                 */
+/*     640 bytes                                                            */
+/* ------------------------------------------------------------------------ */
+/*            Copyright (c) 2004 Texas Instruments, Incorporated.           */
+/*                           All Rights Reserved.                           */
+/* ======================================================================== */
+#ifndef DSPF_DP_LMS_H_
+#define DSPF_DP_LMS_H_ 1
+
+double DSPF_dp_lms     (double *x,
+              double *h,
+               double *desired,
+               double *r,
+               double adaptrate,
+               double error,
+               int nh,
+               int nr
+               );
+
+#endif
+/* ======================================================================== */
+/*  End of file:  DSPF_dp_lms.h                                                  */
+/* ------------------------------------------------------------------------ */
+/*            Copyright (c) 2004 Texas Instruments, Incorporated.           */
+/*                           All Rights Reserved.                           */
+/* ======================================================================== */

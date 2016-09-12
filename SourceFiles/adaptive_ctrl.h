@@ -8,8 +8,8 @@ System:		Dura experimental setup
 Author:		Shimoda Takaki, University of Tokyo, 2016
 *************************************************************************************/
 
-#include "ctrl_math.h"
 #include "system_data.h"
+#include "ctrl_math.h"
 
 /*
 DES:Kalman Filter for pararter estimation

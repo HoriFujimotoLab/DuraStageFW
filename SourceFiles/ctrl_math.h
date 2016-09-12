@@ -9,7 +9,9 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 #ifndef	CTRL_MATH_H
 #define	CTRL_MATH_H
 
-#include <math.h>
+//#include <math.h>
+#include "c67x_dsplib.h"
+#include "c67x_fastmath.h"
 
 /*	STATE-SPACE STATE-EQUATION
 **	--------------------------

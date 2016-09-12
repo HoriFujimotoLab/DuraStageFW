@@ -1,0 +1,101 @@
+* ======================================================================== *
+*  TEXAS INSTRUMENTS, INC.                                                 *
+*                                                                          *
+*  NAME                                                                    *
+*      DSPF_dp_biquad -- Double Precision 2nd order IIR (Biquad) Filter         *
+*                                                                          *
+*                                                                          *
+*  REVISION DATE                                                           *
+*      03-Sep-2003                                                         *
+*                                                                          *
+*  USAGE                                                                    *
+*                                                                           *
+*     This routine has following C prototype:                               *
+*                                                                           *
+*     void DSPF_dp_biquad(double *x, double *b, double *a, double *delay,        *
+*                    double *r, int nx)                                     *
+*                                                                           *
+*            x       :  Pointer to input samples                            *
+*            b       :  Pointer to Nr coefs b0, b1, b2                      *
+*            a       :  Pointer to Dr coefs a1, a2                          *
+*            delay   :  Pointer to filter delays                            *
+*            r       :  Pointer to output samples                           *
+*            nx      :  Number of input/output samples                      *
+*                                                                           *
+*  DESCRIPTION                                                              *
+*                                                                           *
+*       This routine implements a DF 2 transposed structure of the biquad   *
+*       filter. The transfer function of a biquad can be written            *
+*       as:                                                                 *
+*                                                                           *
+*                                    b(0) + b(1)z^(-1) + b(2)z^(-2)         *
+*                        H(Z) =     _________________________________       *
+*                                     1 + a(1)z^(-1) + a(2)z^(-2)           *
+*                                                                           *
+*    TECHNIQUES                                                             *
+*                                                                           *
+*         1.  Register sharing has been used to optimize on the use of      *
+*             registers.                                                    *
+*         2.  x[i] is loaded on both sides to avoid crosspath conflict         *
+*                                                                           *
+*  ASSUMPTIONS                                                              *
+*                                                                           *
+*         1. The value of nx is >=4.                                        *
+*                                                                           *
+*   C CODE                                                                  *
+*                                                                           *
+*    void DSPF_dp_biquad(double *x, double *b, double *a, double *delay,         *
+*                                                 double *r,  int nx)       *
+*       {                                                                   *
+*        int i;                                                             *
+*        double a1, a2, b0, b1, b2, d0, d1, x_i;                            *
+*                                                                           *
+*        a1 = a[0];                                                         *
+*        a2 = a[1];                                                         *
+*                                                                           *
+*        b0 = b[0];                                                         *
+*        b1 = b[1];                                                         *
+*        b2 = b[2];                                                         *
+*                                                                           *
+*        d0 = delay[0];                                                     *
+*        d1 = delay[1];                                                     *
+*                                                                           *
+*        for (i = 0; i < nx; i++)                                           *
+*        {                                                                  *
+*            x_i = x[i];                                                    *
+*            r[i] = b0 * x_i + d0;                                          *
+*            d0 = b1 * x_i - a1 * r[i] + d1;                                *
+*            d1 = b2 * x_i - a2 * r[i];                                     *
+*        }                                                                  *
+*        delay[0] = d0;                                                     *
+*        delay[1] = d1;                                                     *
+*   }                                                                       *
+*                                                                           *
+*  NOTES                                                                    *
+*                                                                           *
+*       1. Endian: This code is LITTLE ENDIAN.                              *
+*       2. Interruptibility: This code is interrupt-tolerant but not        *
+*          interruptible.                                                   *
+*                                                                           *
+*  CYCLES                                                                   *
+*                                                                           *
+*        16 * nx + 49                                                       *
+*        For nx = 64,  cycles = 1073                                        *
+*        For nx = 48,  cycles = 817.                                        *
+*                                                                           *
+*  CODESIZE                                                                 *
+*                                                                           *
+*        576 bytes                                                          *
+* ------------------------------------------------------------------------- *
+*             Copyright (c) 2004 Texas Instruments, Incorporated.           *
+*                            All Rights Reserved.                           *
+* ========================================================================= *
+
+        .global _DSPF_dp_biquad
+
+*  ======================================================================== *
+*   End of file:  DSPF_dp_biquad.h67                                             *
+*  ------------------------------------------------------------------------ *
+*             Copyright (c) 2004 Texas Instruments, Incorporated.           *
+*                            All Rights Reserved.                           *
+*  ======================================================================== *

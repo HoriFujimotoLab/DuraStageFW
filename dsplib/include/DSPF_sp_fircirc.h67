@@ -1,0 +1,148 @@
+* ======================================================================== *
+*  TEXAS INSTRUMENTS, INC.                                                 *
+*                                                                          *
+*  NAME                                                                    *
+*      DSPF_sp_fircirc -- Single Precision Circular FIR algorithm               *
+*                                                                          *
+*                                                                          *
+*  REVISION DATE                                                           *
+*      25-Sep-2003                                                         *
+*                                                                          *
+*   USAGE                                                                   *
+*                                                                           *
+*       This routine has following C prototype                              *
+*                                                                           *
+*       void DSPF_sp_fircirc                                                     *
+*       (                                                                   *
+*           float *x,       // Pointer to input samples                     *
+*           float *h,       // Pointer to impulse response samples          *
+*           float *r,       // Pointer to output samples                    *
+*           int index,      // Offset by which to start reading from        *
+*                           // input array                                  *
+*           int csize,      // Size of circular buffer for input is         *
+*                           // 2^(csize+1) bytes                            *
+*           int nh,         // Number of impulse response samples           *
+*           int nr          // Number of output samples                     *
+*        );                                                                 *
+*                                                                           *
+*       x[]     : Input array (circular buffer of 2^(csize+1) bytes)        *
+*                 Must be aligned at 2^(csize+1) byte boundary              *
+*       h[nh]   : Filter coefficients array                                 *
+*                 Must be double-word aligned                               *
+*       r[nr]   : Output array                                              *
+*       index   : Offset by which to start reading from the input array     *
+*                 Must be multiple of 2                                     *
+*       csize   : Size of circular buffer x[] is 2^(csize+1) bytes.         *
+*                 Must be 2 <= csize <= 31.                                 *
+*       nh      : Number of filter coefficients                             *
+*                 Must be multiple of 2 and >= 4                            *
+*       nr      : Size of output array                                      *
+*                 Must be multiple of 4                                     *
+*                                                                           *
+*                                                                           *
+*   DESCRIPTION                                                             *
+*                                                                           *
+*       This routine implements a circularly addressed FIR filter.          *
+*       'nh' is the number of filter coefficients. 'nr' is the number       *
+*       of the output samples.                                              *
+*                                                                           *
+*                                                                           *
+*   TECHNIQUES                                                              *
+*                                                                           *
+*       1. LDDW instructions are used to load two SP floating point         *
+*          values simultaneously for the x and h arrays.                    *
+*       2. The outer loop is unrolled 4 times.                              *
+*       3. The inner loop is unrolled 2 times.                              *
+*       4. The variables prod1, prod3, prod5 and prod7 share A9.            *
+*          The variables prod0, prod2, prod4 and prod6 share B6.            *
+*          The variables sum1, sum3, sum5 and sum7 share A7.                *
+*          The variables sum0, sum2, sum4 and sum6 share B8.                *
+*          This multiple assignment is possible since the variables         *
+*          are always read just once on the first cycle that they are       *
+*          avaliable.                                                       *
+*       6. A load counter is used so that an epilog is not needed.  No      *
+*          extraneous loads are performed.                                  *
+*                                                                           *
+*                                                                           *
+*   ASSUMPTIONS                                                             *
+*                                                                           *
+*       1. The circular input buffer x[] must be aligned at a 2^(csize+1)   *
+*          byte boundary. csize must lie in the range 2 <= csize <= 31.     *
+*       2. The number of coefficients  (nh) must be a multiple of 2         *
+*          and greater than or equal to 4.                                  *
+*       3. The number of outputs (nr) must be a multiple of 4 and           *
+*          greater than or equal to 4.                                      *
+*       4. The 'index' (offset to start reading input array) must be        *
+*          mutiple of 2 and less than or equal to (2^(csize-1) - 6)         *
+*                                                                           *
+*                                                                           *
+*   C CODE                                                                  *
+*                                                                           *
+*       This is the C equivalent for the assembly code.  Note that          *
+*       the assembly code is hand optimized and restrictions may            *
+*       apply.                                                              *
+*                                                                           *
+*       void DSPF_sp_fircirc                                                     *
+*       (                                                                   *
+*           float *x,       // Pointer to input samples                     *
+*           float *h,       // Pointer to impulse response samples          *
+*           float *r,       // Pointer to output samples                    *
+*           int index,      // Offset by which to start reading from        *
+*                           // input array                                  *
+*           int csize,      // Size of circular buffer for input is         *
+*                           // 2^(csize+1) bytes                            *
+*           int nh,         // Number of impulse response samples           *
+*           int nr          // Number of output samples                     *
+*        )                                                                  *
+*       {                                                                   *
+*           int i, j;                                                       *
+*           //Circular Buffer block size = ((2^(csize + 1)) / 4)            *
+*           //floating point numbers                                        *
+*           int mod = (1 << (csize - 1));                                   *
+*           float r0;                                                       *
+*                                                                           *
+*           for (i = 0; i < nr; i++)                                        *
+*           {                                                               *
+*               r0 = 0;                                                     *
+*               for (j = 0; j < nh; j++)                                    *
+*               {                                                           *
+*                   //Operation "% mod" is equivalent to "& (mod -1)"       *
+*                   //r0 += x[(i + j + index) % mod] * h[j];                *
+*                   r0 += x[(i + j + index) & (mod - 1)] * h[j];            *
+*               }                                                           *
+*           r[i] = r0;                                                      *
+*           }                                                               *
+*       }                                                                   *
+*                                                                           *
+*                                                                           *
+*   NOTES                                                                   *
+*                                                                           *
+*       1. This code is LITLLE ENDIAN.                                      *
+*       2. This routine disables interupts for its entire duration.         *
+*                                                                           *
+*                                                                           *
+*   CYCLES                                                                  *
+*                                                                           *
+*       (2*nh + 10) nr/4 + 18                                               *
+*       eg. for nh = 30, nr=100                                             *
+*       cycles = 1768                                                       *
+*                                                                           *
+*                                                                           *
+*   CODESIZE                                                                *
+*                                                                           *
+*       512 bytes                                                           *
+*                                                                           *
+*                                                                           *
+* ------------------------------------------------------------------------- *
+*             Copyright (c) 2003 Texas Instruments, Incorporated.           *
+*                            All Rights Reserved.                           *
+* ========================================================================= *
+
+        .global _DSPF_sp_fircirc
+
+*  ======================================================================== *
+*   End of file:  DSPF_sp_fircirc.h67                                            *
+*  ------------------------------------------------------------------------ *
+*             Copyright (c) 2003 Texas Instruments, Incorporated.           *
+*                            All Rights Reserved.                           *
+*  ======================================================================== *

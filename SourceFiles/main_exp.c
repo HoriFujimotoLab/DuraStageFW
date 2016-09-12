@@ -66,7 +66,8 @@ void system_tint0(void)
 		//adaptive
 		fchat_a = dominant_freq(theta_par_est[0], theta_par_est[1]);
 		//fchat_a_ma = ALPHAMA * fchat_a + (1 - ALPHAMA) * fchat_a_ma;
-		if (aspx*aspx > contact_threshold) kmode = 1; //milling
+		aux7 = aspx*aspx; //this is for threshold
+		if (aux7 > contact_threshold) kmode = 1; //milling
 		//if(cmode==SHIMODA_A_MODE) calc_new_speed(&rho_sp, &omega_sp_new_rpm, fchat_a, omega_sp_ma_rpm, Qn);
 		//else	
 		//omega_sp_new_ma_rpm = ALPHAMA2 * omega_sp_new_rpm + (1 - ALPHAMA2)*omega_sp_new_ma_rpm;
@@ -141,6 +142,14 @@ void system_tint0(void)
 			//scan mode
 			//const feed per tooth
 			{
+		case CHATTER_TEST_MODE:
+			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
+			if (chatter_rpm > 1000){
+				dac_da_out(0, 3, DA_GAIN_RPM *  chatter_rpm);
+			}
+			else dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_ref_rpm_ma);
+			break;
+
 		case MAIN_MODE:
 			if ((omega_sp_ma_rpm < 2000) && (vm_refx > 0)) vm_refx = -0.0001;
 			vm_refx = Qn*omega_sp_ma_rpm*RPM2HZ*feedpertooth;

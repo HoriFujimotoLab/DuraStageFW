@@ -1,0 +1,144 @@
+* ======================================================================== *
+*  TEXAS INSTRUMENTS, INC.                                                 *
+*                                                                          *
+*  NAME                                                                    *
+*      DSPF_sp_lms -- Single Precision floating point LMS algorithm             *
+*                                                                          *
+*                                                                          *
+*  REVISION DATE                                                           *
+*      23-Sep-2003                                                         *
+*                                                                          *
+*   USAGE                                                                   *
+*                                                                           *
+*       This routine is C callable, and has the following C prototype:      *
+*                                                                           *
+*       float DSPF_sp_lms                                                        *
+*       (                                                                   *
+*           float *x,                                                       *
+*           float *h,                                                       *
+*           float *desired,                                                 *
+*           float *r,                                                       *
+*           float adaptrate,                                                *
+*           float error,                                                    *
+*           int nh,                                                         *
+*           int nr                                                          *
+*       );                                                                  *
+*                                                                           *
+*       x        :  Pointer to input samples                                *
+*       h        :  Pointer to the coefficient array                        *
+*       desired  :  Pointer to the desired output array                     *
+*       r        :  Pointer to filtered output array                        *
+*       adaptrate:  Adaptation rate                                         *
+*       error    :  Initial error                                           *
+*       nh       :  Number of coefficients                                  *
+*       nr       :  Number of output samples                                *
+*                                                                           *
+*                                                                           *
+*   DESCRIPTION                                                             *
+*                                                                           *
+*       The DSPF_sp_lms implements an LMS adaptive filter. Given an actual       *
+*       input signal and a desired input signal, the filter produces an     *
+*       output signal, the final coefficient values, and returns the final  *
+*       output error signal.                                                *
+*                                                                           *
+*                                                                           *
+*   TECHNIQUES                                                              *
+*                                                                           *
+*       1. The inner loop is unrolled six times to allow update of          *
+*          six coefficients in the kernel.                                  *
+*       2. The outer loop has been unrolled twice to enable use of LDDW     *
+*          for loading the input coefficients.                              *
+*       3. LDDW instruction is used to load in the coefficients.            *
+*       4. Register sharing is used to make optimal use of available        *
+*          registers.                                                       *
+*       5. The outer loop instructions are scheduled in parallel with       *
+*          epilog and prolog wherever possible.                             *
+*       6. The 'error' term needs to be computed in the outer loop          *
+*          before a new iteration of the inner loop can start. As a         *
+*          result the prolog cannot be placed in parallel with epilog       *
+*          (after the loop kernel).                                         *
+*       7. Pushing and popping variables from the stack does not            *
+*          really add any overhead except increase stack size. This         *
+*          is because the pops and pushes are done in the delay slots       *
+*          of the outer loop instructions.                                  *
+*                                                                           *
+*                                                                           *
+*   ASSUMPTIONS                                                             *
+*                                                                           *
+*       1. The inner loop counter must be a multiple of 6 and >=6.          *
+*       2. Little endianness is assumed.                                    *
+*       3. Extraneous loads are allowed in the program.                     *
+*                                                                           *
+*                                                                           *
+*   C CODE                                                                  *
+*                                                                           *
+*       This is the C equivalent of the Assembly Code without               *
+*       restrictions.                                                       *
+*                                                                           *
+*       Note that the assembly code is hand optimized and restrictions      *
+*       may apply.                                                          *
+*                                                                           *
+*       float DSPF_sp_lms                                                        *
+*       (                                                                   *
+*           float *x,                                                       *
+*           float *h,                                                       *
+*           float *desired,                                                 *
+*           float *r,                                                       *
+*           float adaptrate,                                                *
+*           float error,                                                    *
+*           int nh,                                                         *
+*           int nr                                                          *
+*       )                                                                   *
+*       {                                                                   *
+*           int i,j;                                                        *
+*                                                                           *
+*           float sum, temp, ae;                                            *
+*           temp = 0.0f;                                                    *
+*                                                                           *
+*           for (i = 0; i < nr; i++)                                        *
+*           {                                                               *
+*               sum = 0.0f;                                                 *
+*               ae = adaptrate * error;                                     *
+*                                                                           *
+*               for (j = 0; j < nh; j++)                                    *
+*               {                                                           *
+*                   h[j] = h[j] + (ae * temp);                              *
+*                   sum += h[j] * x[i+j];                                   *
+*                   temp = x[i + j];                                        *
+*               }                                                           *
+*                                                                           *
+*               r[i] = sum;                                                 *
+*               error = desired[i] - sum;                                   *
+*               temp = x[i];                                                *
+*           }                                                               *
+*           /* return the final error */                                    *
+*           return error;                                                   *
+*       }                                                                   *
+*                                                                           *
+*                                                                           *
+*   NOTES                                                                   *
+*                                                                           *
+*                                                                           *
+*   CYCLES                                                                  *
+*       (nh + 35) nr + 21                                                   *
+*       eg. for nh = 36 and nr = 64                                         *
+*       cycles = 4565                                                       *
+*                                                                           *
+*                                                                           *
+*   CODESIZE                                                                *
+*                                                                           *
+*       1376 bytes                                                          *
+*                                                                           *
+* ------------------------------------------------------------------------- *
+*             Copyright (c) 2003 Texas Instruments, Incorporated.           *
+*                            All Rights Reserved.                           *
+* ========================================================================= *
+
+        .global _DSPF_sp_lms
+
+*  ======================================================================== *
+*   End of file:  DSPF_sp_lms.h67                                                *
+*  ------------------------------------------------------------------------ *
+*             Copyright (c) 2003 Texas Instruments, Incorporated.           *
+*                            All Rights Reserved.                           *
+*  ======================================================================== *

@@ -1,0 +1,24 @@
+* ======================================================================== *
+*  TEXAS INSTRUMENTS, INC.                                                 *
+*                                                                          *
+*  NAME                                                                    *
+*      DSPF_sp_fir_cplx -- Single Precision complex Finite Impulse Response     *
+*      Filter                                                              *
+*                                                                          *
+*                                                                          *
+*  REVISION DATE                                                           *
+*      23-Nov-2002                                                         *
+*                                                                          *
+*  USAGE                                                                   *
+* ------------------------------------------------------------------------ *
+*          Copyright (C) 2002 Texas Instruments, Incorporated.             *
+*                          All Rights Reserved.                            *
+* ======================================================================== *
+        .global _DSPF_sp_fir_cplx
+
+* ======================================================================== *
+*  End of file: DSPF_sp_fir_cplx_h.asm                                          *
+* ------------------------------------------------------------------------ *
+*          Copyright (C) 2002 Texas Instruments, Incorporated.             *
+*                          All Rights Reserved.                            *
+* ======================================================================== *
