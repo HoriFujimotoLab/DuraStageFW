@@ -156,6 +156,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="adaptive_ctrl.h" />
+    <ClInclude Include="c67x_dsplib.h" />
+    <ClInclude Include="c67x_fastmath.h" />
     <ClInclude Include="ctrl_math.h" />
     <ClInclude Include="current_ctrl.h" />
     <ClInclude Include="current_ctrl_par.h" />

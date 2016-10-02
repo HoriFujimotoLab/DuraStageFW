@@ -20,6 +20,7 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define		OVV_LIM	(380.0)					// overvorltage limit	[V]
 #define		OVS_LIM	(450.0)					// overspeed limit		[rad/s]
 #define		I_PK	(24.0)					// ctrl out saturation	[A]
+#define       T_SP (24.0)                    //spindle torque satuation [Nm] 
 
 // INV PAR
 #define		FC		(8000.0)				// carrier frequency	[Hz]
@@ -69,6 +70,11 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define SHIMODA_MAIN_MODE_V (14)
 #define SHIMODA_A_MODE_V (15)
 #define CHATTER_TEST_MODE (16)
+#define TORQUE_MODE (17)
+#define  SPINDLE_OMEGA_MODE (18)
+#define DIRECT_SPINDLE_OMEGA_MODE (19)
+#define DOB_MAIN_MODE_V (20)
+#define DOB_ADAPTIVE_MODE_V (21)
 
 //limit
 #define MAX_ACC (92)
@@ -146,6 +152,8 @@ extern float  theta_mox, theta_mdx, omega_mx, omega_max; //theta_mx,
 extern float theta_my, theta_moy, theta_mdy, omega_my, omega_may;
 extern float x_mx, x_my, v_mx, v_my;
 extern float torque_ad, aspx, aspy, aspz;
+
+extern float torque_command, observed_disturbance;
 
 extern int test, test1, test2, test3, test4, test5, test6, test7;
 extern int cmode, xymode, kmode;

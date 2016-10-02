@@ -52,6 +52,8 @@ float theta_my = 0.0, theta_moy = 0.0, theta_mdy = 0.0, omega_my = 0.0, omega_ma
 float x_mx = 0.0, x_my = 0.0, v_mx = 0.0, v_my = 0.0;
 float torque_ad = 0.0, aspx = 0.0, aspy = 0.0, aspz = 0.0;
 
+float torque_command = 0.0, observed_disturbance=0.0;
+
 int test = 0.0, test1 = 0.0, test2 = 0.0, test3 = 0.0, test4 = 1, test5 = 0.0, test6 = 0.0, test7 = 0.0; //for debugging 
 int cmode = 0, xymode = 0, kmode=0;
 float aux1 = 0.0, aux2 = 0.0, aux3 = 0.0, aux4 = 0.0, aux5 = 0.0, aux6 = 0.0, aux7=0.0;

@@ -114,5 +114,11 @@
     <ClInclude Include="Rfreqref.h">
       <Filter>Resource Files\references</Filter>
     </ClInclude>
+    <ClInclude Include="c67x_dsplib.h">
+      <Filter>Header Files\control</Filter>
+    </ClInclude>
+    <ClInclude Include="c67x_fastmath.h">
+      <Filter>Header Files\control</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -14,7 +14,12 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 
 int ref = 0; double t = 0.0;
 static float xvpi[2][1] = { 0.0, 0.0 }; //{{XAXIS} , {YAXIS}}
-static float xpid[2] = { 0.0 };
+static float xpid[2] = { 0.0, 0.0 };
+static float xspvpi[1] = { 0.0 }; //spindle variable state
+float sd[2] = { 0, 0 }, td[2] = { 0, 0 }, ud[2] = { 0,0 }, vd[2] = { 0,0 };//disturbance observer states
+
+
+
 
 
 void direct_qcurrent_ctrl(int reftype_e, float Aref, float Fref, float *iq_ref){
@@ -58,6 +63,16 @@ void motion_ctrl_vpi(int axis, float vm_ref, float omega_m, float *iq_ref)
 	if (fabsf(*iq_ref) > I_PK) { *iq_ref = sign(*iq_ref) * I_PK; }		// limit torque
 }
 
+void spindle_motion_ctrl_vpi(float vm_ref, float omega_m, float *t_ref)
+{
+	float vm_er[1];
+
+	vm_er[0] = vm_ref - omega_m;
+	ctrl_math_output(Cspvpi, xspvpi, Dspvpi, vm_er, t_ref, 1, 1, 1);
+	ctrl_math_state(Aspvpi, xspvpi, Bspvpi, vm_er, xspvpi, 1, 1);
+	if (fabsf(*t_ref) > T_SP) { *t_ref = sign(*t_ref) * T_SP; }		// limit torque
+}
+
 float motion_ctrl_pos(float x_ref, float x_m) {
 	return Kxp*(x_ref - x_m);
 }
@@ -78,6 +93,33 @@ void motion_ctrl_pid(float x_ref, float x_msr, float *iq_ref)
 	if (fabsf(*iq_ref) > I_PK) { *iq_ref = sign(*iq_ref) * I_PK; }		// limit torque
 }
 
+float estimated_disturbance(float t_ref, float omega_m) {
+	//Torque Command td																		Speed vd
+	//			|																									|
+	//			|																									|	
+	//			------------->[Q(s)]----sd---> - O + <---ud---[Q(s)*(Js+D)]----
+	//															   |
+	//															   |
+	//															   V
+	//									OBSEVED DISTURBANCE TORQUE
+
+
+	//input
+	td[1] = t_ref;
+	vd[1] = omega_m;
+
+	//disturbance observer
+	sd[1] = DOB_A*sd[0] + DOB_B*td[0];
+	ud[1] = DOB_C*ud[0] + DOB_D*vd[1] - DOB_E*vd[0];
+	
+	//update
+	sd[0] = sd[1];
+	ud[0] = ud[1];
+	td[0] = td[1];
+	vd[0] = vd[1];
+
+	return ( ud[1] - sd[1] );
+}
 
 void motion_ctrl_reset(void)
 {
@@ -96,4 +138,7 @@ void motion_ctrl_reset(void)
 		}
 	}
 	ctime = 0;
+	torque_command = 0;
+	iq_adx = 0; iq_ady = 0;
+	omega_sp_ma_rpm = 0;
 }

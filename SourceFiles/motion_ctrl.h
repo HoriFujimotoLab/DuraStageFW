@@ -38,6 +38,15 @@ void motion_ctrl_ref(int reftype_e, float Aref, float Fref, float *x_ref);
 */
 void motion_ctrl_vpi(int axis, float vm_ref, float omega_m, float *iq_ref);
 
+/*SPINDLE 	PI ANGULAR VELOCITY CTRL
+**	------------------------
+**	DES:	pi control of spindle motor velocity (loop shaped)
+**	INP:	vm_ref	: angular velocity reference
+**			omega_m	: angular velocity measurement
+**	OUT:t_ref	: calculated torque reference
+*/
+void spindle_motion_ctrl_vpi(float vm_ref, float omega_m, float *t_ref);
+
 /*	P POSITION CTRL
 **	------------------------
 **	DES:	p control of motor posistion
@@ -67,6 +76,16 @@ void motion_ctrl_pack_pos(int axis, float omega_m, float theta_ref, float theta_
 */
 void motion_ctrl_pid(float x_ref, float x_msr, float *iq_ref);
 
+/*	DISTURBACNE OBSERVER 
+**	-------------------------
+**	DES:	estimate(observe) disturbance 
+**	INP:	t_ref:refence of input(torque)
+**			omega_m:speed(angular speed)
+**	OUT:	 return estimated disturbance
+*/
+
+float estimated_disturbance(float t_ref, float omega_m);
+
 
 /*	RESET CONTROL MODULE
 **	--------------------
@@ -74,6 +93,7 @@ void motion_ctrl_pid(float x_ref, float x_msr, float *iq_ref);
 **			necessary at measurement init for good startup
 */
 void motion_ctrl_reset(void);
+
 
 
 #endif

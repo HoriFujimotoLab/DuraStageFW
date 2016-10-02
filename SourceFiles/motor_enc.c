@@ -27,7 +27,8 @@ static int nrofr[2] = { 0, 0 };						// number of turns [-]
 static double theta_msr[2] = { 0.0, 0.0 };			// measured theta [rad]
 
 //SPINDLE ENCORDER
-#define SPCNT2RADPS (0.191747598485705)  // 2 * PI(1) /SPCNTPREV/TS
+//#define SPCNT2RADPS (0.191747598485705)  // 2 * PI(1) /SPCNTPREV/TS
+#define SPCNT2RADPS (0.766990393942821) // 2 * PI(1) /SPCNTPREV/(125*10^-6)
 #define SPCNTPREV (65536.0) //cnt/turn 2^16
 #define MAXSPCNT (1.073741823500000e+09) //INTMAX/2
 

@@ -15,11 +15,13 @@ Now y-axis motor is not being used.
 #include "system_fsm.h"
 
 #define DA_GAIN_RPM (0.0024920) //1/400 , 400 rpm/V *0.997
+#define DA_GAIN_TORQUE (0.416666666666667) //1/2.4 2.4Nm/V
 
 #define ALPHAMA_FIRST (4.998750208307295e-04) //1Hz LPF for 500 usec
 #define ALPHAMA (0.956786081736228) //1000Hz LPF @5*10^-4 sampling
 #define ALPHAMA2 (0.222232320828211) //80 Hz LPF @5*10^-4 sampling for speed control
-#define BETAMA (0.924465250376256) //100Hz HPF for 125 usec for Kalman Filter
+//#define BETAMA (0.924465250376256) //100Hz HPF for 125 usec for Kalman Filter
+#define BETAMA (0.455938127765996) //1000Hz HPF for 125 usec for Kalman Filter
 
 #define RAD2M (0.001909859317103)  //R[m/rad]
 #define M2RAD (5.235987755982287e+02) //1/R [rad/m]
@@ -60,7 +62,7 @@ void system_tint0(void)
 		motor_enc_read(XAXIS, &theta_mx, &omega_mx, &omega_max);
 		x_mx = RAD2M*theta_mx;
 		v_mx = RAD2M* omega_max;
-		motor_enc_spindle(&count_old_sp, &count_sp, &omega_old_sp, &omega_sp, &omega_sp_ma, &theta_sp, &r_count_sp); //spindle
+		//motor_enc_spindle(&count_old_sp, &count_sp, &omega_old_sp, &omega_sp, &omega_sp_ma, &theta_sp, &r_count_sp); //spindle
 		omega_sp_ma_rpm = RADPS2RPM * omega_sp_ma;
 		omega_sp_ref_rpm_ma = ALPHAMA_FIRST*omega_sp_ref_rpm + (1 - ALPHAMA_FIRST)*omega_sp_ref_rpm_ma;
 		//adaptive
@@ -74,6 +76,9 @@ void system_tint0(void)
 		epsilon_sp = aspx_hf*aspx_hf;
 		//if (epsilon_sp > epsilon_sp_max) epsilon_sp_max = epsilon_sp;
 		//aux1 = ALPHAMA_FIRST*epsilon_sp + (1 - ALPHAMA_FIRST)*aux1;
+		//disturbance_observer
+		//observed_disturbance = estimated_disturbance(torque_command, omega_sp); //disturbace observer
+		//aspx = observed_disturbance;
 		break;
 	case YMODE:
 		motor_enc_read(YAXIS, &theta_my, &omega_my, &omega_may); //y-axis
@@ -191,6 +196,38 @@ void system_tint0(void)
 			//scan mode
 		}
 
+		case DOB_MAIN_MODE_V: //const v
+			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
+			spindle_motion_ctrl_vpi(omega_sp_ref_rpm_ma*RPM2RADPS, omega_sp_ma, &torque_command);
+			dac_da_out(0, 3, DA_GAIN_TORQUE * torque_command);
+			flag_threshold = epsilon_sp - threshold;
+			if (flag_threshold > 0) cmode = ADAPTIVE_MODE_V;
+			break;
+
+		case DOB_ADAPTIVE_MODE_V:
+			calc_new_speed(&rho_sp, &omega_sp_new_rpm, fchat_a, omega_sp_ma_rpm, Qn);
+			if ((omega_sp_ref_rpm  < 1000) && (kmode > 0)) 		cmode = MAIN_MODE_V;
+			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
+			spindle_motion_ctrl_vpi(omega_sp_ref_rpm_ma*RPM2RADPS, omega_sp_ma, &torque_command);
+			dac_da_out(0, 3, DA_GAIN_TORQUE * torque_command);
+			break;
+
+			//spindle torque control
+		case	TORQUE_MODE:
+			dac_da_out(0, 3, DA_GAIN_TORQUE * torque_command);
+			break;
+
+			//spindle speed control via torque
+		case SPINDLE_OMEGA_MODE:
+			spindle_motion_ctrl_vpi(omega_sp_ref_rpm_ma*RPM2RADPS, omega_sp_ma, &torque_command);
+			dac_da_out(0, 3, DA_GAIN_TORQUE * torque_command);
+			break;
+
+		case DIRECT_SPINDLE_OMEGA_MODE:
+			spindle_motion_ctrl_vpi(omega_sp_ref_rpm*RPM2RADPS, omega_sp_ma, &torque_command);
+			dac_da_out(0, 3, DA_GAIN_TORQUE * torque_command);
+			break;
+
 			//stage velocity control
 		case VEL_MODE:
 			if (xymode == XMODE) motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
@@ -301,8 +338,7 @@ void system_cint5(void)
 	motor_enc_elec(XAXIS, &theta_ex);
 	setup_adc_read(XAXIS, &vdc_adx, &idc_adx, &iu_adx, &iw_adx);
 	setup_adc_read(2, &torque_ad, &aspx, &aspy, &aspz);
-	motor_enc_elec(YAXIS, &theta_ey); //y-axis
-	setup_adc_read(YAXIS, &vdc_ady, &idc_ady, &iu_ady, &iw_ady); //y-axis
+
 
 	// CURRENT CONTROL - XY-AXIS
 	if (sysmode_e == SYS_INI || sysmode_e == SYS_RUN){
@@ -320,6 +356,9 @@ void system_cint5(void)
 				motor_inv_pwm(YAXIS, 0, 0, 0, vdc_ady); //dynamic braking
 				break;
 			case YMODE:
+				motor_enc_elec(YAXIS, &theta_ey); //y-axis
+				setup_adc_read(YAXIS, &vdc_ady, &idc_ady, &iu_ady, &iw_ady); //y-axis
+
 				//X-axis
 				motor_inv_pwm(XAXIS, 0, 0, 0, vdc_adx); //dynamic braking
 				//Y-axis
@@ -334,6 +373,11 @@ void system_cint5(void)
 			}
 			//adaptive
 			if (kmode == 1) {
+				motor_enc_spindle(&count_old_sp, &count_sp, &omega_old_sp, &omega_sp, &omega_sp_ma, &theta_sp, &r_count_sp);
+				observed_disturbance = estimated_disturbance(torque_command, omega_sp); //disturbace observer
+				//aspx = observed_disturbance;
+				//aspx = omega_sp_ref_rpm_ma - omega_sp*RADPS2RPM;
+				//aspx from dob
 				aspx_hf = aspx + phi_sp[0] + BETAMA*aspx_hf;
 				kalman_filter(phi_sp, aspx_hf, theta_par_est, P_var);
 				//record phi=[-aspx[k-1], -aspx[k-2]]
