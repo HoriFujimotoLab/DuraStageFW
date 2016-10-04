@@ -21,7 +21,7 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 **			nrofs/i : number of states / inputs
 **	OUT:	dx		: new calculated state vector
 */
-void ctrl_math_state(float A[], float x[], float B[], float u[], float *dx, int nrofs, int nrofi);
+void ctrl_math_state(float A[], float x[], float B[], float u[], float *dx, int nrofs);
 
 
 /*	STATE-SPACE OUTPUT-EQUATION
@@ -32,7 +32,19 @@ void ctrl_math_state(float A[], float x[], float B[], float u[], float *dx, int 
 **			s/i/o	: number of states / inputs / outputs
 **	OUT:	y		: new calculated output vector
 */
-void ctrl_math_output(float C[], float x[], float D[], float u[], float *y, int nrofs, int nrofi, int nrofo);
+void ctrl_math_output(float C[], float x[], float D[], float u[], float *y, int nrofs);
+
+
+/*	LINEAR ALGEBRA
+**	--------------
+**	DES:	conventional linear algebra functions
+*/
+void ctrl_vec_add(float *x, float *y, float *r, int nr);
+void ctrl_vec_sub(float *x, float *y, float *r, int nr);
+void ctrl_vec_mul(float *x, float *y, float *r, int nr);
+void ctrl_vec_scale(float *x, float *w, float *r, int nr);
+void ctrl_vec_dot(float *x, float *y, float *r, int nr);
+
 
 
 /*	EFFICIENT MATRIX ALGEBRA
@@ -44,19 +56,15 @@ void ctrl_math_output(float C[], float x[], float D[], float u[], float *y, int 
 **	OUT:	y		: new calculated output vector
 */
 void ctrl_matrix_prod(float a[], float b[], float *c, int row_a, int col_a, int col_b);
-void ctrl_matrix_add(float a[], float b[], float *c, int row, int col);
-void ctrl_matrix_minus(float a[], float b[], float *c, int row, int col);
 //construct regular matrix, multiplied value
 void eye_matrix(float *e, int n, float value);
-//multiply p 
-void ctrl_matrix_cnst_mlpy(float *c, float p, int row_c, int col_c);
 
 /* PRECALC MATH CONST
 ** ------------------
 ** DES:		precalculated constants allocated for speed & ease
 **			declared in header for general use in ctrl modules
 */
-#define	NMAX		(8)					// max amount of states
+//#define	NMAX		(8)					// max amount of states
 #define	TSQRT2		((double)1.4142135623730950488016887242097)
 #define TSQRT1_6	((double)0.40824829046386301636621401245098)
 #define	TSQRT1_2	((double)0.70710678118654752440084436210485)

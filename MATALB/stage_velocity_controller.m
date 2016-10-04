@@ -5,7 +5,7 @@ close all;
 J=10*10^-3;
 D=1.4;
 Kt=0.715;
-ts=5*10^-4; %sampling period
+ts=1*10^-3; %sampling period
 
 taum=J/D;
 

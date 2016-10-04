@@ -7,21 +7,14 @@ System:		Main-file of modular firmware structure
 Author:		Thomas Beauduin, University of Tokyo, 2016
 *************************************************************************************/
 
-/*
-NOTE:
-Now y-axis motor is not being used.
-*/
-
 #include "system_fsm.h"
 
 #define DA_GAIN_RPM (0.0024920) //1/400 , 400 rpm/V *0.997
 #define DA_GAIN_TORQUE (0.416666666666667) //1/2.4 2.4Nm/V
 
-#define ALPHAMA_FIRST (4.998750208307295e-04) //1Hz LPF for 500 usec
-#define ALPHAMA (0.956786081736228) //1000Hz LPF @5*10^-4 sampling
-#define ALPHAMA2 (0.222232320828211) //80 Hz LPF @5*10^-4 sampling for speed control
-//#define BETAMA (0.924465250376256) //100Hz HPF for 125 usec for Kalman Filter
-#define BETAMA (0.455938127765996) //1000Hz HPF for 125 usec for Kalman Filter
+#define ALPHAMA_FIRST (0.006263487375222) //1 Hz LPF for 1000 usec
+#define ALPHAMA2 (0.792120423649238) //2000 Hz LPF @125 usec sampling 
+#define BETAMA (0.924465250376256) //1000Hz HPF for 125 usec for Kalman Filter
 
 #define RAD2M (0.001909859317103)  //R[m/rad]
 #define M2RAD (5.235987755982287e+02) //1/R [rad/m]
@@ -32,7 +25,7 @@ interrupt void system_tint0(void);
 //interrupt void system_tint1(void);
 interrupt void system_cint5(void);
 
-float time7 = 0.0, epsilon_temp = 0.0;
+float time7 = 0;
 
 void main(void)
 {
@@ -106,14 +99,14 @@ void system_tint0(void)
 		//iq_refx = xref;	// open-loop ???
 		}
 		*/
-		if (ontimer == 1) {
-			ctime += (TS*1.0e-6);
-			if (ctime > limit_time) {
-				cmode = 0; //stop
-				ontimer = 0;
-				ctime = 0;
-			}
-		}
+		//if (ontimer == 1) {
+		//	ctime += (TS*1.0e-6);
+		//	if (ctime > limit_time) {
+		//		cmode = 0; //stop
+		//		ontimer = 0;
+		//		ctime = 0;
+		//	}
+		//}
 
 		switch (cmode) {
 		case MAIN_MODE_V: //const v
@@ -146,7 +139,7 @@ void system_tint0(void)
 			break;
 			//scan mode
 			//const feed per tooth
-			{
+
 		case CHATTER_TEST_MODE:
 			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
 			if (chatter_rpm > 1000){
@@ -163,6 +156,7 @@ void system_tint0(void)
 			flag_threshold = epsilon_sp - threshold;
 			if (flag_threshold > 0) cmode = ADAPTIVE_MODE;
 			break;
+
 		case ADAPTIVE_MODE:
 			if (((omega_sp_ma_rpm < 2000) || (omega_sp_ref_rpm < 2000)) && (vm_refx > 0)) {
 				vm_refx = -0.0001;
@@ -175,6 +169,7 @@ void system_tint0(void)
 			//time7 += (TS*1.0e-6);
 			//if (time7 > 5) cmode = SHIMODA_A_MODE;
 			break;
+
 		case SHIMODA_MAIN_MODE:
 			if ((omega_sp_ma_rpm < 2000) && (vm_refx > 0))	 vm_refx = -0.0001;
 			vm_refx = Qn*omega_sp_ma_rpm*RPM2HZ*feedpertooth;
@@ -194,21 +189,18 @@ void system_tint0(void)
 			//if (omega_sp_ref_rpm < 100) cmode = MAIN_MODE;
 			break;
 			//scan mode
-		}
 
 		case DOB_MAIN_MODE_V: //const v
 			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
 			spindle_motion_ctrl_vpi(omega_sp_ref_rpm_ma*RPM2RADPS, omega_sp_ma, &torque_command);
 			dac_da_out(0, 3, DA_GAIN_TORQUE * torque_command);
-			flag_threshold = epsilon_sp - threshold;
-			if (flag_threshold > 0) cmode = ADAPTIVE_MODE_V;
 			break;
 
 		case DOB_ADAPTIVE_MODE_V:
 			calc_new_speed(&rho_sp, &omega_sp_new_rpm, fchat_a, omega_sp_ma_rpm, Qn);
 			if ((omega_sp_ref_rpm  < 1000) && (kmode > 0)) 		cmode = MAIN_MODE_V;
 			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
-			spindle_motion_ctrl_vpi(omega_sp_ref_rpm_ma*RPM2RADPS, omega_sp_ma, &torque_command);
+			spindle_motion_ctrl_vpi(omega_sp_ref_rpm*RPM2RADPS, omega_sp_ma, &torque_command);
 			dac_da_out(0, 3, DA_GAIN_TORQUE * torque_command);
 			break;
 
@@ -249,25 +241,25 @@ void system_tint0(void)
 			break;
 
 		case SCAN_MODE:
-			if ((omega_sp_ma_rpm < 2000) && (vm_refx>0)) vm_refx = -0.0001;
-			vm_refx = Qn*omega_sp_ma_rpm*RPM2HZ*feedpertooth;
-			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
-			dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_ref_rpm);
-			time7 += (TS*1.0e-6);
-			if (time7 > 10)
-			{
-				if (epsilon_sp_max > epsilon_temp) {
-					epsilon_temp = epsilon_sp_max;
-					epsilon_sp_max = 0;
-				}
-				else { //scan end
-					vm_refx=0;
-					cmode = MAIN_MODE;
-					omega_sp_ref_rpm = 0;
-				}
-				time7 = 0;
-				omega_sp_ref_rpm += 5;
-			}
+			//if ((omega_sp_ma_rpm < 2000) && (vm_refx>0)) vm_refx = -0.0001;
+			//vm_refx = Qn*omega_sp_ma_rpm*RPM2HZ*feedpertooth;
+			//motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
+			//dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_ref_rpm);
+			//time7 += (TS*1.0e-6);
+			//if (time7 > 10)
+			//{
+			//	if (epsilon_sp_max > epsilon_temp) {
+			//		epsilon_temp = epsilon_sp_max;
+			//		epsilon_sp_max = 0;
+			//	}
+			//	else { //scan end
+			//		vm_refx=0;
+			//		cmode = MAIN_MODE;
+			//		omega_sp_ref_rpm = 0;
+			//	}
+			//	time7 = 0;
+			//	omega_sp_ref_rpm += 5;
+			//}
 			break;
 
 				//direct current control
@@ -338,7 +330,7 @@ void system_cint5(void)
 	motor_enc_elec(XAXIS, &theta_ex);
 	setup_adc_read(XAXIS, &vdc_adx, &idc_adx, &iu_adx, &iw_adx);
 	setup_adc_read(2, &torque_ad, &aspx, &aspy, &aspz);
-
+	motor_enc_spindle(&count_old_sp, &count_sp, &omega_old_sp, &omega_sp, &omega_sp_ma, &theta_sp, &r_count_sp);
 
 	// CURRENT CONTROL - XY-AXIS
 	if (sysmode_e == SYS_INI || sysmode_e == SYS_RUN){
@@ -355,6 +347,7 @@ void system_cint5(void)
 				//Y-axis
 				motor_inv_pwm(YAXIS, 0, 0, 0, vdc_ady); //dynamic braking
 				break;
+
 			case YMODE:
 				motor_enc_elec(YAXIS, &theta_ey); //y-axis
 				setup_adc_read(YAXIS, &vdc_ady, &idc_ady, &iu_ady, &iw_ady); //y-axis
@@ -373,9 +366,14 @@ void system_cint5(void)
 			}
 			//adaptive
 			if (kmode == 1) {
-				motor_enc_spindle(&count_old_sp, &count_sp, &omega_old_sp, &omega_sp, &omega_sp_ma, &theta_sp, &r_count_sp);
-				observed_disturbance = estimated_disturbance(torque_command, omega_sp); //disturbace observer
-				//aspx = observed_disturbance;
+				omega_sp_ma_2 = ALPHAMA2*omega_sp + (1 - ALPHAMA2)*omega_sp_ma_2;
+				observed_disturbance = estimated_disturbance(torque_command, omega_sp_ma_2); //disturbace observer
+				aspx = observed_disturbance;
+
+				////debug
+				//time7 += TC * 1.0e-6;
+				//aspx = sinsp(2 * PI(1) * 2500 * time7);
+
 				//aspx = omega_sp_ref_rpm_ma - omega_sp*RADPS2RPM;
 				//aspx from dob
 				aspx_hf = aspx + phi_sp[0] + BETAMA*aspx_hf;
@@ -391,7 +389,7 @@ void system_cint5(void)
 	}	
 
 	watch_data_8ch();
-	time++;
+	//time++;
 }
 
 

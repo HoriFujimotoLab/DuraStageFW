@@ -44,10 +44,11 @@ void system_fsm_reset(void);
 void system_fsm_mode(void)
 {
 	//what is var "time"???
-	if (time/FS >= SWT_PRT){
-	din = pev_pio_in(PEV_BDN); don = 0;	time = 0;					// DI read, DO reset
+	//if (time/FS >= SWT_PRT){
+	din = pev_pio_in(PEV_BDN); don = 0;	
+	//time = 0;					// DI read, DO reset
 	test = din; //first din value
-	}
+	//}
 	
 	switch (sysmode_e)
 	{

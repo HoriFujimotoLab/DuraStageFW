@@ -2,7 +2,7 @@ clear all;
 close all;
 
 %make stage velocity controller
-ts=5*10^-4; %sampling period
+ts=1*10^-3; %sampling period
 
 %P
 omega0=2*pi*1; %bandwithd[rad/s]

@@ -4,7 +4,7 @@ close all;
 %make stage current controller
 R=3;
 Lq=3.1*10^-3;
-ts=125*10^-6; %sampling freq
+ts=200*10^-6; %sampling freq
 
 taue=Lq/R;
 

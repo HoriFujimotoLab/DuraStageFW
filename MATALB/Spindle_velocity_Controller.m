@@ -4,7 +4,7 @@ close all;
 %make stage velocity controller
 J =  0.0031;
 D =  0.0267;
-ts=5*10^-4; %sampling period
+ts=10^-3; %sampling period
 
 taum=J/D;
 

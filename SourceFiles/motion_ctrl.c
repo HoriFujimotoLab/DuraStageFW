@@ -16,11 +16,7 @@ int ref = 0; double t = 0.0;
 static float xvpi[2][1] = { 0.0, 0.0 }; //{{XAXIS} , {YAXIS}}
 static float xpid[2] = { 0.0, 0.0 };
 static float xspvpi[1] = { 0.0 }; //spindle variable state
-float sd[2] = { 0, 0 }, td[2] = { 0, 0 }, ud[2] = { 0,0 }, vd[2] = { 0,0 };//disturbance observer states
-
-
-
-
+static float sd[2] = { 0.0, 0.0 }, td[2] = { 0.0, 0.0 }, ud[2] = { 0.0,0.0 }, vd[2] = { 0.0,0.0 };//disturbance observer states
 
 void direct_qcurrent_ctrl(int reftype_e, float Aref, float Fref, float *iq_ref){
 	switch (reftype_e)
@@ -58,18 +54,18 @@ void motion_ctrl_vpi(int axis, float vm_ref, float omega_m, float *iq_ref)
 
 	if (fabsf(vm_ref) > VELXLIM) { vm_ref = sign(vm_ref) * VELXLIM; }		// limit speed
 	vm_er[0] = vm_ref - omega_m;
-	ctrl_math_output(Cvpi[axis], xvpi[axis], Dvpi[axis], vm_er, iq_ref, 1, 1, 1);
-	ctrl_math_state(Avpi[axis], xvpi[axis], Bvpi[axis], vm_er, xvpi[axis], 1, 1);
+	ctrl_math_output(Cvpi[axis], xvpi[axis], Dvpi[axis], vm_er, iq_ref, 1);
+	ctrl_math_state(Avpi[axis], xvpi[axis], Bvpi[axis], vm_er, xvpi[axis], 1);
 	if (fabsf(*iq_ref) > I_PK) { *iq_ref = sign(*iq_ref) * I_PK; }		// limit torque
 }
 
 void spindle_motion_ctrl_vpi(float vm_ref, float omega_m, float *t_ref)
 {
-	float vm_er[1];
+	float vm_sp_er[1];
 
-	vm_er[0] = vm_ref - omega_m;
-	ctrl_math_output(Cspvpi, xspvpi, Dspvpi, vm_er, t_ref, 1, 1, 1);
-	ctrl_math_state(Aspvpi, xspvpi, Bspvpi, vm_er, xspvpi, 1, 1);
+	vm_sp_er[0] = vm_ref - omega_m;
+	ctrl_math_output(Cspvpi, xspvpi, Dspvpi, vm_sp_er, t_ref, 1);
+	ctrl_math_state(Aspvpi, xspvpi, Bspvpi, vm_sp_er, xspvpi, 1);
 	if (fabsf(*t_ref) > T_SP) { *t_ref = sign(*t_ref) * T_SP; }		// limit torque
 }
 
@@ -88,8 +84,8 @@ void motion_ctrl_pid(float x_ref, float x_msr, float *iq_ref)
 {
 	float x_err[1] = { 0.0 };
 	x_err[0] = x_ref - x_msr;
-	ctrl_math_output(Cpid[0], xpid, Dpid[0], x_err, iq_ref, 2, 1, 1);
-	ctrl_math_state(Apid[0], xpid, Bpid[0], x_err, xpid, 2, 1);
+	ctrl_math_output(Cpid[0], xpid, Dpid[0], x_err, iq_ref, 2);
+	ctrl_math_state(Apid[0], xpid, Bpid[0], x_err, xpid, 2);
 	if (fabsf(*iq_ref) > I_PK) { *iq_ref = sign(*iq_ref) * I_PK; }		// limit torque
 }
 
@@ -97,13 +93,12 @@ float estimated_disturbance(float t_ref, float omega_m) {
 	//Torque Command td																		Speed vd
 	//			|																									|
 	//			|																									|	
-	//			------------->[Q(s)]----sd---> - O + <---ud---[Q(s)*(Js+D)]----
+	//			------------->[Q(s)]----sd---> - O + <---ud---[Q(s)*(Js)]--------
 	//															   |
 	//															   |
 	//															   V
-	//									OBSEVED DISTURBANCE TORQUE
-
-
+	//									OBSERVED DISTURBANCE TORQUE
+	
 	//input
 	td[1] = t_ref;
 	vd[1] = omega_m;
@@ -125,7 +120,14 @@ void motion_ctrl_reset(void)
 {
 	int i, j;
 	for (i = 0; i < 2; i++) {
-		xvpi[i][1] = 0.0;
+		xvpi[i][0] = 0.0;
+	}
+	xspvpi[0] = 0.0;
+	for (i = 0; i < 2; i++) {
+		sd[i] = 0.0;
+		td[i] = 0.0;
+		ud[i] = 0.0;
+		vd[i] = 0.0;
 	}
 	xpid[0] = 0.0; xpid[1] = 0.0;
 	dac_da_out(0, 3, 0);
@@ -139,6 +141,6 @@ void motion_ctrl_reset(void)
 	}
 	ctime = 0;
 	torque_command = 0;
-	iq_adx = 0; iq_ady = 0;
+	iq_refx = 0.0; iq_refy = 0.0;
 	omega_sp_ma_rpm = 0;
 }

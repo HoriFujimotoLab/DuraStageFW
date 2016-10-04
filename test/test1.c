@@ -1,5 +1,12 @@
-#include<math.h>
+//#include<math.h>
 #include <stdio.h>
+
+#include "DSPF_sp_vecmul.h"
+#include "DSPF_sp_dotprod.h"
+#include "atan2sp_c.h"
+#include "divsp_c.h"
+#include "recipsp_c.h"
+#include "sqrtsp_c.h"
 
 void ctrl_matrix_add(float a[], float b[], float *c, int row, int col)
 {
@@ -69,7 +76,33 @@ void print_matrix(float *c, int row_c, int col_c){
   } 
 }
 
+#define Nd ((int) 2)
+#define sigma_w (1e-2)
+#define sigma_v (1e-8)
 
+#define myu (0.1)
+#define Ld ((int) 4)
+#define INV2PITS (1.591549430918954e+03) //1/2/pi*10000
+
+float dominant_freq(float b, float c)
+{
+	float  real, imag;
+	float fchat;
+
+	float discriminant = b * b - 4.0* 1.0 * c;
+
+	if (discriminant < 0) {
+		real = -b *0.50;
+		imag = sqrtsp_c(-discriminant) *0.50; //sqrt(D)/2/a
+										   //z=u+j*w
+										   //log(z)=log(abs(z)) + j*atan2(w,u)
+										   //use atan2f(imag, real)
+		fchat = atan2sp_c(imag, real)*INV2PITS; //2/pi/ts*FC
+		return fchat;
+	}
+
+	return 2000.0; //default
+}
 
 void test1(){
   float a[]={1, 0, 0, 1}, b[]={2, 1}; //eye(2)
@@ -95,12 +128,6 @@ void test2(){
 }
 
 
-#define Nd ((int) 2)
-#define sigma_w (1e-2)
-#define sigma_v (1e-8)
-
-#define myu (0.1)
-#define Ld ((int) 4)
 
 //in: phi[k], y[k], theta[k-1], P[k-1];
 //out: theta[k], P[k]
@@ -126,28 +153,7 @@ void kalman_filter(float *phi, float y, float *theta, float *P) {
 	ctrl_matrix_prod(temp4, P_m, P, Nd, Nd, Nd); //update P
 }
 
-#define INV2PITS (1.591549430918954e+03) //1/2/pi*10000
 
-float dominant_freq(float b, float c)
-{ 
-  float discriminant;
-  float  real, imag;
-  float fchat;
-  
-  discriminant = b * b - 4 * 1.0 * c;
-
-  if (discriminant < 0){ 
-    real = -b * 0.50;
-    imag = sqrtf(-discriminant) * 0.50; //sqrt(D)/2/a
-    //z=u+j*w
-    //log(z)=log(abs(z)) + j*atan2(w,u)
-    //use atan2f(imag, real)
-    fchat = atan2f(imag, real)*INV2PITS; //2/pi/ts
-    return fchat;
-  }
-
-  return 2000.0; //default
-}
 
 void test3(){
   float phi[2]={1, 0};
@@ -180,12 +186,72 @@ void test5(){
   print_matrix(c,1,1);
 }
 
-void NLMS_filter(){
-  float ahat;
 
-  ctrl_matrix_prod(P_m, phi, kalman_g, Nd, 1, 1);
+
+
+void kalman_filter_2(float *phi, float y, float *theta, float *P) {
+	float  kalman_g[Nd], fm; 
+	float temp1[Nd*Nd], temp5[Nd*Nd], temp6[Nd], temp7;
+	int i;
+
+	//eye_matrix(temp1, Nd, sigma_v*sigma_v);
+	//ctrl_matrix_add(P, temp1, P_m, Nd, Nd); //P^-
+	//P_m = P, now sigma = 0
+
+	ctrl_matrix_prod(P, phi, kalman_g, Nd, Nd, 1); //[Nd, Nd], [Nd, 1]
+	temp7 = recipsp_c(DSPF_sp_dotprod(phi, kalman_g, Nd) + sigma_w*sigma_w);
+	for (i = 0; i < Nd; i++) {
+		temp6[i] = temp7;
+	}
+	DSPF_sp_vecmul(kalman_g, temp6, kalman_g, Nd); //calculate kalman gain
+
+	fm = y - DSPF_sp_dotprod(phi, theta, Nd);
+	for (i = 0; i < Nd; i++) {
+		temp6[i] = fm;
+	}
+	DSPF_sp_vecmul(kalman_g, temp6, temp6, Nd);
+	ctrl_matrix_add(theta, temp6, theta, Nd, 1); //update theta
+
+	ctrl_matrix_prod(kalman_g, phi, temp1, Nd, 1, Nd);
+	eye_matrix(temp5, Nd, 1);
+	ctrl_matrix_minus(temp5, temp1, temp5, Nd, Nd);
+	ctrl_matrix_prod(temp5, P, P, Nd, Nd, Nd); //update P
+}
+
+void test7(){
+  float phi[2]={1, 0};
+  float y=2;
+
+  float theta[2]={0, 0};
+  float P[4]={1, 0, 0 ,1};
+
+  float fchat;
+  
+  kalman_filter(phi, y, theta, P);
+  
+  print_matrix(theta, 2, 1);
+  print_matrix(P, 2, 2);
+
+  fchat = dominant_freq(theta[0], theta[1]);
+  printf("fchat = %f",fchat);
+
+  float phi2[2]={1, 0};
+  float y2=2;
+
+  float theta2[2]={0, 0};
+  float P2[4]={1, 0, 0 ,1};
+  
+  kalman_filter_2(phi2, y2, theta2, P2);
+  
+  print_matrix(theta2, 2, 1);
+  print_matrix(P2, 2, 2);
+
+  fchat = dominant_freq(theta2[0], theta2[1]);
+  printf("fchat = %f",fchat);
+
 }
 
 int main(){
-  test3();
+  printf("s");
+  test7();
 }

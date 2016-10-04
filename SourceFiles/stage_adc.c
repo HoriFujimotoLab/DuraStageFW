@@ -92,6 +92,5 @@ void setup_dac_init(void) {
 
 void setup_spindle_enc_init(void) {
 	pev_abz_set_mode(PEV_BDN, 2);					/* Select 'Defferential input mode'		*/
-	pev_abz_disable_int6(PEV_BDN);					/* Permission of Z interrupt			*/
-	pev_abz_disable_clear(PEV_BDN);
+	pev_abz_enable_int6(PEV_BDN);
 }

@@ -33,8 +33,8 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define		FS		(2500.0)          		// system frequency		[Hz]
 */
 // CONTROL PAR
-#define		TS		(500.0)   				// system sampling		[us]
-#define		FS		(2000.0)          		// system frequency		[Hz]
+#define		TS		(1000.0)   				// system sampling		[us]
+#define		FS		(1000.0)          		// system frequency		[Hz]
 #define		NROFT	(50000.0)               // total number of msr	[-]			
 #define		XAXIS (0) //stage x axis
 #define		YAXIS  (1) //stage y axis
@@ -145,7 +145,7 @@ extern float va_refx, vb_refx, vu_refx, vv_refx, vw_refx;
 extern float va_refy, vb_refy, vu_refy, vv_refy, vw_refy;
 
 extern int count_sp, count_old_sp, r_count_sp;
-extern float omega_sp, omega_sp_ma, omega_sp_ma_rpm, omega_old_sp, theta_sp;
+extern float omega_sp, omega_sp_ma, omega_sp_ma_rpm, omega_old_sp, theta_sp, omega_sp_ma_2;
 extern float omega_sp_new_rpm;
 
 extern float  theta_mox, theta_mdx, omega_mx, omega_max; //theta_mx,
@@ -153,9 +153,9 @@ extern float theta_my, theta_moy, theta_mdy, omega_my, omega_may;
 extern float x_mx, x_my, v_mx, v_my;
 extern float torque_ad, aspx, aspy, aspz;
 
-extern float torque_command, observed_disturbance;
+extern float torque_command, observed_disturbance, observed_disturbance_ma;
 
-extern int test, test1, test2, test3, test4, test5, test6, test7;
+extern int test, test1, test2, test3, test4, test5, test6, test7, pin;
 extern int cmode, xymode, kmode;
 extern float aux1, aux2, aux3, aux4, aux5, aux6, aux7;
 extern float fchat_a, fchat_a_ma;

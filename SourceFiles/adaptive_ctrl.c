@@ -12,31 +12,36 @@ Author:		Shimoda Takaki, University of Tokyo, 2016
 #define sigma_w (0.3) //observation noise variance
 #define sigma_v (1e-16) //process noise variance
 
-#define INV2PITS (1.273239544735163e+03) //1/2/pi*FC
+#define INV2PITS (1.273239544735163e+03) //1/2/pi*FC(==8000)
 
 #define RPM2HZ (0.016666666666667) //1/60
 
 
 void kalman_filter(float *phi, float y, float *theta, float *P) {
-	float  P_m[Nd*Nd], kalman_g[Nd], fm[1]; 
-	float temp1[Nd*Nd], temp2[Nd], temp3[1], temp4[Nd*Nd], temp5[Nd*Nd];
+	float  kalman_g[Nd], fm[1]; 
+	float temp1[Nd*Nd], temp5[Nd*Nd], temp6[Nd], temp8[1];
 
-	eye_matrix(temp1, Nd, sigma_v*sigma_v);
-	ctrl_matrix_add(P, temp1, P_m, Nd, Nd); //P^-
+	//eye_matrix(temp1, Nd, sigma_v*sigma_v);
+	//ctrl_matrix_add(P, temp1, P_m, Nd, Nd); //P^-
+	//P_m = P, now sigma = 0
 
-	ctrl_matrix_prod(P_m, phi, kalman_g, Nd, Nd, 1);
-	ctrl_matrix_prod(phi, kalman_g, temp3, 1, Nd, 1);
-	ctrl_matrix_cnst_mlpy(kalman_g, 1 / (temp3[0] + sigma_w*sigma_w), Nd, 1); //kalman gain
+	ctrl_matrix_prod(P, phi, kalman_g, Nd, Nd, 1); //[Nd, Nd], [Nd, 1]
+	ctrl_vec_dot(phi, kalman_g, temp8, Nd);
+	temp8[0] = recipsp(temp8[0] + sigma_w*sigma_w);
+	ctrl_vec_scale(kalman_g, temp8, kalman_g, Nd);
+	//calculate kalman gain
 
-	ctrl_matrix_prod(phi, theta, temp3, 1, Nd, 1);
-	fm[0] = y - temp3[0];
-	ctrl_matrix_prod(kalman_g, fm, temp2, Nd, 1, 1);
-	ctrl_matrix_add(theta, temp2, theta, Nd, 1); //update theta
+	ctrl_vec_dot(phi, theta, temp8 ,Nd);
+	fm[0] = y - temp8[0];
+	ctrl_vec_scale(kalman_g, fm, temp6, Nd);
+	ctrl_vec_add(theta, temp6, theta, Nd); 
+	//update theta
 
 	ctrl_matrix_prod(kalman_g, phi, temp1, Nd, 1, Nd);
 	eye_matrix(temp5, Nd, 1);
-	ctrl_matrix_minus(temp5, temp1, temp4, Nd, Nd);
-	ctrl_matrix_prod(temp4, P_m, P, Nd, Nd, Nd); //update P
+	ctrl_vec_sub(temp5, temp1, temp5, Nd*Nd);
+	ctrl_matrix_prod(temp5, P, P, Nd, Nd, Nd); 
+	//update P
 }
 
 //FS=2000 Hz loop
@@ -57,14 +62,14 @@ float dominant_freq(float b, float c) //dominant freq of  z^2 / ( z^2 + b z + c 
 		return fchat;
 	}
 
-	return 2000; //default
+	return 2000.0; //default
 }
 
 void calc_new_speed(int *rho, float *omega_new_rpm, float fchat,float omega_sp_rpm, int q) {
 	float fTPE;
 	fTPE = q*omega_sp_rpm*RPM2HZ;
 	if (fTPE > 0) { 
-		*rho = (int)(fchat / fTPE+0.5); 
-		*omega_new_rpm = fchat / (*rho) / q * 60;
+		*rho = (int) (divsp(fchat ,  fTPE)+0.5);
+		*omega_new_rpm =divsp(fchat* 60.0, (float)((*rho) * q));
 	}
 }
