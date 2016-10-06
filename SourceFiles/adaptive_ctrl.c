@@ -12,7 +12,7 @@ Author:		Shimoda Takaki, University of Tokyo, 2016
 #define sigma_w (0.3) //observation noise variance
 #define sigma_v (1e-16) //process noise variance
 
-#define INV2PITS (1.273239544735163e+03) //1/2/pi*FC(==8000)
+#define INV2PITS (1.591549430918954e+03) //1/2/pi*FC(==10000)
 
 #define RPM2HZ (0.016666666666667) //1/60
 

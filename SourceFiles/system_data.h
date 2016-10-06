@@ -23,8 +23,8 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define       T_SP (24.0)                    //spindle torque satuation [Nm] 
 
 // INV PAR
-#define		FC		(8000.0)				// carrier frequency	[Hz]
-#define		TC		(125.0)                  // carrier sampling		[us]
+#define		FC		(10000.0)				// carrier frequency	[Hz]
+#define		TC		(100.0)                  // carrier sampling		[us]
 #define		DT		(3500.0)				// inv dead time		[ns]
 
 /*

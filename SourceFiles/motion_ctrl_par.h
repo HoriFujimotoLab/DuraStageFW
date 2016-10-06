@@ -16,9 +16,6 @@ float Bspvpi[1] = { 1.25000000000000000000e-01 };
 float Cspvpi[1] = { 1.07367070529084780000e-01 };
 float Dspvpi[1] = { 1.55822995618053730000e+00 };
 
-
-
-
 //Position PID: Bw 40Hz, Ts 2kHz
 float Apid[2][2] = {
 	{ 1.601349668864234, -0.601349668864234 },
@@ -36,13 +33,12 @@ float Dpid[1][1] = {
 };
 
 
-//Disturbance Observer: 125us sampling, nominal plant: 1/Js, LPF 2000 Hz
-float DOB_A = 2.078796e-01;
-float DOB_B = 7.921204e-01;
-float DOB_C = 2.078796e-01;
-float DOB_D = 1.964459e+01;
-float DOB_E = 1.964459e+01;
-
+//Disturbance Observer: 100us sampling, nominal plant: 1/Js, LPF 2000 Hz
+float DOB_A = 2.846095e-01;
+float DOB_B = 7.153905e-01;
+float DOB_C = 2.846095e-01;
+float DOB_D = 2.217710e+01;
+float DOB_E = 2.217710e+01;
 
 
 

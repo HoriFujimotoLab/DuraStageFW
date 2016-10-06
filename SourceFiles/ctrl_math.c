@@ -8,23 +8,6 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 *************************************************************************************/
 #include "ctrl_math.h"
 
-//void ctrl_math_state(float A[], float x[], float B[], float u[], float *dx, int nrofs, int nrofi)
-//{
-//	float C1[NMAX] = { 0.0 }; float C2[NMAX] = { 0.0 };
-//	ctrl_matrix_prod(A, x, C1, nrofs, nrofs, 1);
-//	ctrl_matrix_prod(B, u, C2, nrofs, nrofi, 1);
-//	ctrl_matrix_add(C1, C2, &*dx, nrofs, 1);
-//}
-//
-//
-//void ctrl_math_output(float C[], float x[], float D[], float u[], float *y, int nrofs, int nrofi, int nrofo)
-//{
-//	float C1[NMAX] = { 0.0 }; float C2[NMAX] = { 0.0 };
-//	ctrl_matrix_prod(C, x, C1, nrofo, nrofs, 1);
-//	ctrl_matrix_prod(D, u, C2, nrofo, nrofi, 1);
-//	ctrl_matrix_add(C1, C2, &*y, nrofo, 1);
-//}
-
 #define	NMAX		(4)					// max amount of states
 
 //ONLY FOR SI

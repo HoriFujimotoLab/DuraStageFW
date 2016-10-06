@@ -1,0 +1,4 @@
+EXTLIBS	+= 
+EXOBJS	+= 
+OBJS	+= main_exp.c.obj
+main_exp.c.obj: 

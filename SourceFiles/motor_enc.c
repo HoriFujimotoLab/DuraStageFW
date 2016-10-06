@@ -28,10 +28,9 @@ static double theta_msr[2] = { 0.0, 0.0 };			// measured theta [rad]
 
 //SPINDLE ENCORDER
 //#define SPCNT2RADPS (0.191747598485705)  // 2 * PI(1) /SPCNTPREV/TS
-#define ALPHASP		(0.269597308951354)						// recursive IIR MAF factor //400Hz@125*10^-6 sampling
-#define SPCNT2RADPS (0.766990393942821) // 2 * PI(1) /SPCNTPREV/(125*10^-6)
-#define SPCNTPREV (65536.0) //cnt/turn 2^16
-#define MAXSPCNT (1.073741823500000e+09) //INTMAX/2
+#define ALPHASP		(0.222232320828211)						// recursive IIR MAF factor //400Hz@100*10^-6 sampling
+#define SPCNT2RADPS (1.917475984857052) // 2 * PI(1) /SPCNTPREV/(100*10^-6)
+#define SPCNTPREV (32768.0) //pulse/turn 2^15
 
 void motor_enc_init(int axis)
 {
@@ -94,22 +93,21 @@ void motor_enc_reset(int axis)
 
 void motor_enc_spindle(int *count_old, int *count, float *omega_old, float *omega, float *omega_ma, float *theta_m, int *r_count) {
 	int count_d;
-	*count_old = *count; /*１サンプル前のカウント値*/
-	//*omega_old = *omega;                              /**omegaの１サンプル前の更新*/
+
+	*count_old = *count; 
 	*count = pev_abz_read(PEV_BDN);				/* Read value of ABZ encoder's count	*/
 	//pin = pev_abz_in_pin(PEV_BDN);			/* Check status of ABZ encoder's signal */
 	count_d = *count- *count_old; //diff
-//	if (*omega * count_d<0) {                     //Z interruption: when spindle speed(almost constant, at least there is no posibbility of servo use) >0, count_d should be >0 unless Z intteruption
-//	
-//	}
-	                                        /*z信号がこない場合*/
-	*omega = (float) count_d* SPCNT2RADPS;              /*パルス数から角速度変換*/
-	*theta_m += (float) count_d  * SPCNT2RADPS;          //スピンドルモータの位相
-	////reset
-	//if ((*count > MAXSPCNT) || (*count < -MAXSPCNT)) {
-	//	pev_abz_clear(PEV_BDN);
-	//	*count = 0;
-	//}
+
+	*omega = (float)count_d* SPCNT2RADPS;
+		//		*theta_m += (float)count_d  * SPCNT2RADPS;
+	
+	if ((*count > SPCNTPREV) || (*count < -SPCNTPREV))  {
+		pev_abz_clear(PEV_BDN);
+		*count = 0;
+	}
+	*omega_ma = ALPHASP * *omega + (1.0 - ALPHASP) * *omega_ma;
+	/*
 	while (*theta_m > PI(2)) {
 		*theta_m -= PI(2);
 		r_count += 1;
@@ -118,5 +116,6 @@ void motor_enc_spindle(int *count_old, int *count, float *omega_old, float *omeg
 		*theta_m += PI(2);
 		r_count -= 1;
 	}							// {0, 2pi}
-	*omega_ma = ALPHASP * *omega + (1.0 - ALPHASP) * *omega_ma;
+	*/
 }
+

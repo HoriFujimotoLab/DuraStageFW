@@ -13,8 +13,8 @@ Author:		Thomas Beauduin, University of Tokyo, 2016
 #define DA_GAIN_TORQUE (0.416666666666667) //1/2.4 2.4Nm/V
 
 #define ALPHAMA_FIRST (0.006263487375222) //1 Hz LPF for 1000 usec
-#define ALPHAMA2 (0.792120423649238) //2000 Hz LPF @125 usec sampling 
-#define BETAMA (0.924465250376256) //1000Hz HPF for 125 usec for Kalman Filter
+#define ALPHAMA2 (0.715390456663971) //2000 Hz LPF @100 usec sampling 
+#define BETAMA (0.939101367424293) //100Hz HPF @100 usec for Kalman Filter
 
 #define RAD2M (0.001909859317103)  //R[m/rad]
 #define M2RAD (5.235987755982287e+02) //1/R [rad/m]
