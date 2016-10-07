@@ -52,9 +52,10 @@ void system_tint0(void)
 	switch (xymode)	{
 	case XMODE:
 		//encorder read
-		motor_enc_read(XAXIS, &theta_mx, &omega_mx, &omega_max);
-		x_mx = RAD2M*theta_mx;
-		v_mx = RAD2M* omega_max;
+		//motor_enc_read(XAXIS, &theta_mx, &omega_mx, &omega_max);
+		//x_mx = RAD2M*theta_mx;
+		//v_mx = RAD2M* omega_max;
+		stage_lin_read(XAXIS, &x_linx, &v_linx, &v_linx_ma);
 		//motor_enc_spindle(&count_old_sp, &count_sp, &omega_old_sp, &omega_sp, &omega_sp_ma, &theta_sp, &r_count_sp); //spindle
 		omega_sp_ma_rpm = RADPS2RPM * omega_sp_ma;
 		omega_sp_ref_rpm_ma = ALPHAMA_FIRST*omega_sp_ref_rpm + (1 - ALPHAMA_FIRST)*omega_sp_ref_rpm_ma;
@@ -74,9 +75,10 @@ void system_tint0(void)
 		//aspx = observed_disturbance;
 		break;
 	case YMODE:
-		motor_enc_read(YAXIS, &theta_my, &omega_my, &omega_may); //y-axis
-		x_my = RAD2M*theta_my;
-		v_my = RAD2M* omega_may;
+		//motor_enc_read(YAXIS, &theta_my, &omega_my, &omega_may); //y-axis
+		//x_my = RAD2M*theta_my;
+		//v_my = RAD2M* omega_may;
+		stage_lin_read(YAXIS, &x_liny, &v_liny, &v_liny_ma);
 		break;
 	default:
 		break;
@@ -87,120 +89,91 @@ void system_tint0(void)
 	if (sysmode_e == SYS_INI) {}	
 	if (sysmode_e == SYS_RUN)
 	{
-		/*
-		if (msr >= 0 && msr < NROFT) {
-		motion_ctrl_ref(reftype_e, Aref, Fref, &xref);
-		msr++;
-		//motion_ctrl_pid(xref, theta_mx, &iq_refx); //too dangerous now to activate
-		}
-		else {
-		motion_ctrl_ref(REF_OFF, Aref, Fref, &xref);
-		//motion_ctrl_pid(xref, theta_mx, &iq_refx); //too dangerous now to activate }
-		//iq_refx = xref;	// open-loop ???
-		}
-		*/
-		//if (ontimer == 1) {
-		//	ctime += (TS*1.0e-6);
-		//	if (ctime > limit_time) {
-		//		cmode = 0; //stop
-		//		ontimer = 0;
-		//		ctime = 0;
-		//	}
-		//}
-
 		switch (cmode) {
-		case MAIN_MODE_V: //const v
-			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
-			dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_ref_rpm_ma);
-			flag_threshold = epsilon_sp - threshold;
-			if (flag_threshold > 0) cmode = ADAPTIVE_MODE_V;
-			break;
+		//case MAIN_MODE_V: //const v
+		//	motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
+		//	dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_ref_rpm_ma);
+		//	flag_threshold = epsilon_sp - threshold;
+		//	if (flag_threshold > 0) cmode = ADAPTIVE_MODE_V;
+		//	break;
 
-		case ADAPTIVE_MODE_V:
-			calc_new_speed(&rho_sp, &omega_sp_new_rpm, fchat_a, omega_sp_ma_rpm, Qn);
-			if ( (omega_sp_ref_rpm  < 1000) && (kmode > 0)) 		cmode = MAIN_MODE_V;
-			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
-			dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_new_rpm);
-			break;
+		//case ADAPTIVE_MODE_V:
+		//	calc_new_speed(&rho_sp, &omega_sp_new_rpm, fchat_a, omega_sp_ma_rpm, Qn);
+		//	if ( (omega_sp_ref_rpm  < 1000) && (kmode > 0)) 		cmode = MAIN_MODE_V;
+		//	motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
+		//	dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_new_rpm);
+		//	break;
 
-		case SHIMODA_MAIN_MODE_V:
-			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
-			dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_ref_rpm_ma);
-			flag_threshold = epsilon_sp - threshold;
-			if (flag_threshold > 0) cmode = SHIMODA_A_MODE_V;
-			break;
+		//case SHIMODA_MAIN_MODE_V:
+		//	motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
+		//	dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_ref_rpm_ma);
+		//	flag_threshold = epsilon_sp - threshold;
+		//	if (flag_threshold > 0) cmode = SHIMODA_A_MODE_V;
+		//	break;
 
-		case SHIMODA_A_MODE_V:
-			calc_new_speed(&rho_sp, &omega_sp_new_rpm, fchat_a, omega_sp_ma_rpm / beta_SHIMODA, Qn);
-			if ((omega_sp_ref_rpm  < 1000) && (kmode > 0)) 		cmode = MAIN_MODE_V;
-			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
-			dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_new_rpm * beta_SHIMODA);
-			//if (omega_sp_ref_rpm < 100) cmode = MAIN_MODE;
-			break;
-			//scan mode
-			//const feed per tooth
+		//case SHIMODA_A_MODE_V:
+		//	calc_new_speed(&rho_sp, &omega_sp_new_rpm, fchat_a, omega_sp_ma_rpm / beta_SHIMODA, Qn);
+		//	if ((omega_sp_ref_rpm  < 1000) && (kmode > 0)) 		cmode = MAIN_MODE_V;
+		//	motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
+		//	dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_new_rpm * beta_SHIMODA);
+		//	//if (omega_sp_ref_rpm < 100) cmode = MAIN_MODE;
+		//	break;
+		//	//scan mode
+		//	//const feed per tooth
 
-		case CHATTER_TEST_MODE:
-			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
-			if (chatter_rpm > 1000){
-				dac_da_out(0, 3, DA_GAIN_RPM *  chatter_rpm);
-			}
-			else dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_ref_rpm_ma);
-			break;
+		//case CHATTER_TEST_MODE:
+		//	motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
+		//	if (chatter_rpm > 1000){
+		//		dac_da_out(0, 3, DA_GAIN_RPM *  chatter_rpm);
+		//	}
+		//	else dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_ref_rpm_ma);
+		//	break;
 
-		case MAIN_MODE:
-			if ((omega_sp_ma_rpm < 2000) && (vm_refx > 0)) vm_refx = -0.0001;
-			vm_refx = Qn*omega_sp_ma_rpm*RPM2HZ*feedpertooth;
-			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
-			dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_ref_rpm_ma);
-			flag_threshold = epsilon_sp - threshold;
-			if (flag_threshold > 0) cmode = ADAPTIVE_MODE;
-			break;
+		//case MAIN_MODE:
+		//	if ((omega_sp_ma_rpm < 2000) && (vm_refx > 0)) vm_refx = -0.0001;
+		//	vm_refx = Qn*omega_sp_ma_rpm*RPM2HZ*feedpertooth;
+		//	motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
+		//	dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_ref_rpm_ma);
+		//	flag_threshold = epsilon_sp - threshold;
+		//	if (flag_threshold > 0) cmode = ADAPTIVE_MODE;
+		//	break;
 
-		case ADAPTIVE_MODE:
-			if (((omega_sp_ma_rpm < 2000) || (omega_sp_ref_rpm < 2000)) && (vm_refx > 0)) {
-				vm_refx = -0.0001;
-				cmode = MAIN_MODE;
-			}
-			vm_refx = Qn*omega_sp_ma_rpm*RPM2HZ*feedpertooth;
-			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
-			dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_new_rpm);
-			//if (omega_sp_ref_rpm < 100) cmode = MAIN_MODE;
-			//time7 += (TS*1.0e-6);
-			//if (time7 > 5) cmode = SHIMODA_A_MODE;
-			break;
+		//case ADAPTIVE_MODE:
+		//	if (((omega_sp_ma_rpm < 2000) || (omega_sp_ref_rpm < 2000)) && (vm_refx > 0)) {
+		//		vm_refx = -0.0001;
+		//		cmode = MAIN_MODE;
+		//	}
+		//	vm_refx = Qn*omega_sp_ma_rpm*RPM2HZ*feedpertooth;
+		//	motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
+		//	dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_new_rpm);
+		//	//if (omega_sp_ref_rpm < 100) cmode = MAIN_MODE;
+		//	//time7 += (TS*1.0e-6);
+		//	//if (time7 > 5) cmode = SHIMODA_A_MODE;
+		//	break;
 
-		case SHIMODA_MAIN_MODE:
-			if ((omega_sp_ma_rpm < 2000) && (vm_refx > 0))	 vm_refx = -0.0001;
-			vm_refx = Qn*omega_sp_ma_rpm*RPM2HZ*feedpertooth;
-			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
-			dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_ref_rpm_ma);
-			flag_threshold = epsilon_sp - threshold;
-			if (flag_threshold > 0) cmode = SHIMODA_A_MODE;
-			break;
-		case SHIMODA_A_MODE:
-			if (((omega_sp_ma_rpm < 2000) || (omega_sp_ref_rpm < 2000)) && (vm_refx > 0)) {
-				vm_refx = -0.0001;
-				cmode = MAIN_MODE;
-			}
-			vm_refx = Qn*omega_sp_ma_rpm*RPM2HZ*feedpertooth;
-			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
-			dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_new_rpm * beta_SHIMODA);
-			//if (omega_sp_ref_rpm < 100) cmode = MAIN_MODE;
-			break;
-			//scan mode
+		//case SHIMODA_MAIN_MODE:
+		//	if ((omega_sp_ma_rpm < 2000) && (vm_refx > 0))	 vm_refx = -0.0001;
+		//	vm_refx = Qn*omega_sp_ma_rpm*RPM2HZ*feedpertooth;
+		//	motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
+		//	dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_ref_rpm_ma);
+		//	flag_threshold = epsilon_sp - threshold;
+		//	if (flag_threshold > 0) cmode = SHIMODA_A_MODE;
+		//	break;
+		//case SHIMODA_A_MODE:
+		//	if (((omega_sp_ma_rpm < 2000) || (omega_sp_ref_rpm < 2000)) && (vm_refx > 0)) {
+		//		vm_refx = -0.0001;
+		//		cmode = MAIN_MODE;
+		//	}
+		//	vm_refx = Qn*omega_sp_ma_rpm*RPM2HZ*feedpertooth;
+		//	motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
+		//	dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_new_rpm * beta_SHIMODA);
+		//	//if (omega_sp_ref_rpm < 100) cmode = MAIN_MODE;
+		//	break;
+		//	//scan mode
 
 		case DOB_MAIN_MODE_V: //const v
-			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
+			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, v_linx_ma*M2RAD, &iq_refx);
 			spindle_motion_ctrl_vpi(omega_sp_ref_rpm_ma*RPM2RADPS, omega_sp_ma, &torque_command);
-			dac_da_out(0, 3, DA_GAIN_TORQUE * torque_command);
-			break;
-
-		case DOB_ADAPTIVE_MODE_V:
-			calc_new_speed(&rho_sp, &omega_sp_new_rpm, fchat_a, omega_sp_ma_rpm, Qn);
-			if ((omega_sp_ref_rpm  < 1000) && (kmode > 0)) 		cmode = MAIN_MODE_V;
-			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
-			spindle_motion_ctrl_vpi(omega_sp_ref_rpm*RPM2RADPS, omega_sp_ma, &torque_command);
 			dac_da_out(0, 3, DA_GAIN_TORQUE * torque_command);
 			break;
 
@@ -215,6 +188,7 @@ void system_tint0(void)
 			dac_da_out(0, 3, DA_GAIN_TORQUE * torque_command);
 			break;
 
+			//spindle speed(no LPF) control via torque
 		case DIRECT_SPINDLE_OMEGA_MODE:
 			spindle_motion_ctrl_vpi(omega_sp_ref_rpm*RPM2RADPS, omega_sp_ma, &torque_command);
 			dac_da_out(0, 3, DA_GAIN_TORQUE * torque_command);
@@ -222,63 +196,33 @@ void system_tint0(void)
 
 			//stage velocity control
 		case VEL_MODE:
-			if (xymode == XMODE) motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
-			else if (xymode == YMODE) motion_ctrl_vpi(YAXIS, vm_refy*M2RAD, omega_may, &iq_refy);
+			if (xymode == XMODE)	motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, v_linx_ma*M2RAD, &iq_refx);
+			else if (xymode == YMODE)	motion_ctrl_vpi(YAXIS, vm_refy*M2RAD, v_liny_ma*M2RAD, &iq_refy);
 			break;
 
 			//stage position incremental mode
 		case INC_MODE:
 			if (xymode == XMODE) {
-				if (fabsf(incx) > 0)  theta_m_refx = incx*M2RAD + theta_mx;
-				motion_ctrl_vpi(XAXIS, motion_ctrl_pos(theta_m_refx, theta_mx), omega_max, &iq_refx);
+				if (fabsf(incx) > 0)  theta_m_ref_linx = incx + x_linx;
+				motion_ctrl_vpi(XAXIS, motion_ctrl_pos(theta_m_ref_linx, x_linx)*M2RAD, v_linx_ma*M2RAD, &iq_refx);
 				incx = 0;
 			}
 			else if (xymode == YMODE) {
-				if (fabsf(incy) > 0) theta_m_refy = incy*M2RAD + theta_my;
-				motion_ctrl_vpi(YAXIS, motion_ctrl_pos(theta_m_refy, theta_my), omega_may, &iq_refy);
+				if (fabsf(incy) > 0) theta_m_ref_liny = incy + x_liny;
+				motion_ctrl_vpi(YAXIS, motion_ctrl_pos(theta_m_ref_liny, x_liny)*M2RAD, v_liny_ma*M2RAD, &iq_refy);
 				incy = 0;
 			}
 			break;
 
-		case SCAN_MODE:
-			//if ((omega_sp_ma_rpm < 2000) && (vm_refx>0)) vm_refx = -0.0001;
-			//vm_refx = Qn*omega_sp_ma_rpm*RPM2HZ*feedpertooth;
-			//motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
-			//dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_ref_rpm);
-			//time7 += (TS*1.0e-6);
-			//if (time7 > 10)
-			//{
-			//	if (epsilon_sp_max > epsilon_temp) {
-			//		epsilon_temp = epsilon_sp_max;
-			//		epsilon_sp_max = 0;
-			//	}
-			//	else { //scan end
-			//		vm_refx=0;
-			//		cmode = MAIN_MODE;
-			//		omega_sp_ref_rpm = 0;
-			//	}
-			//	time7 = 0;
-			//	omega_sp_ref_rpm += 5;
-			//}
+			case POS_MODE:
+			//stage position control
+			if (xymode == XMODE) motion_ctrl_vpi(XAXIS, motion_ctrl_pos(theta_m_ref_linx, x_linx)*M2RAD, v_linx_ma*M2RAD, &iq_refx);
+			else if (xymode == YMODE) motion_ctrl_vpi(YAXIS, motion_ctrl_pos(theta_m_ref_liny, x_liny)*M2RAD, v_liny_ma*M2RAD, &iq_refy);
 			break;
 
-				//direct current control
-			//mode iqx=Aref*sin(Fref:2*pi*t)
-			case QCRNT_MODE:
-				if (xymode == XMODE) direct_qcurrent_ctrl(reftype_e, Aref, Fref, &iq_refx);
-				else if (xymode == YMODE) direct_qcurrent_ctrl(reftype_e, Aref, Fref, &iq_refy);
-				break;
-
-			case POS_MODE:
-				//stage position control
-				if (xymode == XMODE) motion_ctrl_vpi(XAXIS, motion_ctrl_pos(theta_m_refx, theta_mx), omega_max, &iq_refx);
-				else if (xymode == YMODE) motion_ctrl_vpi(YAXIS, motion_ctrl_pos(theta_m_refy, theta_my), omega_may, &iq_refy);
-				break;
-
 			case 0: //stop
-				motion_ctrl_vpi(XAXIS, 0, omega_max, &iq_refx);
-				omega_sp_ref_rpm = 0;
-				dac_da_out(0, 3, DA_GAIN_RPM *  omega_sp_ref_rpm_ma);
+				motion_ctrl_vpi(XAXIS, 0, v_linx_ma, &iq_refx);
+				dac_da_out(0, 3, 0);
 				break;
 
 			default:
@@ -401,10 +345,10 @@ void system_init(void)
 	setup_adc_init();
 	motor_enc_init(0); //X-axis
 	motor_enc_init(1); //Y-axis
+	stage_lin_init(); 
 	setup_dac_init();
 	setup_spindle_enc_init();
 	
-
 	// DRIVE CTRL
 	int5_init_vector(system_cint5);
 	motor_inv_init();

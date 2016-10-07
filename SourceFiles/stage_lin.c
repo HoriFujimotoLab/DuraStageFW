@@ -11,8 +11,8 @@ Author:		Thomas Beauduin, University of Tokyo, April 2015
 #include	<mwio3.h>
 
 // MODULE PAR
-#define ALPHA		(0.1)										// recusive iir maf factor
-#define LIN_DIR		(-1.0)										// linear scale direction
+#define ALPHA		(0.918997407842057)						// recursive IIR MAF factor //400Hz@1 msec sampling
+//#define LIN_DIR (-0.1) 										
 
 // FPGA ADDR
 #define	INI_ADDR	((volatile unsigned int*)0xA002000C)		// init address     (RW bit0)
@@ -24,6 +24,8 @@ Author:		Thomas Beauduin, University of Tokyo, April 2015
 #define	DAT2_ADDR	((volatile unsigned int*)0xA0020030)		// data address		(R 32bit)
 #define	STA_ADDR	((volatile unsigned int*)0xA0020024)		// status address	(R bit6..0:busy, bit7:err)
 
+// linear scale direction X:-1, Y:+1
+float LIN_DIR[2] = { -1.0, 1.0 };
 // MODULE VAR
 int read_err = 0, hard_err = 0;
 
@@ -49,13 +51,12 @@ void stage_lin_read(int axis, float *pos_t, float *vel_t, float *vel_ta)
 	if (i >= 5) { read_err = 1; }								// over-time error
 	if (axis == 0){ data_cnt = *DAT0_ADDR; }				    // read data register X axis
 	if (axis == 1){ data_cnt = *DAT2_ADDR; }				    // read data register Y axis
-
-
+	
 	// POS & VEL
-	temp = *pos_t;												// previous msr   [mm]
-	*pos_t = LIN_DIR * data_cnt * 1.0e-6;						// table position [mm]
-	*vel_t = (*pos_t - temp) * FS;								// table velocity [mm/s]
-	*vel_ta = ALPHA * *vel_t + (1 - ALPHA) * *vel_ta;			// resursive maf  [mm/s]
+	temp = *pos_t;												// previous msr   [m]
+	*pos_t =(float) LIN_DIR[axis] * data_cnt * 1.0e-9;						// table position [m]
+	*vel_t = (*pos_t - temp) * FS;								// table velocity [m/s]
+	*vel_ta = ALPHA * *vel_t + (1 - ALPHA) * *vel_ta;			// resursive maf  [m/s]
 }
 
 

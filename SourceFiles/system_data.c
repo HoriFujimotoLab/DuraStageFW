@@ -49,7 +49,10 @@ float  omega_sp_new_rpm = 0.0;
 
 float theta_mox = 0.0, theta_mdx = 0.0, omega_mx = 0.0, omega_max = 0.0; //theta_mx,
 float theta_my = 0.0, theta_moy = 0.0, theta_mdy = 0.0, omega_my = 0.0, omega_may = 0.0;
+float theta_m_ref_liny = 0.0, theta_m_ref_linx=0.0;
 float x_mx = 0.0, x_my = 0.0, v_mx = 0.0, v_my = 0.0;
+float x_linx = 0.0, x_liny = 0.0, v_linx = 0.0, v_liny=0.0, v_linx_ma=0.0, v_liny_ma = 0.0;
+
 float torque_ad = 0.0, aspx = 0.0, aspy = 0.0, aspz = 0.0;
 
 float torque_command = 0.0, observed_disturbance=0.0, observed_disturbance_ma=0.0;

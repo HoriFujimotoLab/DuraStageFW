@@ -19,6 +19,7 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define		OVC_LIM	(50.48)					// overcurrent limit	[A] 
 #define		OVV_LIM	(380.0)					// overvorltage limit	[V]
 #define		OVS_LIM	(450.0)					// overspeed limit		[rad/s]
+//#define		OVS_LIN_LIM	(0.1)					// overspeed limit		[m/s]
 #define		I_PK	(24.0)					// ctrl out saturation	[A]
 #define       T_SP (24.0)                    //spindle torque satuation [Nm] 
 
@@ -152,6 +153,8 @@ extern float  theta_mox, theta_mdx, omega_mx, omega_max; //theta_mx,
 extern float theta_my, theta_moy, theta_mdy, omega_my, omega_may;
 extern float x_mx, x_my, v_mx, v_my;
 extern float torque_ad, aspx, aspy, aspz;
+extern float x_linx, x_liny, v_linx, v_liny, v_linx_ma, v_liny_ma;
+extern float theta_m_ref_liny , theta_m_ref_linx ;
 
 extern float torque_command, observed_disturbance, observed_disturbance_ma;
 
