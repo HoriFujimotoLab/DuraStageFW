@@ -8,7 +8,6 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 *************************************************************************************/
 #include "ctrl_math.h"
 
-#define	NMAX		(4)					// max amount of states
 
 //ONLY FOR SI
 void ctrl_math_state(float A[], float x[], float B[], float u[], float *dx, int nrofs)
@@ -24,7 +23,7 @@ void ctrl_math_state(float A[], float x[], float B[], float u[], float *dx, int 
 void ctrl_math_output(float C[], float x[], float D[], float u[], float *y, int nrofs)
 {
 	//int nrofi = 1; int  nrofo = 1;
-	float Cx[NMAX] = { 0.0 }; float Du[NMAX] = { 0.0 };
+	float Cx[IOMAX] = { 0.0 }; float Du[IOMAX] = { 0.0 };
 	ctrl_vec_dot(C, x, &Cx[0], nrofs);
 	Du[0] = D[0] * u[0];					
 	ctrl_vec_add(Cx, Du, y, nrofs);

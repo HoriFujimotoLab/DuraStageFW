@@ -315,7 +315,7 @@ void system_cint5(void)
 				aspx = observed_disturbance;
 
 				////debug
-				//time7 += TC * 1.0e-6;
+				time7 += TC * 1.0e-6;
 				//aspx = sinsp(2 * PI(1) * 2500 * time7);
 
 				//aspx = omega_sp_ref_rpm_ma - omega_sp*RADPS2RPM;

@@ -13,10 +13,10 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 #include "Rtimeref.h"
 
 int ref = 0; double t = 0.0;
-static float xvpi[2][1] = { 0.0, 0.0 }; //{{XAXIS} , {YAXIS}}
-static float xpid[2] = { 0.0, 0.0 };
-static float xspvpi[1] = { 0.0 }; //spindle variable state
-static float sd[2] = { 0.0, 0.0 }, td[2] = { 0.0, 0.0 }, ud[2] = { 0.0,0.0 }, vd[2] = { 0.0,0.0 };//disturbance observer states
+static float xvpi[NMAX][2] = { 0.0 }; //{{XAXIS} , {YAXIS}}
+static float xpid[NMAX] = { 0.0 };
+static float xspvpi[NMAX] = { 0.0 }; //spindle variable state
+static float xq[NMAX] = { 0.0}, xr[NMAX] = {0.0 };//disturbance observer states
 
 void direct_qcurrent_ctrl(int reftype_e, float Aref, float Fref, float *iq_ref){
 	switch (reftype_e)
@@ -90,46 +90,37 @@ void motion_ctrl_pid(float x_ref, float x_msr, float *iq_ref)
 }
 
 float estimated_disturbance(float t_ref, float omega_m) {
-	//Torque Command td																		Speed vd
-	//			|																									|
-	//			|																									|	
-	//			------------->[Q(s)]----sd---> - O + <---ud---[Q(s)*(Js)]--------
+	//Torque Command   td																						Speed   vd 
+	//			|																													|
+	//			|																													|			
+	//			------------->[Q(s)]----sd---> - O + <---ud---[R(S) = Q(s)*(Js)]--------
 	//															   |
 	//															   |
 	//															   V
 	//									OBSERVED DISTURBANCE TORQUE
-	
-	//input
-	td[1] = t_ref;
-	vd[1] = omega_m;
-
-	//disturbance observer
-	sd[1] = DOB_A*sd[0] + DOB_B*td[0];
-	ud[1] = DOB_C*ud[0] + DOB_D*vd[1] - DOB_E*vd[0];
-	
-	//update
-	sd[0] = sd[1];
-	ud[0] = ud[1];
-	td[0] = td[1];
-	vd[0] = vd[1];
-
-	return ( ud[1] - sd[1] );
+	float sd[IOMAX] = { 0.0 }, ud[IOMAX] = { 0.0 }, td[IOMAX], vd[IOMAX];
+	td[0] = t_ref;	
+	vd[0] = omega_m;
+	//Q Filter
+	ctrl_math_output(C_Q, xq, D_Q, td, sd , 2);
+	ctrl_math_state(A_Q, xq, B_Q, td, xq, 2);
+	//R Filter
+	ctrl_math_output(C_R, xr, D_R, vd, ud, 2);
+	ctrl_math_state(A_R, xr, B_R, vd, xr, 2);
+	//observed(estimated) disturbance torque
+	return ( ud[0] - sd[0] );
 }
 
 void motion_ctrl_reset(void)
 {
 	int i, j;
-	for (i = 0; i < 2; i++) {
-		xvpi[i][0] = 0.0;
-	}
-	xspvpi[0] = 0.0;
-	for (i = 0; i < 2; i++) {
-		sd[i] = 0.0;
-		td[i] = 0.0;
-		ud[i] = 0.0;
-		vd[i] = 0.0;
-	}
-	xpid[0] = 0.0; xpid[1] = 0.0;
+	for (i = 0; i < NMAX; i++) {
+		for(j=0;j<2;j++)	xvpi[i][j] = 0.0;
+		xspvpi[i] = 0.0;
+		xq[i] = 0.0;
+		xr[i] = 0.0;
+		xpid[i] = 0.0;
+	}	
 	dac_da_out(0, 3, 0);
 	for (i = 0; i < Nd; i++) {
 		phi_sp[i] = 0;

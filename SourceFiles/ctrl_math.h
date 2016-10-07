@@ -70,6 +70,7 @@ void eye_matrix(float *e, int n, float value);
 #define	TSQRT1_2	((double)0.70710678118654752440084436210485)
 #define	TSQRT2_3	((double)0.81649658092772603273242802490196)
 #define	TSQRT3_2	((double)1.2247448713915890490986420373529)
-
+#define	NMAX		(2)					// max amount of states
+#define	 IOMAX		(1)							// max amount of input or output states
 #endif
 
