@@ -29,8 +29,8 @@ static double theta_msr[2] = { 0.0, 0.0 };			// measured theta [rad]
 //SPINDLE ENCORDER
 //#define SPCNT2RADPS (0.191747598485705)  // 2 * PI(1) /SPCNTPREV/TS
 #define ALPHASP		(0.222232320828211)						// recursive IIR MAF factor //400Hz@100*10^-6 sampling
-#define SPCNT2RADPS (1.917475984857052) // 2 * PI(1) /SPCNTPREV/(100*10^-6)
-#define SPCNTPREV (32768.0) //pulse/turn 2^15
+#define SPCNT2RADPS (0.958737992428526) // 2 * PI(1) /SPCNTPREV/(100*10^-6)
+#define SPCNTPREV (65536.0) //pulse/turn 2^16
 
 void motor_enc_init(int axis)
 {
