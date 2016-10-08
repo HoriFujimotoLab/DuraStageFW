@@ -62,7 +62,7 @@ float dominant_freq(float b, float c) //dominant freq of  z^2 / ( z^2 + b z + c 
 		return fchat;
 	}
 
-	return 2000.0; //default
+	return 0.0; //default
 }
 
 void calc_new_speed(int *rho, float *omega_new_rpm, float fchat,float omega_sp_rpm, int q) {

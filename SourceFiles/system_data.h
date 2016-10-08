@@ -94,6 +94,16 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define VELXLIM (50)
 #define VELYLIM (50)
 
+//CONSTANTS
+#define RAD2M (0.001909859317103)  //R[m/rad]
+#define M2RAD (5.235987755982287e+02) //1/R [rad/m]
+#define RPM2HZ (0.016666666666667)
+
+#define DA_GAIN_RPM (0.0024920) //1/400 , 400 rpm/V *0.997
+#define DA_GAIN_TORQUE (0.416666666666667) //1/2.4 2.4Nm/V
+
+//MA FILTERS
+#define  ALPHA		(0.918997407842057)						// recursive IIR MAF factor //400Hz@1 msec sampling
 
 // SYSTEM VAR
 extern int msr, cnt, set, calib;

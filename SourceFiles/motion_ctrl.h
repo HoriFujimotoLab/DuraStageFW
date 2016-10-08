@@ -84,6 +84,8 @@ void motion_ctrl_pid(float x_ref, float x_msr, float *iq_ref);
 **	OUT:	 return estimated disturbance
 */
 float estimated_disturbance(float t_ref, float omega_m);
+float dob_hpf2(float u);
+float dob_lpf2(float u);
 
 /*	NOTCH FILTER FOR STAGE X
 **	-------------------------

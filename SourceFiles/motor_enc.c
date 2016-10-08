@@ -17,7 +17,7 @@ float theta_mx = 0.0;
 #define DAT_ADDR		0xA0070000					// myway defined data address
 #define RST_ADDR		0xA0071000					// myway defined reset address
 #define	ENC_RES			(1048576.0)					// 20bit resolution [cnt/turn]
-#define ALPHA		(0.918997407842057)						// recursive IIR MAF factor //400Hz@1 msec sampling
+
 const int pios_bdn[2] = {0, 1};						// PIOS board dip switch numbers
 const int enc_dir[2] = { -1, -1 };					// encoder rotation direction
 const float enc_off[2] = {2.363769, 2.187501416};	// setup encoder-rotor offsets

@@ -9,16 +9,8 @@ Author:		Thomas Beauduin, University of Tokyo, 2016
 
 #include "system_fsm.h"
 
-#define DA_GAIN_RPM (0.0024920) //1/400 , 400 rpm/V *0.997
-#define DA_GAIN_TORQUE (0.416666666666667) //1/2.4 2.4Nm/V
-
 #define ALPHAMA_FIRST (0.006263487375222) //1 Hz LPF for 1000 usec
 #define ALPHAMA2 (0.715390456663971) //2000 Hz LPF @100 usec sampling 
-#define BETAMA (0.939101367424293) //100Hz HPF @100 usec for Kalman Filter
-
-#define RAD2M (0.001909859317103)  //R[m/rad]
-#define M2RAD (5.235987755982287e+02) //1/R [rad/m]
-#define RPM2HZ (0.016666666666667)
 
 void system_init(void);
 interrupt void system_tint0(void);
@@ -275,6 +267,8 @@ void system_cint5(void)
 	setup_adc_read(XAXIS, &vdc_adx, &idc_adx, &iu_adx, &iw_adx);
 	setup_adc_read(2, &torque_ad, &aspx, &aspy, &aspz);
 	motor_enc_spindle(&count_old_sp, &count_sp, &omega_old_sp, &omega_sp, &omega_sp_ma, &theta_sp, &r_count_sp);
+	omega_sp_ma_2 = ALPHAMA2*omega_sp + (1-ALPHAMA2)*omega_sp_ma_2;
+	observed_disturbance = estimated_disturbance(torque_command, omega_sp_ma_2); //disturbace observer
 
 	// CURRENT CONTROL - XY-AXIS
 	if (sysmode_e == SYS_INI || sysmode_e == SYS_RUN){
@@ -310,21 +304,19 @@ void system_cint5(void)
 			}
 			//adaptive
 			if (kmode == 1) {
-				omega_sp_ma_2 = ALPHAMA2*omega_sp + (1 - ALPHAMA2)*omega_sp_ma_2;
-				observed_disturbance = estimated_disturbance(torque_command, omega_sp_ma_2); //disturbace observer
 				aspx = observed_disturbance;
+				aspx_hf = dob_lpf2(dob_hpf2(aspx));
 
 				////debug
-				time7 += TC * 1.0e-6;
+				//time7 += TC * 1.0e-6;
 				//aspx = sinsp(2 * PI(1) * 2500 * time7);
 
 				//aspx = omega_sp_ref_rpm_ma - omega_sp*RADPS2RPM;
 				//aspx from dob
-				aspx_hf = aspx + phi_sp[0] + BETAMA*aspx_hf;
 				kalman_filter(phi_sp, aspx_hf, theta_par_est, P_var);
 				//record phi=[-aspx[k-1], -aspx[k-2]]
 				phi_sp[1] = phi_sp[0]; //aspx[k-2]
-				phi_sp[0] = -aspx; //aspx[k-1]
+				phi_sp[0] = -aspx_hf; //aspx[k-1]
 			 }
 	}
 	else {
