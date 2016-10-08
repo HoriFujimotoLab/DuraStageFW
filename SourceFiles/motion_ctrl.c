@@ -13,10 +13,11 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 #include "Rtimeref.h"
 
 int ref = 0; double t = 0.0;
-static float xvpi[NMAX][2] = { 0.0 }; //{{XAXIS} , {YAXIS}}
+static float xvpi[NMAX][2] = { 0.0 }; //{{XAXIS} , {YAXIS}} stage state
 static float xpid[NMAX] = { 0.0 };
 static float xspvpi[NMAX] = { 0.0 }; //spindle variable state
 static float xq[NMAX] = { 0.0}, xr[NMAX] = {0.0 };//disturbance observer states
+static float xstn[NMAX] = { 0.0 }; // notch filter for stage x
 
 void direct_qcurrent_ctrl(int reftype_e, float Aref, float Fref, float *iq_ref){
 	switch (reftype_e)
@@ -98,17 +99,22 @@ float estimated_disturbance(float t_ref, float omega_m) {
 	//															   |
 	//															   V
 	//									OBSERVED DISTURBANCE TORQUE
-	float sd[IOMAX] = { 0.0 }, ud[IOMAX] = { 0.0 }, td[IOMAX], vd[IOMAX];
-	td[0] = t_ref;	
-	vd[0] = omega_m;
+	float sd[IOMAX] , ud[IOMAX];
 	//Q Filter
-	ctrl_math_output(C_Q, xq, D_Q, td, sd , 2);
-	ctrl_math_state(A_Q, xq, B_Q, td, xq, 2);
+	ctrl_math_output(C_Q, xq, D_Q, &t_ref, sd , 2);
+	ctrl_math_state(A_Q, xq, B_Q, &t_ref, xq, 2);
 	//R Filter
-	ctrl_math_output(C_R, xr, D_R, vd, ud, 2);
-	ctrl_math_state(A_R, xr, B_R, vd, xr, 2);
+	ctrl_math_output(C_R, xr, D_R, &omega_m, ud, 2);
+	ctrl_math_state(A_R, xr, B_R, &omega_m, xr, 2);
 	//observed(estimated) disturbance torque
 	return ( ud[0] - sd[0] );
+}
+
+float notch_stage_x(float t_ref) {
+	float t_nref[IOMAX];
+	ctrl_math_output(C_notch_stage_x, xstn, D_notch_stage_x, &t_ref, t_nref, 2);
+	ctrl_math_state(A_notch_stage_x, xstn, B_notch_stage_x, &t_ref, xstn, 2);
+	return t_nref[0];
 }
 
 void motion_ctrl_reset(void)
@@ -120,6 +126,7 @@ void motion_ctrl_reset(void)
 		xq[i] = 0.0;
 		xr[i] = 0.0;
 		xpid[i] = 0.0;
+		xstn[i] = 0.0;
 	}	
 	dac_da_out(0, 3, 0);
 	for (i = 0; i < Nd; i++) {

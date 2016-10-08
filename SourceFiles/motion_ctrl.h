@@ -83,8 +83,15 @@ void motion_ctrl_pid(float x_ref, float x_msr, float *iq_ref);
 **			omega_m:speed(angular speed)
 **	OUT:	 return estimated disturbance
 */
-
 float estimated_disturbance(float t_ref, float omega_m);
+
+/*	NOTCH FILTER FOR STAGE X
+**	-------------------------
+**	DES:	remove frequency component of resonance
+**	INP:	t_ref:refence of input(torque or current)
+**	OUT:	 t_ref without resonance coponent
+*/
+float notch_stage_x(float t_ref);
 
 
 /*	RESET CONTROL MODULE

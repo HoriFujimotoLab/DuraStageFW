@@ -196,7 +196,10 @@ void system_tint0(void)
 
 			//stage velocity control
 		case VEL_MODE:
-			if (xymode == XMODE)	motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, v_linx_ma*M2RAD, &iq_refx);
+			if (xymode == XMODE) {
+				motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, v_linx_ma*M2RAD, &iq_refx);
+				if(test3>0) iq_refx = notch_stage_x(iq_refx);
+			}
 			else if (xymode == YMODE)	motion_ctrl_vpi(YAXIS, vm_refy*M2RAD, v_liny_ma*M2RAD, &iq_refy);
 			break;
 
