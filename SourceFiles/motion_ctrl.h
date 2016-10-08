@@ -93,6 +93,15 @@ float estimated_disturbance(float t_ref, float omega_m);
 */
 float notch_stage_x(float t_ref);
 
+/*	DISTURBACNE OBSERVER FOR STAGE X
+**	-------------------------
+**	DES:	estimate(observe) disturbance
+**	INP:	t_ref:refence of input(torque)
+**			omega_m:speed(angular speed)
+**	OUT:	 return estimated disturbance
+*/
+float estimated_disturbance_stx(float t_ref, float omega_m);
+
 
 /*	RESET CONTROL MODULE
 **	--------------------

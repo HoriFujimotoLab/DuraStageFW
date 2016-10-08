@@ -18,6 +18,7 @@ static float xpid[NMAX] = { 0.0 };
 static float xspvpi[NMAX] = { 0.0 }; //spindle variable state
 static float xq[NMAX] = { 0.0}, xr[NMAX] = {0.0 };//disturbance observer states
 static float xstn[NMAX] = { 0.0 }; // notch filter for stage x
+static float xqstx[NMAX] = { 0.0 }, xrstx[NMAX] = { 0.0 }; //disturbance observer for stage states
 
 void direct_qcurrent_ctrl(int reftype_e, float Aref, float Fref, float *iq_ref){
 	switch (reftype_e)
@@ -54,9 +55,14 @@ void motion_ctrl_vpi(int axis, float vm_ref, float omega_m, float *iq_ref)
 	float vm_er[1];
 
 	if (fabsf(vm_ref) > VELXLIM) { vm_ref = sign(vm_ref) * VELXLIM; }		// limit speed
+	//Velocity PI control
 	vm_er[0] = vm_ref - omega_m;
 	ctrl_math_output(Cvpi[axis], xvpi[axis], Dvpi[axis], vm_er, iq_ref, 1);
 	ctrl_math_state(Avpi[axis], xvpi[axis], Bvpi[axis], vm_er, xvpi[axis], 1);
+	if (axis == XAXIS) {	//DOB
+		dob_stx = estimated_disturbance_stx(*iq_ref, omega_m);
+		*iq_ref -= dob_stx;
+	}
 	if (fabsf(*iq_ref) > I_PK) { *iq_ref = sign(*iq_ref) * I_PK; }		// limit torque
 }
 
@@ -117,6 +123,26 @@ float notch_stage_x(float t_ref) {
 	return t_nref[0];
 }
 
+float estimated_disturbance_stx(float t_ref, float omega_m) {
+	//Torque Command   td																						Speed   vd 
+	//			|																													|
+	//			|																													|			
+	//			------------->[Q(s)]----sd---> - O + <---ud---[R(S) = Q(s)*(Js+D)]-----
+	//															   |
+	//															   |
+	//															   V
+	//									OBSERVED DISTURBANCE TORQUE
+	float sd[IOMAX], ud[IOMAX];
+	//Q Filter
+	ctrl_math_output(C_Q_STX, xqstx, D_Q_STX, &t_ref, sd, 2);
+	ctrl_math_state(A_Q_STX, xqstx, B_Q_STX, &t_ref, xqstx, 2);
+	//R Filter
+	ctrl_math_output(C_R_STX, xrstx, D_R_STX, &omega_m, ud, 2);
+	ctrl_math_state(A_R_STX, xrstx, B_R_STX, &omega_m, xrstx, 2);
+	//observed(estimated) disturbance torque
+	return (ud[0] - sd[0]);
+}
+
 void motion_ctrl_reset(void)
 {
 	int i, j;
@@ -127,6 +153,8 @@ void motion_ctrl_reset(void)
 		xr[i] = 0.0;
 		xpid[i] = 0.0;
 		xstn[i] = 0.0;
+		xqstx[i] = 0.0;
+		xrstx[i] = 0.0;
 	}	
 	dac_da_out(0, 3, 0);
 	for (i = 0; i < Nd; i++) {

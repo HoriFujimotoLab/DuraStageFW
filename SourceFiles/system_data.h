@@ -155,6 +155,7 @@ extern float x_mx, x_my, v_mx, v_my;
 extern float torque_ad, aspx, aspy, aspz;
 extern float x_linx, x_liny, v_linx, v_liny, v_linx_ma, v_liny_ma;
 extern float theta_m_ref_liny , theta_m_ref_linx ;
+extern float dob_stx;
 
 extern float torque_command, observed_disturbance, observed_disturbance_ma;
 
