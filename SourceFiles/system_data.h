@@ -28,11 +28,10 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define		TC		(100.0)                  // carrier sampling		[us]
 #define		DT		(3500.0)				// inv dead time		[ns]
 
-/*
-// STAGE PAR
-#define		TS		(400.0)   				// system sampling		[us]
-#define		FS		(2500.0)          		// system frequency		[Hz]
-*/
+//CURRENT CONTROL PAR
+#define		TQ (250.0) //current control frequency
+#define		FQ (4000.0)
+
 // CONTROL PAR
 #define		TS		(1000.0)   				// system sampling		[us]
 #define		FS		(1000.0)          		// system frequency		[Hz]

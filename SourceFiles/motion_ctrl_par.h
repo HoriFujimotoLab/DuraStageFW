@@ -6,8 +6,8 @@ float Cvpi[2][1] = { { 9.84219236928830730000e-01 },{ 9.84219236928830730000e-01
 float Dvpi[2][1] = { { 3.51506870331725140000e+00 },{ 3.51506870331725140000e+00 } };
 
 
-//Postion P based on Velocity PI, Bw:0.5 Hz, Ts1kHz
-float Kxp = 3.14;
+//Postion P based on Velocity PI, Bw:1 Hz, Ts1kHz
+float Kxp = PI(2);
 
 //Spindle velocity PI control Bw:80Hz, Ts 1kHz
 float Aspvpi[1] = { 1.00000000000000000000e+00 };
