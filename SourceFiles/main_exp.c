@@ -9,9 +9,6 @@ Author:		Thomas Beauduin, University of Tokyo, 2016
 
 #include "system_fsm.h"
 
-#define ALPHAMA_FIRST (0.006263487375222) //1 Hz LPF for 1000 usec
-#define ALPHAMA2 (0.715390456663971) //2000 Hz LPF @100 usec sampling 
-
 void system_init(void);
 interrupt void system_tint0(void);
 //interrupt void system_tint1(void);
@@ -50,15 +47,16 @@ void system_tint0(void)
 		//motor_enc_spindle(&count_old_sp, &count_sp, &omega_old_sp, &omega_sp, &omega_sp_ma, &theta_sp, &r_count_sp); //spindle
 		omega_sp_ma_rpm = RADPS2RPM * omega_sp_ma;
 		omega_sp_ref_rpm_ma = ALPHAMA_FIRST*omega_sp_ref_rpm + (1 - ALPHAMA_FIRST)*omega_sp_ref_rpm_ma;
+
 		//adaptive
 		fchat_a = dominant_freq(theta_par_est[0], theta_par_est[1]);
 		//fchat_a_ma = ALPHAMA * fchat_a + (1 - ALPHAMA) * fchat_a_ma;
-		aux7 = aspx*aspx; //this is for threshold
-		if (aux7 > contact_threshold) kmode = 1; //milling
+		//aux7 = aspx*aspx; //this is for threshold
+		//if (aux7 > contact_threshold) kmode = 1; //milling
 		//if(cmode==SHIMODA_A_MODE) calc_new_speed(&rho_sp, &omega_sp_new_rpm, fchat_a, omega_sp_ma_rpm, Qn);
 		//else	
 		//omega_sp_new_ma_rpm = ALPHAMA2 * omega_sp_new_rpm + (1 - ALPHAMA2)*omega_sp_new_ma_rpm;
-		epsilon_sp = aspx_hf*aspx_hf;
+		//epsilon_sp = aspx_hf*aspx_hf;
 		//if (epsilon_sp > epsilon_sp_max) epsilon_sp_max = epsilon_sp;
 		//aux1 = ALPHAMA_FIRST*epsilon_sp + (1 - ALPHAMA_FIRST)*aux1;
 		//disturbance_observer
@@ -187,7 +185,6 @@ void system_tint0(void)
 			//stage velocity control
 		case VEL_MODE:
 			if (xymode == XMODE) 	motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
-			//you may add: iq_refx = notch_stage_x(*iq_ref);
 			else if (xymode == YMODE)	motion_ctrl_vpi(YAXIS, vm_refy*M2RAD, omega_may, &iq_refy);
 			break;
 
@@ -204,6 +201,7 @@ void system_tint0(void)
 				incy = 0;
 			}
 			break;
+
 
 			//case POS_MODE:
 			////stage position control full closed
@@ -269,6 +267,10 @@ void system_cint5(void)
 	motor_enc_spindle(&count_old_sp, &count_sp, &omega_old_sp, &omega_sp, &omega_sp_ma, &theta_sp, &r_count_sp);
 	omega_sp_ma_2 = ALPHAMA2*omega_sp + (1-ALPHAMA2)*omega_sp_ma_2;
 	observed_disturbance = estimated_disturbance(torque_command, omega_sp_ma_2); //disturbace observer
+	if (xymode > XMODE) { //YMODE or XYMODE
+		motor_enc_elec(YAXIS, &theta_ey); //y-axis
+		setup_adc_read(YAXIS, &vdc_ady, &idc_ady, &iu_ady, &iw_ady); //y-axis
+	}
 
 	// CURRENT CONTROL - XY-AXIS
 	if (sysmode_e == SYS_INI || sysmode_e == SYS_RUN){
@@ -287,9 +289,6 @@ void system_cint5(void)
 				break;
 
 			case YMODE:
-				motor_enc_elec(YAXIS, &theta_ey); //y-axis
-				setup_adc_read(YAXIS, &vdc_ady, &idc_ady, &iu_ady, &iw_ady); //y-axis
-
 				//X-axis
 				motor_inv_pwm(XAXIS, 0, 0, 0, vdc_adx); //dynamic braking
 				//Y-axis
@@ -309,7 +308,7 @@ void system_cint5(void)
 
 				////debug
 				//time7 += TC * 1.0e-6;
-				//aspx = sinsp(2 * PI(1) * 2500 * time7);
+				//aspx_hf = sinsp(2 * PI(1) * 1500 * time7);
 
 				//aspx = omega_sp_ref_rpm_ma - omega_sp*RADPS2RPM;
 				//aspx from dob

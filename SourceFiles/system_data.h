@@ -53,6 +53,9 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define Nd ((int) 2) //size of parameter
 #define Qn ((int) 4) //number of flutes
 #define CONTACT_THRESHOLD (100.0) //m^2/s^2
+#define sigma_w (0.1) //observation noise variance
+#define sigma_v (1.0e-16) //process noise variance
+#define SIGMA_P (1.0e-4) //initial value of P
 
 //modes
 #define POS_MODE (1)
@@ -103,7 +106,14 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define DA_GAIN_TORQUE (0.416666666666667) //1/2.4 2.4Nm/V
 
 //MA FILTERS
+//TS
 #define  ALPHA		(0.918997407842057)						// recursive IIR MAF factor //400Hz@1 msec sampling
+#define ALPHAMA_FIRST (0.006263487375222) //1 Hz LPF for 1000 usec
+//TC
+#define ALPHAMA2 (0.715390456663971) //2000 Hz LPF @100 usec sampling 
+#define ALPHASP		(0.222232320828211)						// recursive IIR MAF factor //400Hz@100*10^-6 sampling
+#define SPCNT2RADPS (0.958737992428526) // 2 * PI(1) /SPCNTPREV/(100*10^-6)
+#define INV2PITS (1.591549430918954e+03) //1/2/pi*FC(==10000)
 
 // SYSTEM VAR
 extern int msr, cnt, set, calib;

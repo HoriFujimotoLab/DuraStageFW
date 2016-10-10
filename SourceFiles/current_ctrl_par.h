@@ -1,7 +1,6 @@
 //MOTOR CTRL PARAMETERS:
 //FOR DURA
 
-
 //PZC PI
 //Bw:800 Hz(5000 rad/s), Ts: 10 kHz (100us) with FF input shaping LPF 4000 Hz
 float	Afbi = 1.00000000000000000000e+00;
@@ -13,9 +12,6 @@ float	Affi = 8.10025921579431430000e-02;
 float	Bffi = 1.00000000000000000000e+00;
 float	Cffi = 9.18997407842056750000e-01;
 float	Dffi = 0.00000000000000000000e+00;
-
-
-
 
 //Dead-Time SP
 float	ihys	=	5.0000000000e-02;

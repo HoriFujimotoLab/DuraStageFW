@@ -13,7 +13,7 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 #include "Rtimeref.h"
 
 int ref = 0; double t = 0.0;
-static float xvpi[NMAX][2] = { 0.0 }; //{{XAXIS} , {YAXIS}} stage state
+static float xvpi[XYMODE][NMAX] = { 0.0 }; //{{XAXIS} , {YAXIS}} stage state
 static float xpid[NMAX] = { 0.0 };
 static float xspvpi[NMAX] = { 0.0 }; //spindle variable state
 static float xq[NMAX] = { 0.0}, xr[NMAX] = {0.0 };//disturbance observer states
@@ -60,10 +60,13 @@ void motion_ctrl_vpi(int axis, float vm_ref, float omega_m, float *iq_ref)
 	vm_er[0] = vm_ref - omega_m;
 	ctrl_math_output(Cvpi[axis], xvpi[axis], Dvpi[axis], vm_er, iq_ref, 1);
 	ctrl_math_state(Avpi[axis], xvpi[axis], Bvpi[axis], vm_er, xvpi[axis], 1);
-	if (axis == XAXIS) {	//DOB
-		dob_stx = estimated_disturbance_stx(*iq_ref, omega_m);
-		*iq_ref -= dob_stx;
-	}
+	//if (axis == XAXIS) {
+	////DOB
+	//	dob_stx = estimated_disturbance_stx(*iq_ref, omega_m);
+	//	*iq_ref -= dob_stx;
+	////notch
+	// *iq_ref = notch_stage_x(*iq_ref);
+	//}
 	if (fabsf(*iq_ref) > I_PK) { *iq_ref = sign(*iq_ref) * I_PK; }		// limit torque
 }
 
@@ -178,7 +181,7 @@ void motion_ctrl_reset(void)
 		phi_sp[i] = 0;
 		theta_par_est[i] =0;
 		for (j = 0; j < Nd; j++) {
-			if (i==j) P_var[i*Nd +j] =  1e-4;
+			if (i==j) P_var[i*Nd +j] = SIGMA_P;
 			else  P_var[i*Nd + j] = 0;
 		}
 	}

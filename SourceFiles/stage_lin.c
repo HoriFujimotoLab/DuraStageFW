@@ -11,7 +11,6 @@ Author:		Thomas Beauduin, University of Tokyo, April 2015
 #include	<mwio3.h>
 
 // MODULE PAR
-#define ALPHA		(0.918997407842057)						// recursive IIR MAF factor //400Hz@1 msec sampling
 //#define LIN_DIR (-0.1) 										
 
 // FPGA ADDR
