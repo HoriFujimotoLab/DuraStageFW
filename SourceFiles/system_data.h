@@ -18,7 +18,7 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 
 #define		OVC_LIM	(50.48)					// overcurrent limit	[A] 
 #define		OVV_LIM	(380.0)					// overvorltage limit	[V]
-#define		OVS_LIM	(450.0)					// overspeed limit		[rad/s]
+#define		OVS_LIM	(50.0)					// overspeed limit		[rad/s]
 //#define		OVS_LIN_LIM	(0.1)					// overspeed limit		[m/s]
 #define		I_PK	(24.0)					// ctrl out saturation	[A]
 #define       T_SP (24.0)                    //spindle torque satuation [Nm] 
@@ -93,8 +93,8 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define ISOVRRN (1)
 
 //STAGE VELOCITY LIMIT [rad/s]
-#define VELXLIM (50)
-#define VELYLIM (50)
+#define VELXLIM (5.235987755982287)
+#define VELYLIM (5.235987755982287)
 
 //CONSTANTS
 #define RAD2M (0.001909859317103)  //R[m/rad]
