@@ -19,7 +19,7 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 
 #define		OVC_LIM	(50.48)					// overcurrent limit	[A] 
 #define		OVV_LIM	(380.0)					// overvorltage limit	[V]
-#define		OVS_LIM	(50.0)					// overspeed limit		[rad/s]
+#define		OVS_LIM	(450.0)					// overspeed limit		[rad/s]
 //#define		OVS_LIN_LIM	(0.1)					// overspeed limit		[m/s]
 #define		I_PK	(24.0)					// ctrl out saturation	[A]
 #define       T_SP (24.0)                    //spindle torque satuation [Nm] 
@@ -29,13 +29,13 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define		TC		(100.0)                  // carrier sampling		[us]
 #define		DT		(3500.0)				// inv dead time		[ns]
 
-//CURRENT CONTROL PAR
-#define		TQ (250.0) //current control frequency
-#define		FQ (4000.0)
+//CURRENT CONTROL AND MOTION SENSOR PAR
+#define		FQ (5000.0)		// current control frequency		[Hz]
+#define		TQ (200.0)		//current control sampling [us]
 
-// CONTROL PAR
-#define		TS		(1000.0)   				// system sampling		[us]
+// MOTION CONTROL PAR
 #define		FS		(1000.0)          		// system frequency		[Hz]
+#define		TS		(1000.0)   				// system sampling		[us]
 #define		NROFT	(50000.0)               // total number of msr	[-]			
 #define		XAXIS (0) //stage x axis
 #define		YAXIS  (1) //stage y axis

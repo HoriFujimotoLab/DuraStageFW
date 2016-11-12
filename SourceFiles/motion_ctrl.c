@@ -12,6 +12,9 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 #include "Rfreqref.h"
 #include "Rtimeref.h"
 
+//#include "data/Rqlog1_1k.h"
+#include "data/Rqlog1k_2k.h"
+
 int ref = 0; double t = 0.0;
 static float xvpi[XYMODE][NMAX] = { 0.0 }; //{{XAXIS} , {YAXIS}} stage state
 static float xpid[NMAX] = { 0.0 };
@@ -47,7 +50,10 @@ void motion_ctrl_ref(int reftype_e, float Aref, float Fref, float *x_ref)
 	case 4:	*x_ref = Aref*timeref[ref];
 		if (ref < (TIME - 1))	{ ref++; }
 		else					{ ref = 0; }		break;
-	case 5:											break;
+	case 5:*x_ref = Aref*refvec[ref];			
+		if (ref < (NROFS - 1)) { ref++; }
+		else { ref = 0; }
+		break;
 	}
 }
 
