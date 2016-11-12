@@ -15,6 +15,7 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define		Ke		(0.412805442470582)		// dq-Axis voltage constant [V/(rad/s)]
 #define		Rs		(3.0)		// Stator resistance	[Ohm] /phase
 #define		Ls		(0.00310)		// Stator inductance	[H] =Lq=Ld
+#define		Ktx	(0.715)
 
 #define		OVC_LIM	(50.48)					// overcurrent limit	[A] 
 #define		OVV_LIM	(380.0)					// overvorltage limit	[V]
@@ -52,8 +53,8 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define Nd ((int) 2) //size of parameter
 #define Qn ((int) 4) //number of flutes
 #define CONTACT_THRESHOLD (100.0) //m^2/s^2
-#define sigma_w (0.1) //observation noise variance
-#define sigma_v (1.0e-16) //process noise variance
+#define SIGMA_W (0.07) //observation noise variance
+#define SIGMA_V (1.0e-16) //process noise variance
 #define SIGMA_P (1.0e-4) //initial value of P
 
 //modes
@@ -106,13 +107,12 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 
 //MA FILTERS
 //TS
-#define  ALPHA		(0.918997407842057)						// recursive IIR MAF factor //400Hz@1 msec sampling
-#define ALPHAMA_FIRST (0.006263487375222) //1 Hz LPF for 1000 usec
-//TC
-#define ALPHAMA2 (0.715390456663971) //2000 Hz LPF @100 usec sampling 
-#define ALPHASP		(0.222232320828211)						// recursive IIR MAF factor //400Hz@100*10^-6 sampling
-#define SPCNT2RADPS (0.958737992428526) // 2 * PI(1) /SPCNTPREV/(100*10^-6)
-#define INV2PITS (1.591549430918954e+03) //1/2/pi*FC(==10000)
+#define ALPHASP		(0.715390456663971)					// 200 Hz LPF @1000*10^-6 sampling
+#define ALPHAMA_FIRST (0.006263487375222)				//1 Hz LPF for 1000 usec
+#define SPCNT2RADPS (0.0958737992428526)					// 2 * PI(1) /SPCNTPREV/(1000*10^-6)
+//TQ
+#define  ALPHA		(0.269597308951354)						// 200 Hz LPF @250 msec sampling
+#define INV2PITS (6.366197723675814e+02)					//1/2/pi*FC(==4000)
 
 // SYSTEM VAR
 extern int msr, cnt, set, calib;
@@ -175,8 +175,12 @@ extern float torque_ad, aspx, aspy, aspz;
 extern float x_linx, x_liny, v_linx, v_liny, v_linx_ma, v_liny_ma;
 extern float theta_m_ref_liny , theta_m_ref_linx ;
 extern float dob_stx;
+extern float sigma_w, sigma_v;
 
 extern float torque_command, observed_disturbance, observed_disturbance_ma;
+
+extern int is_drive;
+extern float pre_linx;
 
 extern int test, test1, test2, test3, test4, test5, test6, test7, pin;
 extern int cmode, xymode, kmode;

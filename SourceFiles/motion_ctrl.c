@@ -20,6 +20,7 @@ static float xq[NMAX] = { 0.0}, xr[NMAX] = {0.0 };//disturbance observer states
 static float xstn[NMAX] = { 0.0 }; // notch filter for stage x
 static float xqstx[NMAX] = { 0.0 }, xrstx[NMAX] = { 0.0 }; //disturbance observer for stage states
 static float xlpf2[NMAX] = { 0.0 }, xhpf2[NMAX] = { 0.0 }; //2 order lpf and hpf for DOB
+static float xdobn[NMAX] = { 0.0 };
 
 void direct_qcurrent_ctrl(int reftype_e, float Aref, float Fref, float *iq_ref){
 	switch (reftype_e)
@@ -134,6 +135,13 @@ float dob_hpf2(float u) {
 	return y[0];
 }
 
+float notch_2000(float t_ref) {
+	float t_nref[IOMAX];
+	ctrl_math_output(C_notch_2000, xdobn, D_notch_2000, &t_ref, t_nref, 2);
+	ctrl_math_state(A_notch_2000, xdobn, B_notch_2000, &t_ref, xdobn, 2);
+	return t_nref[0];
+}
+
 float notch_stage_x(float t_ref) {
 	float t_nref[IOMAX];
 	ctrl_math_output(C_notch_stage_x, xstn, D_notch_stage_x, &t_ref, t_nref, 2);
@@ -175,6 +183,7 @@ void motion_ctrl_reset(void)
 		xrstx[i] = 0.0;
 		xlpf2[i] = 0.0;
 		xhpf2[i] = 0.0;
+		xdobn[i] = 0.0;
 	}	
 	dac_da_out(0, 3, 0);
 	for (i = 0; i < Nd; i++) {
@@ -185,8 +194,8 @@ void motion_ctrl_reset(void)
 			else  P_var[i*Nd + j] = 0;
 		}
 	}
-	ctime = 0;
 	torque_command = 0;
 	iq_refx = 0.0; iq_refy = 0.0;
 	omega_sp_ma_rpm = 0;
+	flag_threshold = 0;
 }

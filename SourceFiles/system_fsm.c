@@ -29,7 +29,7 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 #define		OVS_LED		0x0800			// 4. overspeed error		(DO11)
 #define		HWE_LED		0x1000			// 5. inv hardware error	(DO12) //if inv power is not supplied 
 #define		SSE_LED		0x2000			// 6. setup sensor error	(DO13)
-#define		OVA_LED		0x4000			// 7. over acc error	(DO14)
+#define		OVL_LED		0x4000			// 7. over load error	(DO14)
 
 // MODULE PAR
 //#define		PEV_BDN		0				// pev board number

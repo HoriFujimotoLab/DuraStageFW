@@ -70,7 +70,7 @@ void motor_enc_read(int axis, float *theta_m, float *omega_m, float *omega_ma)
 	if (diff >  PI(1)){ nrofr[axis]--; i--; }								// revolution calc
 	if (diff < -PI(1)){ nrofr[axis]++; i++; }								// note: max vel pi*fs
 	*theta_m = (float)(theta_msr[axis] + nrofr[axis] * PI(2));				// full screw pos calc
-	*omega_m = (float)((diff + i*PI(2)) * FS);								// full screw vel calc
+	*omega_m = (float)((diff + i*PI(2)) * FQ);								// full screw vel calc
 
 	// FILT
 	*omega_ma = ALPHA * *omega_m + (1.0 - ALPHA) * *omega_ma;				// resursive iir maf

@@ -57,6 +57,10 @@ float dob_stx=0.0;
 float torque_ad = 0.0, aspx = 0.0, aspy = 0.0, aspz = 0.0;
 
 float torque_command = 0.0, observed_disturbance=0.0, observed_disturbance_ma=0.0;
+float sigma_w=SIGMA_W, sigma_v = SIGMA_V;
+
+int is_drive = 0;
+float pre_linx=0.0;
 
 int test = 0.0, test1 = 0.0, test2 = 0.0, test3 = 0.0, test4 = 1, test5 = 0.0, test6 = 0.0, test7 = 0.0, pin=0; //for debugging 
 int cmode = 0, xymode = 0, kmode=0;

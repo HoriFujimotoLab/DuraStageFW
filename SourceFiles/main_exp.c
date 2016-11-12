@@ -28,13 +28,6 @@ void main(void)
 }
 
 void system_tint0(void) {
-	unsigned int regs[2];
-
-	// MULTI-INT ON
-	regs[0] = CSR;
-	regs[1] = IRP;
-	int_enable();
-
 	motor_enc_elec(XAXIS, &theta_ex); //x-axis
 	setup_adc_read(XAXIS, &vdc_adx, &idc_adx, &iu_adx, &iw_adx); //y-axis
 	motor_enc_elec(YAXIS, &theta_ey); //y-axis
@@ -63,10 +56,32 @@ void system_tint0(void) {
 		motor_inv_pwm(YAXIS, 0, 0, 0, vdc_ady);
 	}
 
-	// MULTI-INT OFF
-	int_disable();
-	CSR = regs[0];
-	IRP = regs[1];
+		//X read
+	motor_enc_read(XAXIS, &theta_mx, &omega_mx, &omega_max);
+	stage_lin_read(XAXIS, &x_linx, &v_linx, &v_linx_ma);
+		//Y read
+	motor_enc_read(YAXIS, &theta_my, &omega_my, &omega_may);
+	
+	//Acceleraton
+	setup_adc_read(2, &torque_ad, &aspx, &aspy, &aspz);
+
+	//disturbace observer
+	observed_disturbance = estimated_disturbance(M2RAD * Kt * iq_refx, v_linx);
+
+	//adaptive
+	if (kmode > 0) {
+		aspx_hf = dob_lpf2(dob_hpf2(observed_disturbance));
+		////debug
+		//time7 += TC * 1.0e-6;
+		//aspx_hf = sinsp(PI(2) * 1500 * time7);
+		//aspx = omega_sp_ref_rpm_ma - omega_sp*RADPS2RPM;
+		kalman_filter(phi_sp, aspx_hf, theta_par_est, P_var);
+		//record phi=[-aspx[k-1], -aspx[k-2]]
+		phi_sp[1] = phi_sp[0]; //aspx[k-2]
+		phi_sp[0] = -aspx_hf; //aspx[k-1]
+	}
+
+	watch_data_8ch();
 }
 
 void system_tint1(void)
@@ -78,35 +93,22 @@ void system_tint1(void)
 	regs[1] = IRP;
 	int_enable();
 
-	// SENSOR READ
-		//encorder read
+	//SAFETY
+	if ((is_drive > 0) && (omega_sp_ma_rpm < 2000)) vm_refx = -1.0e-4; //go back in case of sudden spindle stop
 	//X-AXIS
-	motor_enc_read(XAXIS, &theta_mx, &omega_mx, &omega_max);
 	v_mx = RAD2M* omega_max;
-	stage_lin_read(XAXIS, &x_linx, &v_linx, &v_linx_ma);
 	//Y-AXIS
-	motor_enc_read(YAXIS, &theta_my, &omega_my, &omega_may); //y-axis
 	v_my = RAD2M* omega_may;
 	stage_lin_read(YAXIS, &x_liny, &v_liny, &v_liny_ma);
 	//SPINDLE
+	motor_enc_spindle(&count_old_sp, &count_sp, &omega_old_sp, &omega_sp, &omega_sp_ma, &theta_sp, &r_count_sp);
 	omega_sp_ma_rpm = RADPS2RPM * omega_sp_ma;
 	omega_sp_ref_rpm_ma = ALPHAMA_FIRST*omega_sp_ref_rpm + (1 - ALPHAMA_FIRST)*omega_sp_ref_rpm_ma;
 	//ADAPTIVE
 	fchat_a = dominant_freq(theta_par_est[0], theta_par_est[1]);
-
-	//motor_enc_spindle(&count_old_sp, &count_sp, &omega_old_sp, &omega_sp, &omega_sp_ma, &theta_sp, &r_count_sp); //spindle
-	//fchat_a_ma = ALPHAMA * fchat_a + (1 - ALPHAMA) * fchat_a_ma;
-	//aux7 = aspx*aspx; //this is for threshold
-	//if (aux7 > contact_threshold) kmode = 1; //milling
-	//if(cmode==SHIMODA_A_MODE) calc_new_speed(&rho_sp, &omega_sp_new_rpm, fchat_a, omega_sp_ma_rpm, Qn);
-	//else	
-	//omega_sp_new_ma_rpm = ALPHAMA2 * omega_sp_new_rpm + (1 - ALPHAMA2)*omega_sp_new_ma_rpm;
-	//epsilon_sp = aspx_hf*aspx_hf;
-	//if (epsilon_sp > epsilon_sp_max) epsilon_sp_max = epsilon_sp;
-	//aux1 = ALPHAMA_FIRST*epsilon_sp + (1 - ALPHAMA_FIRST)*aux1;
-	//disturbance_observer
-	//observed_disturbance = estimated_disturbance(torque_command, omega_sp); //disturbace observer
-	//aspx = observed_disturbance;
+	//IS_CONTACT
+	epsilon_sp = aspx*aspx - contact_threshold;
+	if (epsilon_sp > 0)	kmode = 1;
 
 	// MOTION CTRL
 	if (sysmode_e == SYS_STP) {}
@@ -204,9 +206,15 @@ void system_tint1(void)
 				theta_m_ref_liny = x_liny;
 			}
 			motion_ctrl_vpi(YAXIS, motion_ctrl_pos(theta_m_ref_liny, x_liny)*M2RAD, omega_may, &iq_refy);
+			//Adaptive
+			if ((kmode > 0) && (aspx_hf*aspx_hf - threshold > 0)) 	flag_threshold = 1;
+			if (flag_threshold > 0) {
+				calc_new_speed(&rho_sp, &omega_sp_new_rpm, fchat_a, omega_sp_ma_rpm, Qn);
+				if (omega_sp_ref_rpm > 2000) omega_sp_ref_rpm_ma = omega_sp_new_rpm;
+			}
 			//Spindle for cutting
 			spindle_motion_ctrl_vpi(omega_sp_ref_rpm_ma*RPM2RADPS, omega_sp_ma, &torque_command);
-			dac_da_out(0, 3, DA_GAIN_TORQUE * torque_command);
+			dac_da_out(0, 3, DA_GAIN_TORQUE * torque_command);	
 			break;
 
 			//spindle torque control
@@ -289,33 +297,7 @@ void system_tint1(void)
 	//watch_data_8ch(); //watch data @ this frequency FS
 }
 
-void system_cint5(void)
-{
-	setup_adc_read(2, &torque_ad, &aspx, &aspy, &aspz);
-	motor_enc_spindle(&count_old_sp, &count_sp, &omega_old_sp, &omega_sp, &omega_sp_ma, &theta_sp, &r_count_sp);
-	omega_sp_ma_2 = ALPHAMA2*omega_sp + (1 - ALPHAMA2)*omega_sp_ma_2;
-	observed_disturbance = estimated_disturbance(torque_command, omega_sp_ma_2); //disturbace observer
-
-	//adaptive
-	if (kmode > 0) {
-		aspx = observed_disturbance;
-		aspx_hf = dob_lpf2(dob_hpf2(aspx));
-		////debug
-		//time7 += TC * 1.0e-6;
-		//aspx_hf = sinsp(PI(2) * 1500 * time7);
-		//aspx = omega_sp_ref_rpm_ma - omega_sp*RADPS2RPM;
-
-		//aspx from dob
-		kalman_filter(phi_sp, aspx_hf, theta_par_est, P_var);
-		//record phi=[-aspx[k-1], -aspx[k-2]]
-		phi_sp[1] = phi_sp[0]; //aspx[k-2]
-		phi_sp[0] = -aspx_hf; //aspx[k-1]
-	}
-
-	watch_data_8ch();
-	//time++;
-}
-
+void system_cint5(void)	{}
 
 void system_init(void)
 {

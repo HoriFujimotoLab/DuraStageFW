@@ -54,7 +54,7 @@ void stage_lin_read(int axis, float *pos_t, float *vel_t, float *vel_ta)
 	// POS & VEL
 	temp = *pos_t;												// previous msr   [m]
 	*pos_t =(float) LIN_DIR[axis] * data_cnt * 1.0e-9;						// table position [m]
-	*vel_t = (*pos_t - temp) * FS;								// table velocity [m/s]
+	*vel_t = (*pos_t - temp) * FQ;								// table velocity [m/s]
 	*vel_ta = ALPHA * *vel_t + (1 - ALPHA) * *vel_ta;			// resursive maf  [m/s]
 }
 
