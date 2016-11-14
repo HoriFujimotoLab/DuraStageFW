@@ -30,13 +30,13 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define		DT		(3500.0)				// inv dead time		[ns]
 
 //CURRENT CONTROL AND MOTION SENSOR PAR
-#define		FQ (5000.0)		// current control frequency		[Hz]
-#define		TQ (200.0)		//current control sampling [us]
+#define		FQ (8.333333333333334e+03)
+#define		TQ (120.0)		//current control sampling [us]
 
 // MOTION CONTROL PAR
 #define		FS		(1000.0)          		// system frequency		[Hz]
 #define		TS		(1000.0)   				// system sampling		[us]
-#define		NROFT	(50000.0)               // total number of msr	[-]			
+#define		NROFT	(100000)               // total number of msr	[-]			
 #define		XAXIS (0) //stage x axis
 #define		YAXIS  (1) //stage y axis
 

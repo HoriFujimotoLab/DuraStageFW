@@ -112,19 +112,22 @@
     <ClInclude Include="adaptive_ctrl.h">
       <Filter>Header Files\control</Filter>
     </ClInclude>
-    <ClInclude Include="Rfreqref.h">
-      <Filter>Resource Files\references</Filter>
-    </ClInclude>
     <ClInclude Include="c67x_dsplib.h">
       <Filter>Header Files\control</Filter>
     </ClInclude>
     <ClInclude Include="c67x_fastmath.h">
       <Filter>Header Files\control</Filter>
     </ClInclude>
-    <ClInclude Include="data\Rqlog1_1k.h">
+    <ClInclude Include="data\Rqlog1k_2k.h">
       <Filter>Resource Files\references</Filter>
     </ClInclude>
-    <ClInclude Include="data\Rqlog1k_2k.h">
+    <ClInclude Include="data\Rqlog10_1k.h">
+      <Filter>Resource Files\references</Filter>
+    </ClInclude>
+    <ClInclude Include="data\Rqlog1000_1500.h">
+      <Filter>Resource Files\references</Filter>
+    </ClInclude>
+    <ClInclude Include="data\Rqlog1500_2000.h">
       <Filter>Resource Files\references</Filter>
     </ClInclude>
   </ItemGroup>
