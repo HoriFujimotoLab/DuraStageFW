@@ -30,6 +30,7 @@ void stage_lin_init(void);
 */
 void stage_lin_read(int axis, float *pos_t, float *vel_t, float *vel_ta);
 
+void stage_lin_nano_read(int axis, int *pos_nano);
 
 /*	READ LINEAR-SCALE STATUS
 **	------------------------

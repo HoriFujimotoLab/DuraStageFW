@@ -13,8 +13,8 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define		Pp		(4.0)					// pole pairs amount	[-]
 #define		Kt		    (0.412805442470582)		 // dq-Axis torque constant		[Nm/A] = CatalogValue/sqrt(3)
 #define		Ke		(0.412805442470582)		// dq-Axis voltage constant [V/(rad/s)]
-#define		Rs		(3.0)		// Stator resistance	[Ohm] /phase
-#define		Ls		(0.00310)		// Stator inductance	[H] =Lq=Ld
+#define		Rs		(4.15)		// Stator resistance	[Ohm] /phase
+#define		Ls		(0.004880)		// Stator inductance	[H] =Lq=Ld
 #define		Ktx	(0.715)
 
 #define		OVC_LIM	(50.48)					// overcurrent limit	[A] 
@@ -175,6 +175,7 @@ extern float torque_ad, aspx, aspy, aspz;
 extern float x_linx, x_liny, v_linx, v_liny, v_linx_ma, v_liny_ma;
 extern float theta_m_ref_liny , theta_m_ref_linx ;
 extern float dob_stx;
+extern int  x_nano_linx;
 extern float sigma_w, sigma_v;
 
 extern float torque_command, observed_disturbance, observed_disturbance_ma;

@@ -58,6 +58,23 @@ void stage_lin_read(int axis, float *pos_t, float *vel_t, float *vel_ta)
 	*vel_ta = ALPHA * *vel_t + (1 - ALPHA) * *vel_ta;			// resursive maf  [m/s]
 }
 
+void stage_lin_nano_read(int axis, int *pos_nano)
+{
+	// LOCAL VAR
+	int data_cnt = 0;											// msr counter [cnt]
+	int i = 0;													// loop index  [-]
+
+																// READ DATA
+	*CON_ADDR = 1;												// conversion start
+	while (((*STA_ADDR & 0x02) == 1) && (i <= 5)) { i++; }		// wait for rdy status
+	if (i >= 5) { read_err = 1; }								// over-time error
+	if (axis == 0) { data_cnt = *DAT0_ADDR; }				    // read data register X axis
+	if (axis == 1) { data_cnt = *DAT2_ADDR; }				    // read data register Y axis
+
+																// POS & VEL
+	*pos_nano = (int)LIN_DIR[axis] * data_cnt;						// table position [nm]
+}
+
 
 void stage_lin_status(int *status)
 {

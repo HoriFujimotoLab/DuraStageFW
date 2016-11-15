@@ -16,7 +16,8 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 //#include "data/Rqlog1k_2k.h"
 //#include "data/Rqlog10_1k.h"
 //#include "data/Rqlog1000_1500.h"
-#include "data/Rqlog1500_2000.h"
+//#include "data/Rqlog1500_2000.h"
+#include "data/Rqlog1_250.h"
 
 int ref = 0; double t = 0.0;
 static float xvpi[XYMODE][NMAX] = { 0.0 }; //{{XAXIS} , {YAXIS}} stage state

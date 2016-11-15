@@ -27,10 +27,10 @@ void main(void)
 void system_tint0(void) {
 	//x-axis current
 	motor_enc_elec(XAXIS, &theta_ex); //x-axis
-	setup_adc_read(XAXIS, &vdc_adx, &idc_adx, &iu_adx, &iw_adx); //y-axis
+	setup_adc_read(XAXIS, &vdc_adx, &idc_adx, &iu_adx, &iw_adx); 
 																 //x-axis motor/stage
 	motor_enc_read(XAXIS, &theta_mx, &omega_mx, &omega_max);
-	stage_lin_read(XAXIS, &x_linx, &v_linx, &v_linx_ma);
+	stage_lin_nano_read(XAXIS, &x_nano_linx);
 
 	if (sysmode_e == SYS_RUN) {
 		if (msr >= 0 && msr < NROFT) {
