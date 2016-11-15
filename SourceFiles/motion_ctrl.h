@@ -87,6 +87,7 @@ float estimated_disturbance(float t_ref, float omega_m);
 float dob_hpf2(float u);
 float dob_lpf2(float u);
 float notch_2000(float t_ref);
+float stage_lpf2(float u);
 
 /*	NOTCH FILTER FOR STAGE X
 **	-------------------------

@@ -162,10 +162,16 @@
     <ClInclude Include="ctrl_math.h" />
     <ClInclude Include="current_ctrl.h" />
     <ClInclude Include="current_ctrl_par.h" />
+    <ClInclude Include="data\Rqlog1000_1250.h" />
     <ClInclude Include="data\Rqlog1000_1500.h" />
     <ClInclude Include="data\Rqlog10_1k.h" />
+    <ClInclude Include="data\Rqlog1250_1500.h" />
+    <ClInclude Include="data\Rqlog1500_1750.h" />
     <ClInclude Include="data\Rqlog1500_2000.h" />
+    <ClInclude Include="data\Rqlog1750_2000.h" />
     <ClInclude Include="data\Rqlog1k_2k.h" />
+    <ClInclude Include="data\Rqlog1_250.h" />
+    <ClInclude Include="data\Rqlog250_1000.h" />
     <ClInclude Include="motion_ctrl.h" />
     <ClInclude Include="motion_ctrl_par.h" />
     <ClInclude Include="motor_enc.h" />

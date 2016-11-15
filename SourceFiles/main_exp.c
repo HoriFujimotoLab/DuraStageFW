@@ -66,13 +66,14 @@ void system_tint0(void) {
 	setup_adc_read(2, &torque_ad, &aspx, &aspy, &aspz);
 
 	//disturbace observer
-	observed_disturbance = estimated_disturbance(M2RAD * Kt * iq_refx, v_linx);
+	observed_disturbance = estimated_disturbance(0, v_linx);
 
 	//adaptive
 	if (kmode > 0) {
-		aspx_hf = dob_lpf2(dob_hpf2(observed_disturbance));
+		aspx_hf = dob_hpf2(observed_disturbance);
+		//aspx_hf = dob_lpf2(dob_hpf2(observed_disturbance));
 		////debug
-		//time7 += TC * 1.0e-6;
+		//time7 += TQ * 1.0e-6;
 		//aspx_hf = sinsp(PI(2) * 1500 * time7);
 		//aspx = omega_sp_ref_rpm_ma - omega_sp*RADPS2RPM;
 		kalman_filter(phi_sp, aspx_hf, theta_par_est, P_var);
@@ -80,6 +81,8 @@ void system_tint0(void) {
 		phi_sp[1] = phi_sp[0]; //aspx[k-2]
 		phi_sp[0] = -aspx_hf; //aspx[k-1]
 	}
+
+	if (msr >= 0) msr++;
 
 	watch_data_8ch();
 }

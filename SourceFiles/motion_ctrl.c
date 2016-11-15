@@ -28,6 +28,7 @@ static float xstn[NMAX] = { 0.0 }; // notch filter for stage x
 static float xqstx[NMAX] = { 0.0 }, xrstx[NMAX] = { 0.0 }; //disturbance observer for stage states
 static float xlpf2[NMAX] = { 0.0 }, xhpf2[NMAX] = { 0.0 }; //2 order lpf and hpf for DOB
 static float xdobn[NMAX] = { 0.0 };
+static float xstlpf2[NMAX] = { 0.0 }; // 2nd order LPF for stage velocity control
 
 void direct_qcurrent_ctrl(int reftype_e, float Aref, float Fref, float *iq_ref){
 	switch (reftype_e)
@@ -71,6 +72,7 @@ void motion_ctrl_vpi(int axis, float vm_ref, float omega_m, float *iq_ref)
 	vm_er[0] = vm_ref - omega_m;
 	ctrl_math_output(Cvpi[axis], xvpi[axis], Dvpi[axis], vm_er, iq_ref, 1);
 	ctrl_math_state(Avpi[axis], xvpi[axis], Bvpi[axis], vm_er, xvpi[axis], 1);
+	*iq_ref = stage_lpf2(*iq_ref); //LPF2
 	//if (axis == XAXIS) {
 	////DOB
 	//	dob_stx = estimated_disturbance_stx(*iq_ref, omega_m);
@@ -79,6 +81,13 @@ void motion_ctrl_vpi(int axis, float vm_ref, float omega_m, float *iq_ref)
 	// *iq_ref = notch_stage_x(*iq_ref);
 	//}
 	if (fabsf(*iq_ref) > I_PK) { *iq_ref = sign(*iq_ref) * I_PK; }		// limit torque
+}
+
+float stage_lpf2(float u) {
+	float y[IOMAX];
+	ctrl_math_output(C_StageLPF, xstlpf2, D_StageLPF, &u, y, 2);
+	ctrl_math_state(A_StageLPF, xstlpf2, B_StageLPF, &u, xstlpf2, 2);
+	return y[0];
 }
 
 void spindle_motion_ctrl_vpi(float vm_ref, float omega_m, float *t_ref)
@@ -194,6 +203,7 @@ void motion_ctrl_reset(void)
 		xlpf2[i] = 0.0;
 		xhpf2[i] = 0.0;
 		xdobn[i] = 0.0;
+		xstlpf2[i] = 0.0;
 	}	
 	dac_da_out(0, 3, 0);
 	for (i = 0; i < Nd; i++) {

@@ -130,5 +130,23 @@
     <ClInclude Include="data\Rqlog1500_2000.h">
       <Filter>Resource Files\references</Filter>
     </ClInclude>
+    <ClInclude Include="data\Rqlog1_250.h">
+      <Filter>Resource Files\references</Filter>
+    </ClInclude>
+    <ClInclude Include="data\Rqlog250_1000.h">
+      <Filter>Resource Files\references</Filter>
+    </ClInclude>
+    <ClInclude Include="data\Rqlog1000_1250.h">
+      <Filter>Resource Files\references</Filter>
+    </ClInclude>
+    <ClInclude Include="data\Rqlog1250_1500.h">
+      <Filter>Resource Files\references</Filter>
+    </ClInclude>
+    <ClInclude Include="data\Rqlog1500_1750.h">
+      <Filter>Resource Files\references</Filter>
+    </ClInclude>
+    <ClInclude Include="data\Rqlog1750_2000.h">
+      <Filter>Resource Files\references</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

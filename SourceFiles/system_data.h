@@ -21,7 +21,7 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define		OVV_LIM	(380.0)					// overvorltage limit	[V]
 #define		OVS_LIM	(450.0)					// overspeed limit		[rad/s]
 //#define		OVS_LIN_LIM	(0.1)					// overspeed limit		[m/s]
-#define		I_PK	(24.0)					// ctrl out saturation	[A]
+#define		I_PK	(25.0)					// ctrl out saturation	[A]
 #define       T_SP (24.0)                    //spindle torque satuation [Nm] 
 
 // INV PAR
@@ -30,8 +30,8 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define		DT		(3500.0)				// inv dead time		[ns]
 
 //CURRENT CONTROL AND MOTION SENSOR PAR
-#define		FQ (8.333333333333334e+03)
-#define		TQ (120.0)		//current control sampling [us]
+#define		FQ (5000)
+#define		TQ (200.0)		//current control sampling [us]
 
 // MOTION CONTROL PAR
 #define		FS		(1000.0)          		// system frequency		[Hz]
@@ -53,9 +53,9 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define Nd ((int) 2) //size of parameter
 #define Qn ((int) 4) //number of flutes
 #define CONTACT_THRESHOLD (100.0) //m^2/s^2
-#define SIGMA_W (0.07) //observation noise variance
-#define SIGMA_V (1.0e-16) //process noise variance
-#define SIGMA_P (1.0e-4) //initial value of P
+#define SIGMA_W (0.3) //observation noise variance
+#define SIGMA_V (1.0e-6) //process noise variance
+#define SIGMA_P (1.0e-2) //initial value of P
 
 //modes
 #define POS_MODE (1)
@@ -94,8 +94,8 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define ISOVRRN (1)
 
 //STAGE VELOCITY LIMIT [rad/s]
-#define VELXLIM (5.235987755982287)
-#define VELYLIM (5.235987755982287)
+#define VELXLIM (0.5235987755982287)
+#define VELYLIM (0.5235987755982287)
 
 //CONSTANTS
 #define RAD2M (0.001909859317103)  //R[m/rad]
@@ -111,8 +111,8 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define ALPHAMA_FIRST (0.006263487375222)				//1 Hz LPF for 1000 usec
 #define SPCNT2RADPS (0.0958737992428526)					// 2 * PI(1) /SPCNTPREV/(1000*10^-6)
 //TQ
-#define  ALPHA		(0.269597308951354)						// 200 Hz LPF @250 msec sampling
-#define INV2PITS (6.366197723675814e+02)					//1/2/pi*FC(==4000)
+#define  ALPHA		(0.222232320828211	)						// 200 Hz LPF @200 usec sampling
+#define INV2PITS (7.957747154594767e+02)					//1/2/pi*FC(==5000)
 
 // SYSTEM VAR
 extern int msr, cnt, set, calib;
