@@ -67,11 +67,10 @@ void system_tint0(void) {
 
 	//disturbace observer
 	observed_disturbance = estimated_disturbance(0, v_linx);
+	aspx_hf = dob_lpf2(dob_hpf2(observed_disturbance));
 
 	//adaptive
 	if (kmode > 0) {
-		aspx_hf = dob_hpf2(observed_disturbance);
-		//aspx_hf = dob_lpf2(dob_hpf2(observed_disturbance));
 		////debug
 		//time7 += TQ * 1.0e-6;
 		//aspx_hf = sinsp(PI(2) * 1500 * time7);

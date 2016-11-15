@@ -2,17 +2,16 @@
 //FOR DURA
 
 //PZC PI
-//Bw:800 Hz(5000 rad/s), Ts: 5 kHz (200 us) with FF input shaping
+//Bw:200 Hz(1200 rad/s), Ts: 5 kHz (200 us) with FF input shaping
 float	Afbi = 1.00000000000000000000e+00;
-float	Bfbi = 2.00000000000000000000e+00;
-float	Cfbi = 2.08601752198362260000e+00;
-float	Dfbi = 2.45295554392291030000e+01;
+float	Bfbi = 1.00000000000000000000e+00;
+float	Cfbi = 1.04300876099181130000e+00;
+float	Dfbi = 6.13238885980727580000e+00;
 
-float	Affi = 1.33905721399763060000e-01;
+float	Affi = 8.10025921579431430000e-02;
 float	Bffi = 1.00000000000000000000e+00;
-float	Cffi = 8.66094278600236910000e-01;
+float	Cffi = 9.18997407842056750000e-01;
 float	Dffi = 0.00000000000000000000e+00;
-
 
 //Dead-Time SP
 float	ihys	=	5.0000000000e-02;

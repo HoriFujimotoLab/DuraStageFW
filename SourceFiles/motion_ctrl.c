@@ -72,13 +72,13 @@ void motion_ctrl_vpi(int axis, float vm_ref, float omega_m, float *iq_ref)
 	vm_er[0] = vm_ref - omega_m;
 	ctrl_math_output(Cvpi[axis], xvpi[axis], Dvpi[axis], vm_er, iq_ref, 1);
 	ctrl_math_state(Avpi[axis], xvpi[axis], Bvpi[axis], vm_er, xvpi[axis], 1);
-	*iq_ref = stage_lpf2(*iq_ref); //LPF2
+	//*iq_ref = stage_lpf2(*iq_ref); //LPF2
 	//if (axis == XAXIS) {
 	////DOB
 	//	dob_stx = estimated_disturbance_stx(*iq_ref, omega_m);
 	//	*iq_ref -= dob_stx;
 	////notch
-	// *iq_ref = notch_stage_x(*iq_ref);
+	//*iq_ref = notch_stage_x(*iq_ref);
 	//}
 	if (fabsf(*iq_ref) > I_PK) { *iq_ref = sign(*iq_ref) * I_PK; }		// limit torque
 }

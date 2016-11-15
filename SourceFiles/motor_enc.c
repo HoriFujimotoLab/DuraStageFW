@@ -99,10 +99,10 @@ void motor_enc_spindle(int *count_old, int *count, float *omega_old, float *omeg
 	*omega = (float)count_d* SPCNT2RADPS;
 		//		*theta_m += (float)count_d  * SPCNT2RADPS;
 	
-	if ((*count > SPCNTPREV) || (*count < -SPCNTPREV))  {
-		pev_abz_clear(PEV_BDN);
-		*count = 0;
-	}
+	//if ((*count > SPCNTPREV) || (*count < -SPCNTPREV))  {
+	//	pev_abz_clear(PEV_BDN);
+	//	*count = 0;
+	//}
 	*omega_ma = ALPHASP * *omega + (1.0 - ALPHASP) * *omega_ma;
 	/*
 	while (*theta_m > PI(2)) {
