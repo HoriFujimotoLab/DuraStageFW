@@ -81,7 +81,7 @@ void system_tint0(void) {
 		phi_sp[0] = -aspx_hf; //aspx[k-1]
 	}
 
-	if (msr >= 0) msr++;
+	//if (msr >= 0) msr++;
 
 	watch_data_8ch();
 }

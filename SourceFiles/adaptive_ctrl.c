@@ -14,6 +14,7 @@ void kalman_filter(float *phi, float y, float *theta, float *P) {
 	float  kalman_g[Nd], fm[1]; 
 	float temp1[Nd*Nd], temp5[Nd*Nd], temp6[Nd], temp8[1];
 
+	//No system noise.
 	//eye_matrix(temp1, Nd, sigma_v*sigma_v);
 	//ctrl_matrix_add(P, temp1, P_m, Nd, Nd); //P^-
 	//P_m = P, now sigma = 0

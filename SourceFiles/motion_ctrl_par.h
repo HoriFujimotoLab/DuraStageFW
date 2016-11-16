@@ -14,12 +14,11 @@ float	D_StageLPF[1] = { 0.00000000000000000000e+00 };
 //Postion P based on Velocity PI, Bw:5 Hz, Ts1kHz
 float Kxp = PI(10);
 
-//Spindle velocity PI PZC control Bw:80Hz, Ts 1kHz 
+//Spindle velocity PI PZC control Bw:40Hz, Ts 1kHz 
 float Aspvpi[1] = { 1.00000000000000000000e+00 };
-float Bspvpi[1] = { 1.25000000000000000000e-01 };
+float Bspvpi[1] = { 6.25000000000000000000e-02 };
 float Cspvpi[1] = { 1.20637157897849790000e-01 };
-float Dspvpi[1] = { 2.51327412287183450000e+00 };
-
+float Dspvpi[1] = { 1.25663706143591720000e+00 };
 
 //Position PID: Bw 40Hz, Ts 2kHz
 float Apid[2][2] = {

@@ -22,7 +22,8 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define		OVS_LIM	(450.0)					// overspeed limit		[rad/s]
 //#define		OVS_LIN_LIM	(0.1)					// overspeed limit		[m/s]
 #define		I_PK	(25.0)					// ctrl out saturation	[A]
-#define       T_SP (24.0)                    //spindle torque satuation [Nm] 
+//#define       T_SP (24.0)                    //spindle torque satuation [Nm] 
+#define       T_SP (12.0)
 
 // INV PAR
 #define		FC		(10000.0)				// carrier frequency	[Hz]
@@ -53,7 +54,7 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define Nd ((int) 2) //size of parameter
 #define Qn ((int) 4) //number of flutes
 #define CONTACT_THRESHOLD (100.0) //m^2/s^2
-#define SIGMA_W (0.3) //observation noise variance
+#define SIGMA_W (0.1) //observation noise variance
 #define SIGMA_V (1.0e-6) //process noise variance
 #define SIGMA_P (1.0e-2) //initial value of P
 

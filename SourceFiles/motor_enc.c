@@ -95,8 +95,9 @@ void motor_enc_spindle(int *count_old, int *count, float *omega_old, float *omeg
 	*count = pev_abz_read(PEV_BDN);				/* Read value of ABZ encoder's count	*/
 	//pin = pev_abz_in_pin(PEV_BDN);			/* Check status of ABZ encoder's signal */
 	count_d = *count- *count_old; //diff
-
-	*omega = (float)count_d* SPCNT2RADPS;
+	//if no error (error if sudden change) for 1 kHz
+	if ((*omega > 200 && count_d < 0) || (count_d > 5000)) ;
+	else *omega = (float)count_d* SPCNT2RADPS;
 		//		*theta_m += (float)count_d  * SPCNT2RADPS;
 	
 	//if ((*count > SPCNTPREV) || (*count < -SPCNTPREV))  {
