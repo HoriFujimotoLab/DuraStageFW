@@ -28,6 +28,8 @@ void main(void)
 }
 
 void system_tint0(void) {
+	int i;
+
 	motor_enc_elec(XAXIS, &theta_ex); //x-axis
 	setup_adc_read(XAXIS, &vdc_adx, &idc_adx, &iu_adx, &iw_adx); //y-axis
 	motor_enc_elec(YAXIS, &theta_ey); //y-axis
@@ -55,19 +57,16 @@ void system_tint0(void) {
 		motor_inv_pwm(XAXIS, 0, 0, 0, vdc_adx);
 		motor_inv_pwm(YAXIS, 0, 0, 0, vdc_ady);
 	}
-
-		//X read
+	
+	//X read
 	motor_enc_read(XAXIS, &theta_mx, &omega_mx, &omega_max);
 	stage_lin_read(XAXIS, &x_linx, &v_linx, &v_linx_ma);
-		//Y read
+	//Y read
 	motor_enc_read(YAXIS, &theta_my, &omega_my, &omega_may);
-	
+
 	//Acceleraton
 	setup_adc_read(2, &torque_ad, &aspx, &aspy, &aspz);
-
-	//disturbace observer
-	observed_disturbance = estimated_disturbance(0, v_linx);
-	aspx_hf = dob_lpf2(dob_hpf2(observed_disturbance));
+	aspx_hf = aspx; //no HPF
 
 	//adaptive
 	if (kmode > 0) {
@@ -77,7 +76,12 @@ void system_tint0(void) {
 		//aspx = omega_sp_ref_rpm_ma - omega_sp*RADPS2RPM;
 		kalman_filter(phi_sp, aspx_hf, theta_par_est, P_var);
 		//record phi=[-aspx[k-1], -aspx[k-2]]
-		phi_sp[1] = phi_sp[0]; //aspx[k-2]
+		for (i = 1; i < Nd; i++) {
+			phi_sp[i] = phi_sp[i - 1];
+		}
+		//phi_sp[3] = phi_sp[2]; //aspx[k-3]
+		//phi_sp[2] = phi_sp[1]; //aspx[k-3]
+		//phi_sp[1] = phi_sp[0]; //aspx[k-2]
 		phi_sp[0] = -aspx_hf; //aspx[k-1]
 	}
 
@@ -97,6 +101,12 @@ void system_tint1(void)
 
 	//SAFETY
 	if ((is_drive > 0) && (omega_sp_ma_rpm < 2000)) vm_refx = -1.0e-4; //go back in case of sudden spindle stop
+
+
+	//disturbace observer
+	//observed_disturbance = estimated_disturbance(0, v_linx);
+	//aspx_hf = dob_lpf2(dob_hpf2(observed_disturbance));
+																	   
 	//X-AXIS
 	v_mx = RAD2M* omega_max;
 	//Y-AXIS
@@ -240,6 +250,9 @@ void system_tint1(void)
 		case VEL_MODE:
 			motion_ctrl_vpi(XAXIS, vm_refx*M2RAD, omega_max, &iq_refx);
 			motion_ctrl_vpi(YAXIS, vm_refy*M2RAD, omega_may, &iq_refy);
+			//spindle control also
+			spindle_motion_ctrl_vpi(omega_sp_ref_rpm_ma*RPM2RADPS, omega_sp_ma, &torque_command);
+			dac_da_out(0, 3, DA_GAIN_TORQUE * torque_command);
 			break;
 
 			//stage position incremental mode

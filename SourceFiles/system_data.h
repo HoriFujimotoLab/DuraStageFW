@@ -51,7 +51,7 @@ Author:		Thomas Beauduin, University of Tokyo, March 2016
 #define RPM2RADPS (0.104719755119660)
 
 //adaptive
-#define Nd ((int) 2) //size of parameter
+#define Nd ((int) 4) //size of parameter
 #define Qn ((int) 4) //number of flutes
 #define CONTACT_THRESHOLD (100.0) //m^2/s^2
 #define SIGMA_W (0.1) //observation noise variance

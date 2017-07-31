@@ -69,7 +69,7 @@ float aux1 = 0.0, aux2 = 0.0, aux3 = 0.0, aux4 = 0.0, aux5 = 0.0, aux6 = 0.0, au
 float fchat_a = 0.0, fchat_a_ma=0.0; 
 float threshold = 50, flag_threshold = 0, contact_threshold = 25, beta_SHIMODA=0.975;
 
-float phi_sp[Nd] = { 0.0, 0.0 }, theta_par_est[Nd] = { 0.0, 0.0 }, P_var[Nd*Nd] = {SIGMA_P, 0.0, 0.0, SIGMA_P };
+float phi_sp[Nd] = { 0.0, 0.0, 0.0, 0.0 }, theta_par_est[Nd] = { 0.0, 0.0, 0.0, 0.0 }, P_var[Nd*Nd] = {SIGMA_P, 0.0, 0.0, 0.0, 0.0, SIGMA_P, 0.0, 0.0, 0.0, 0.0, SIGMA_P, 0.0, 0.0, 0.0, 0.0, SIGMA_P };
 float  aspx_hf = 0.0, epsilon_sp=0.0, epsilon_sp_max=0.0;
 int rho_sp = 0;
 float chatter_rpm = 0;
