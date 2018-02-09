@@ -115,7 +115,7 @@ void system_tint0(void)
 	{
 		if (msr >= 0 && msr < ITER * NROFS)
 		{
-			iq_refx = refvec[(msr++)%NROFS];
+			iq_refx = I_PK * refvec[(msr++)%NROFS];
 		}
 		else
 		{
