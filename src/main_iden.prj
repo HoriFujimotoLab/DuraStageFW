@@ -1,0 +1,10 @@
+[COMPONENT]
+LIB	"c67x_dsplib.lib" "c67x_fastmath.lib"	# "":Sat Nov 12 23:39:55 2016
+OBJ	""	# Create:Sat Nov 12 23:37:16 2016
+HEADER	"adaptive_ctrl.h" "c67x_dsplib.h" "c67x_fastmath.h" "ctrl_math.h" "current_ctrl.h" "current_ctrl_par.h" "motion_ctrl.h" "motion_ctrl_par.h" "motor_enc.h" "motor_pem.h" "Rfreqref.h" "Rtimeref.h" "stage_adc.h" "stage_dac.h" "stage_lin.h" "system_data.h" "system_fsm.h"	# "":Sat Nov 12 23:39:55 2016
+SRC	"adaptive_ctrl.c" "ctrl_math.c" "current_ctrl.c" "main_iden.c" "motion_ctrl.c" "motor_enc.c" "motor_pem.c" "stage_adc.c" "stage_lin.c" "system_data.c" "system_fsm.c"	# "main_iden.c":Sat Nov 12 23:39:55 2016
+[CONFIGURE]
+PEOS_VER	"1_16"	# Create:Sat Nov 12 23:37:16 2016
+PROTECT	"ON"	# Create:Sat Nov 12 23:37:16 2016
+STOP_RECONF	"OFF"	# Create:Sat Nov 12 23:37:16 2016
+TARGET_TYPE	"EXP3C6713"	# Create:Sat Nov 12 23:37:16 2016
