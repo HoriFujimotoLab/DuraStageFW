@@ -54,6 +54,10 @@ Author:		Shimoda Takaki, University of Tokyo, 2018
 #define MAIN_MODE (6)
 #define SCAN_MODE (7)
 
+//watch frequency
+#define WATCH_CURRENT 0
+#define WATCH_MOTION 1
+
 //accel limit
 #define MAX_ACC (92)
 
@@ -176,6 +180,7 @@ extern float torque_ad, aspx, aspy, aspz;
 //SYSTEM VAR
 extern int is_drive;
 extern int cmode, xymode, kmode;
+extern int watch;
 
 //DEBUG par
 extern float aux1, aux2, aux3, aux4, aux5, aux6, aux7;

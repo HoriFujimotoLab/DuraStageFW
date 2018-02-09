@@ -56,8 +56,9 @@ void system_cint5(void)
 		motor_inv_pwm(XAXIS, 0, 0, 0, vdc_adx);
 		motor_inv_pwm(YAXIS, 0, 0, 0, vdc_ady);
 	}
-
-	watch_data_8ch();
+	
+	if (watch == WATCH_CURRENT)
+		watch_data_8ch();
 }
 
 void system_tint0(void)
@@ -173,4 +174,7 @@ void system_tint0(void)
 	int_disable();
 	CSR = regs[0];
 	IRP = regs[1];
+
+	if (watch == WATCH_MOTION)
+		watch_data_8ch();
 }
