@@ -29,8 +29,8 @@ Author:		Shimoda Takaki, University of Tokyo, 2018
 #define DT (3500.0)  // inv dead time		[ns]
 
 // MOTION CONTROL PAR
-#define FS (1000.0)	// system frequency		[Hz]
-#define TS (1000.0)	// system sampling		[us]
+#define FS (2000.0)	// system frequency		[Hz]
+#define TS (500.0)	// system sampling		[us]
 #define NROFT (100000) // total number of msr	[-]
 #define XAXIS (0)	  //stage x axis
 #define YAXIS (1)	  //stage y axis
