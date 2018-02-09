@@ -1,5 +1,6 @@
 ###data
 data/
+input.h
 
 ### MyWay Specific
 *.cnd

@@ -1,14 +1,13 @@
 EXTLIBS	+= c67x_dsplib.lib c67x_fastmath.lib
 EXOBJS	+= 
-OBJS	+= adaptive_ctrl.obj ctrl_math.obj current_ctrl.obj main_iden.obj motion_ctrl.obj motor_enc.obj motor_pem.obj stage_adc.obj stage_lin.obj system_data.obj system_fsm.obj
-adaptive_ctrl.obj: adaptive_ctrl.h c67x_dsplib.h c67x_fastmath.h ctrl_math.h current_ctrl.h current_ctrl_par.h motion_ctrl.h motion_ctrl_par.h motor_enc.h motor_pem.h Rfreqref.h Rtimeref.h stage_adc.h stage_dac.h stage_lin.h system_data.h system_fsm.h
-ctrl_math.obj: adaptive_ctrl.h c67x_dsplib.h c67x_fastmath.h ctrl_math.h current_ctrl.h current_ctrl_par.h motion_ctrl.h motion_ctrl_par.h motor_enc.h motor_pem.h Rfreqref.h Rtimeref.h stage_adc.h stage_dac.h stage_lin.h system_data.h system_fsm.h
-current_ctrl.obj: adaptive_ctrl.h c67x_dsplib.h c67x_fastmath.h ctrl_math.h current_ctrl.h current_ctrl_par.h motion_ctrl.h motion_ctrl_par.h motor_enc.h motor_pem.h Rfreqref.h Rtimeref.h stage_adc.h stage_dac.h stage_lin.h system_data.h system_fsm.h
-main_iden.obj: adaptive_ctrl.h c67x_dsplib.h c67x_fastmath.h ctrl_math.h current_ctrl.h current_ctrl_par.h motion_ctrl.h motion_ctrl_par.h motor_enc.h motor_pem.h Rfreqref.h Rtimeref.h stage_adc.h stage_dac.h stage_lin.h system_data.h system_fsm.h
-motion_ctrl.obj: adaptive_ctrl.h c67x_dsplib.h c67x_fastmath.h ctrl_math.h current_ctrl.h current_ctrl_par.h motion_ctrl.h motion_ctrl_par.h motor_enc.h motor_pem.h Rfreqref.h Rtimeref.h stage_adc.h stage_dac.h stage_lin.h system_data.h system_fsm.h
-motor_enc.obj: adaptive_ctrl.h c67x_dsplib.h c67x_fastmath.h ctrl_math.h current_ctrl.h current_ctrl_par.h motion_ctrl.h motion_ctrl_par.h motor_enc.h motor_pem.h Rfreqref.h Rtimeref.h stage_adc.h stage_dac.h stage_lin.h system_data.h system_fsm.h
-motor_pem.obj: adaptive_ctrl.h c67x_dsplib.h c67x_fastmath.h ctrl_math.h current_ctrl.h current_ctrl_par.h motion_ctrl.h motion_ctrl_par.h motor_enc.h motor_pem.h Rfreqref.h Rtimeref.h stage_adc.h stage_dac.h stage_lin.h system_data.h system_fsm.h
-stage_adc.obj: adaptive_ctrl.h c67x_dsplib.h c67x_fastmath.h ctrl_math.h current_ctrl.h current_ctrl_par.h motion_ctrl.h motion_ctrl_par.h motor_enc.h motor_pem.h Rfreqref.h Rtimeref.h stage_adc.h stage_dac.h stage_lin.h system_data.h system_fsm.h
-stage_lin.obj: adaptive_ctrl.h c67x_dsplib.h c67x_fastmath.h ctrl_math.h current_ctrl.h current_ctrl_par.h motion_ctrl.h motion_ctrl_par.h motor_enc.h motor_pem.h Rfreqref.h Rtimeref.h stage_adc.h stage_dac.h stage_lin.h system_data.h system_fsm.h
-system_data.obj: adaptive_ctrl.h c67x_dsplib.h c67x_fastmath.h ctrl_math.h current_ctrl.h current_ctrl_par.h motion_ctrl.h motion_ctrl_par.h motor_enc.h motor_pem.h Rfreqref.h Rtimeref.h stage_adc.h stage_dac.h stage_lin.h system_data.h system_fsm.h
-system_fsm.obj: adaptive_ctrl.h c67x_dsplib.h c67x_fastmath.h ctrl_math.h current_ctrl.h current_ctrl_par.h motion_ctrl.h motion_ctrl_par.h motor_enc.h motor_pem.h Rfreqref.h Rtimeref.h stage_adc.h stage_dac.h stage_lin.h system_data.h system_fsm.h
+OBJS	+= ctrl_current.obj ctrl_math.obj ctrl_motion.obj main_iden.obj motor_enc.obj motor_pem.obj stage_adc.obj stage_lin.obj system_data.obj system_fsm.obj
+ctrl_current.obj: c67x_dsplib.h c67x_fastmath.h ctrl_current.h ctrl_current_par.h ctrl_math.h ctrl_motion.h ctrl_motion_par.h input.h motor_pem.h stage_adc.h stage_lin.h system_data.h system_fsm.h
+ctrl_math.obj: c67x_dsplib.h c67x_fastmath.h ctrl_current.h ctrl_current_par.h ctrl_math.h ctrl_motion.h ctrl_motion_par.h input.h motor_pem.h stage_adc.h stage_lin.h system_data.h system_fsm.h
+ctrl_motion.obj: c67x_dsplib.h c67x_fastmath.h ctrl_current.h ctrl_current_par.h ctrl_math.h ctrl_motion.h ctrl_motion_par.h input.h motor_pem.h stage_adc.h stage_lin.h system_data.h system_fsm.h
+main_iden.obj: c67x_dsplib.h c67x_fastmath.h ctrl_current.h ctrl_current_par.h ctrl_math.h ctrl_motion.h ctrl_motion_par.h input.h motor_pem.h stage_adc.h stage_lin.h system_data.h system_fsm.h
+motor_enc.obj: c67x_dsplib.h c67x_fastmath.h ctrl_current.h ctrl_current_par.h ctrl_math.h ctrl_motion.h ctrl_motion_par.h input.h motor_pem.h stage_adc.h stage_lin.h system_data.h system_fsm.h
+motor_pem.obj: c67x_dsplib.h c67x_fastmath.h ctrl_current.h ctrl_current_par.h ctrl_math.h ctrl_motion.h ctrl_motion_par.h input.h motor_pem.h stage_adc.h stage_lin.h system_data.h system_fsm.h
+stage_adc.obj: c67x_dsplib.h c67x_fastmath.h ctrl_current.h ctrl_current_par.h ctrl_math.h ctrl_motion.h ctrl_motion_par.h input.h motor_pem.h stage_adc.h stage_lin.h system_data.h system_fsm.h
+stage_lin.obj: c67x_dsplib.h c67x_fastmath.h ctrl_current.h ctrl_current_par.h ctrl_math.h ctrl_motion.h ctrl_motion_par.h input.h motor_pem.h stage_adc.h stage_lin.h system_data.h system_fsm.h
+system_data.obj: c67x_dsplib.h c67x_fastmath.h ctrl_current.h ctrl_current_par.h ctrl_math.h ctrl_motion.h ctrl_motion_par.h input.h motor_pem.h stage_adc.h stage_lin.h system_data.h system_fsm.h
+system_fsm.obj: c67x_dsplib.h c67x_fastmath.h ctrl_current.h ctrl_current_par.h ctrl_math.h ctrl_motion.h ctrl_motion_par.h input.h motor_pem.h stage_adc.h stage_lin.h system_data.h system_fsm.h

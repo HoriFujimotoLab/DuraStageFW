@@ -8,9 +8,8 @@ Author:		Shimoda Takaki, University of Tokyo, 2018
 *************************************************************************************/
 
 #include "system_fsm.h"
-#include "data/data***/***.h" //include excitation data
+#include "input.h"
 
-#define ITER (10) //number of iterations
 
 void system_init(void);
 interrupt void system_tint0(void);
@@ -113,7 +112,7 @@ void system_tint0(void)
 	}
 	if (sysmode_e == SYS_RUN)
 	{
-		if (msr >= 0 && msr < ITER * NROFS)
+		if (msr >= 0 && msr < NOI * NROFS)
 		{
 			iq_refx = I_PK * refvec[(msr++)%NROFS];
 		}
