@@ -17,8 +17,13 @@ void current_ctrl_zcpi(int axis, float iq_ref, float id_ad, float iq_ad, float *
 {
 	double iq_ff, id_er, iq_er;
 
+	//FEEDFORWARD
 	iq_ff = Cffi * xff_q[axis] + Dffi * (double)iq_ref; // input shaping
 	xff_q[axis] = Affi * xff_q[axis] + Bffi * (double)iq_ref;
+	/*
+	//FEEDBACK
+	iq_ff = iq_ref;
+	*/
 
 	id_er = 0.0 - (double)id_ad; // dq-axis feedback
 	iq_er = iq_ff - (double)iq_ad;
