@@ -104,6 +104,11 @@ void system_tint0(void)
 		switch (cmode)
 		{
 
+		//q-axis current control
+		case QCRNT_MODE:
+			//you can just change iq_refx or iq_refy
+			break;
+
 		/*
 		//spindle torque control
 		case TORQUE_MODE:
