@@ -59,6 +59,10 @@ float dob_stx;
 int x_nano_linx;
 float sigma_w, sigma_v;
 
+//EXPERIMENTAL VAR
+float e_theta_mx=0;
+float simulated_disturbance=0;
+
 //ACCEL VAR
 float torque_ad, aspx, aspy, aspz;
 

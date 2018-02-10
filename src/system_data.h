@@ -53,6 +53,7 @@ Author:		Shimoda Takaki, University of Tokyo, 2018
 #define INC_MODE (5)
 #define MAIN_MODE (6)
 #define SCAN_MODE (7)
+#define STEP_DISTURBANCE_MODE (8)
 
 //watch frequency
 #define WATCH_CURRENT 0
@@ -173,6 +174,10 @@ extern float theta_m_ref_liny, theta_m_ref_linx;
 extern float dob_stx;
 extern int x_nano_linx;
 extern float sigma_w, sigma_v;
+
+//EXPERIMENTAL VAR
+extern float e_theta_mx;
+extern float simulated_disturbance;
 
 //ACCEL VAR
 extern float torque_ad, aspx, aspy, aspz;

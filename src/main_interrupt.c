@@ -56,7 +56,7 @@ void system_cint5(void)
 		motor_inv_pwm(XAXIS, 0, 0, 0, vdc_adx);
 		motor_inv_pwm(YAXIS, 0, 0, 0, vdc_ady);
 	}
-	
+
 	if (watch == WATCH_CURRENT)
 		watch_data_8ch();
 }
@@ -108,6 +108,22 @@ void system_tint0(void)
 		//q-axis current control
 		case QCRNT_MODE:
 			//you can just change iq_refx or iq_refy
+			break;
+
+		case POS_MODE:
+			if (xymode == XMODE)
+			{
+				motion_ctrl_pid(theta_m_refx, theta_mx, &iq_refx);
+			}
+			break;
+
+		case STEP_DISTURBANCE_MODE:
+			if (xymode == XMODE)
+			{
+				motion_ctrl_pid(theta_m_refx, theta_mx, &iq_refx);
+				iq_refx -= simulated_disturbance;
+				e_theta_mx = theta_m_refx - theta_mx;
+			}
 			break;
 
 		/*
