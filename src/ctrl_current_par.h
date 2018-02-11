@@ -1,5 +1,11 @@
-//MOTOR CTRL PARAMETERS:
-//FOR DURA
+/************************************************************************************
+CURRENT CONTROL PARAMETER
+----------------------
+Descr.:		Control module for drive current control
+Boards:		PE-Expert3, C6713A DSP (float calculation)
+System:		DURA, S-PMSM motor-type (dq-axis control)
+Author:		Shimoda Takaki, University of Tokyo, March 2018
+*************************************************************************************/
 
 //PZC PI
 //Bw:1000 Hz(2*pi*1000 rad/s), Ts: 10 kHz (100 us)

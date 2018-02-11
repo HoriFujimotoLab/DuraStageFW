@@ -1,4 +1,12 @@
-//MOTION CTRL PAR:
+/************************************************************************************
+MOTION CONTROL PARAMETER
+----------------------
+Descr.:		Control module for drive current control
+Boards:		PE-Expert3, C6713A DSP (float calculation)
+System:		Dura, Ball-screw-driven stage control
+Author:		Shimoda Takaki, University of Tokyo, March 2018
+*************************************************************************************/
+
 //Velocity PI Pole Assignment: Bw 20Hz, Ts 1 kHz
 float Avpi[2][1] = {{1.00000000000000000000e+00}, {1.00000000000000000000e+00}};
 float Bvpi[2][1] = {{5.00000000000000000000e-01}, {5.00000000000000000000e-01}};
