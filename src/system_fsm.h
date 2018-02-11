@@ -13,22 +13,20 @@ Author:		Shimoda Takaki, University of Tokyo, 2018
 **	DES:	include the required hardware modules headers
 **			necessary for the particular setup configuration
 */
-#include	"motor_pem.h"
-#include	"motor_enc.h"
-#include	"stage_adc.h"
-#include	"stage_lin.h"
-#include	"system_data.h"
-#include	<mwio3.h>
-
+#include "motor_pem.h"
+#include "motor_enc.h"
+#include "stage_adc.h"
+#include "stage_lin.h"
+#include "system_data.h"
+#include <mwio3.h>
 
 /*	CONTROL MODULES INCLUSION
 **	-------------------------
 **	DES:	include the required control modules headers
 **			necessary for the particular experiment configuration
 */
-#include	"ctrl_current.h"
-#include	"ctrl_motion.h"
-
+#include "ctrl_current.h"
+#include "ctrl_motion.h"
 
 /*	INIT SYSTEM PROTECTION
 **	----------------------
@@ -37,11 +35,9 @@ Author:		Shimoda Takaki, University of Tokyo, 2018
 */
 void system_fsm_init(void);
 
-
 /*	PROCES SYSTEM MODE
 **	------------------
 **	DES:	finit-state-machine mode processing 
 **			defines the system state and sets mode flag
 */
 void system_fsm_mode(void);
-

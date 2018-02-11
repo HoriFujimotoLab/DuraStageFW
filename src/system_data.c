@@ -60,8 +60,8 @@ int x_nano_linx;
 float sigma_w, sigma_v;
 
 //EXPERIMENTAL VAR
-float e_theta_mx=0;
-float simulated_disturbance=0;
+float e_theta_mx = 0;
+float simulated_disturbance = 0;
 
 //ACCEL VAR
 float torque_ad, aspx, aspy, aspz;
@@ -69,7 +69,7 @@ float torque_ad, aspx, aspy, aspz;
 //SYSTEM VAR
 int is_drive;
 int cmode, xymode, kmode;
-int watch=0;
+int watch = 0;
 
 //DEBUG par
 float aux1, aux2, aux3, aux4, aux5, aux6, aux7;

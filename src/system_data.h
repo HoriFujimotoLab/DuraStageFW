@@ -30,7 +30,7 @@ Author:		Shimoda Takaki, University of Tokyo, 2018
 
 // MOTION CONTROL PAR
 #define FS (2000.0)	// system frequency		[Hz]
-#define TS (500.0)	// system sampling		[us]
+#define TS (500.0)	 // system sampling		[us]
 #define NROFT (100000) // total number of msr	[-]
 #define XAXIS (0)	  //stage x axis
 #define YAXIS (1)	  //stage y axis
@@ -149,7 +149,7 @@ extern float theta_m_refx, theta_m_refy;
 extern float incx, incy;
 
 // MSR VAR
-extern float idc_adx, theta_ex; 
+extern float idc_adx, theta_ex;
 extern float iu_adx, iw_adx, ia_adx, ib_adx, id_adx, iq_adx;
 extern float vu_adx, vw_adx, va_adx, vb_adx, vd_adx, vq_adx;
 extern float vdc_adx, vdc_ady, idc_ady, theta_ey;

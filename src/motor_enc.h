@@ -20,7 +20,6 @@ extern float theta_mx;
 */
 void motor_enc_init(int axis);
 
-
 /*	READ MOTOR ENCODER DATA
 **	-----------------------
 **	DES:	returns the read and processed motor enc data from pios board
@@ -34,7 +33,6 @@ void motor_enc_init(int axis);
 void motor_enc_elec(int axis, float *theta_e);
 void motor_enc_read(int axis, float *theta_m, float *omega_m, float *omega_ma);
 
-
 /*	RESET ENCODER MODULE
 **	--------------------
 **	DES:	resets encoder module internal counters and variables
@@ -42,7 +40,6 @@ void motor_enc_read(int axis, float *theta_m, float *omega_m, float *omega_ma);
 **  IN :    axis:  selection of axis {X,Y:0,1}
 */
 void motor_enc_reset(int axis);
-
 
 /*	CHECK ENCODER STATUS
 **	--------------------
@@ -63,4 +60,3 @@ void motor_enc_status(int axis, unsigned int *status);
 **	DSP:	calctime:	average calculation time				8 [ms]  (vers. 29/11/15)
 */
 void motor_enc_spindle(int *count_old, int *count, float *omega_old, float *omega, float *omega_ma, float *theta_m, int *r_count);
-

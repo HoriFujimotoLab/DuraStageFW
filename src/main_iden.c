@@ -10,7 +10,6 @@ Author:		Shimoda Takaki, University of Tokyo, 2018
 #include "system_fsm.h"
 #include "input.h"
 
-
 void system_init(void);
 interrupt void system_tint0(void);
 interrupt void system_cint5(void);
@@ -114,7 +113,7 @@ void system_tint0(void)
 	{
 		if (msr >= 0 && msr < NOI * NROFS)
 		{
-			iq_refx = I_PK * refvec[(msr++)%NROFS];
+			iq_refx = I_PK * refvec[(msr++) % NROFS];
 		}
 		else
 		{
