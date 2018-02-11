@@ -103,6 +103,9 @@ void system_tint0(void)
 	omega_sp_ma_rpm = RADPS2RPM * omega_sp_ma;
 	omega_sp_ref_rpm_ma = ALPHAMA_FIRST * omega_sp_ref_rpm + (1 - ALPHAMA_FIRST) * omega_sp_ref_rpm_ma;
 
+	//FF
+	theta_m_refx_ff = motion_ctrl_prefilter(theta_m_refx);
+
 	// MOTION CTRL
 	if (sysmode_e == SYS_STP)
 	{
@@ -112,9 +115,10 @@ void system_tint0(void)
 	}
 	if (sysmode_e == SYS_RUN)
 	{
+		e_theta_mx = theta_m_refx - theta_mx;
+
 		switch (cmode)
 		{
-
 		//q-axis current control
 		case QCRNT_MODE:
 			//you can just change iq_refx or iq_refy
@@ -130,10 +134,8 @@ void system_tint0(void)
 		case STEP_DISTURBANCE_MODE:
 			if (xymode == XMODE)
 			{
-				theta_m_refx_ff = motion_ctrl_prefilter(theta_m_refx);
 				motion_ctrl_pid(theta_m_refx_ff, theta_mx, &iq_refx);
 				iq_refx -= simulated_disturbance;
-				e_theta_mx = theta_m_refx - theta_mx;
 			}
 			break;
 

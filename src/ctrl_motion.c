@@ -101,12 +101,12 @@ void motion_ctrl_pid(float x_ref, float x_msr, float *iq_ref)
 	} // limit torque
 }
 
-void motion_ctrl_prefilter(float x_ref)
+float motion_ctrl_prefilter(float x_ref)
 {
-	float x_ref_ff;
-	ctrl_math_output(C_C_FF, x_C_FF, D_C_FF, &x_ref, &x_ref_ff, 2);
-	ctrl_math_state(A_C_FF, xpid, B_C_FF, &x_ref, xpid, 2);
-	return x_ref_ff;
+	float x_ref_ff[1]={0.0};
+	ctrl_math_output(C_C_FF, x_C_FF, D_C_FF, &x_ref, x_ref_ff, 2);
+	ctrl_math_state(A_C_FF, x_C_FF, B_C_FF, &x_ref, x_C_FF, 2);
+	return x_ref_ff[0];
 }
 
 void motion_ctrl_reset(void)

@@ -74,6 +74,14 @@ void motion_ctrl_pack_pos(int axis, float omega_m, float theta_ref, float theta_
 */
 void motion_ctrl_pid(float x_ref, float x_msr, float *iq_ref);
 
+/* Prefilter Structure Feedforward
+**
+** DES:   Prefilter for input shaping
+** INP:   x_ref: step value
+** OUT:   x_ref_ff: shaped input
+*/
+float motion_ctrl_prefilter(float x_ref);
+
 /*	RESET CONTROL MODULE
 **	--------------------
 **	DES:	resets module internal counters and variables
