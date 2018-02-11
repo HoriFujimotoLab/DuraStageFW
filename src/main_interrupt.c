@@ -130,7 +130,8 @@ void system_tint0(void)
 		case STEP_DISTURBANCE_MODE:
 			if (xymode == XMODE)
 			{
-				motion_ctrl_pid(theta_m_refx, theta_mx, &iq_refx);
+				theta_m_refx_ff = motion_ctrl_prefilter(theta_m_refx);
+				motion_ctrl_pid(theta_m_refx_ff, theta_mx, &iq_refx);
 				iq_refx -= simulated_disturbance;
 				e_theta_mx = theta_m_refx - theta_mx;
 			}

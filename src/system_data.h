@@ -178,6 +178,7 @@ extern float sigma_w, sigma_v;
 //EXPERIMENTAL VAR
 extern float e_theta_mx;
 extern float simulated_disturbance;
+extern float theta_m_refx_ff;
 
 //ACCEL VAR
 extern float torque_ad, aspx, aspy, aspz;

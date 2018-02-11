@@ -19,6 +19,7 @@ double t = 0.0;
 //INTERNAL STATE
 static float xvpi[XYMODE][NMAX] = {0.0}; //{{XAXIS} , {YAXIS}} stage state
 static float xpid[NMAX] = {0.0};
+static float x_C_FF[NMAX] = {0.0}; //Prefilter
 static float xspvpi[NMAX] = {0.0}; //spindle variable state
 
 void direct_qcurrent_ctrl(int reftype_e, float Aref, float Fref, float *iq_ref)
@@ -100,6 +101,14 @@ void motion_ctrl_pid(float x_ref, float x_msr, float *iq_ref)
 	} // limit torque
 }
 
+void motion_ctrl_prefilter(float x_ref)
+{
+	float x_ref_ff;
+	ctrl_math_output(C_C_FF, x_C_FF, D_C_FF, &x_ref, &x_ref_ff, 2);
+	ctrl_math_state(A_C_FF, xpid, B_C_FF, &x_ref, xpid, 2);
+	return x_ref_ff;
+}
+
 void motion_ctrl_reset(void)
 {
 	int i, j;
@@ -109,6 +118,7 @@ void motion_ctrl_reset(void)
 			xvpi[i][j] = 0.0;
 		xspvpi[i] = 0.0;
 		xpid[i] = 0.0;
+		x_C_FF[i] = 0.0;
 	}
 	dac_da_out(0, 3, 0);
 	torque_command = 0;
