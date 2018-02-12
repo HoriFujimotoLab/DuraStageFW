@@ -9,6 +9,7 @@ Author:		Shimoda Takaki, the University of Tokyo, 2018
 *************************************************************************************/
 
 #include "main_interrupt.h"
+#include "trajectory.h"
 
 void system_init(void)
 {
@@ -104,6 +105,19 @@ void system_tint0(void)
 	omega_sp_ref_rpm_ma = ALPHAMA_FIRST * omega_sp_ref_rpm + (1 - ALPHAMA_FIRST) * omega_sp_ref_rpm_ma;
 
 	//FF
+	switch (cmode)
+	{
+	case TRAJECOTRY_MODE:
+		if ((msr < NROFS) && (msr > -1))
+		{
+			theta_m_refx = theta_mox + refvec[msr];
+			msr += 1;
+		}
+		break;
+	default:
+		theta_mox = theta_mx; //Origin
+		break;
+	}
 	theta_m_refx_ff = motion_ctrl_prefilter(theta_m_refx);
 
 	// MOTION CTRL
@@ -132,6 +146,7 @@ void system_tint0(void)
 			break;
 
 		case STEP_DISTURBANCE_MODE:
+		case TRAJECOTRY_MODE:
 			if (xymode == XMODE)
 			{
 				motion_ctrl_pid(theta_m_refx_ff, theta_mx, &iq_refx);

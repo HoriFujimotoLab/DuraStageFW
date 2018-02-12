@@ -54,6 +54,7 @@ Author:		Shimoda Takaki, University of Tokyo, 2018
 #define MAIN_MODE (6)
 #define SCAN_MODE (7)
 #define STEP_DISTURBANCE_MODE (8)
+#define TRAJECOTRY_MODE (9)
 
 //watch frequency
 #define WATCH_CURRENT 0

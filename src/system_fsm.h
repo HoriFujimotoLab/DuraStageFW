@@ -28,6 +28,7 @@ Author:		Shimoda Takaki, University of Tokyo, 2018
 #include "ctrl_current.h"
 #include "ctrl_motion.h"
 
+
 /*	INIT SYSTEM PROTECTION
 **	----------------------
 **	DES:	initiate dio board & protection flags
