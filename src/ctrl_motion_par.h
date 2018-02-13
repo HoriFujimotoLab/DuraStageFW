@@ -28,6 +28,24 @@ float Cspvpi[1] = {1.20637157897849790000e-01};
 float Dspvpi[1] = {1.25663706143591720000e+00};
 
 /*
+//H infinity Loop Shaping PID: Bw 35 Hz, Ts 2 kHz, Gain Margin 5 dB, Phase Margin 30 degrees
+float Apid[2][2] = {
+	{1.5081852805207450e+00, -5.0818528052074508e-01},
+	{1.0000000000000000e+00, 0.0000000000000000e+00},
+};
+float Bpid[2][1] = {
+	{1.2800000000000000e+02},
+	{0.0000000000000000e+00},
+};
+float Cpid[1][2] = {
+	{-3.5811387591960994e+01, 3.6639527468957738e+01},
+};
+float Dpid[1][1] = {
+	{1.1632029923373888e+04},
+};
+*/
+
+/*
 //Pole Assigned Position PID: Bw 18 Hz, Ts 2 kHz, Gain Margin 10 dB, Phase Margin 40 degrees
 float Apid[2][2] = {
 	{1.7877412762836360e+00, -7.8774127628363588e-01},
