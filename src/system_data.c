@@ -72,5 +72,9 @@ int is_drive;
 int cmode, xymode, kmode;
 int watch = 0;
 
+//ILC VAR
+float f_ff = 0;
+int flag_ILC = 0;
+
 //DEBUG par
 float aux1, aux2, aux3, aux4, aux5, aux6, aux7;

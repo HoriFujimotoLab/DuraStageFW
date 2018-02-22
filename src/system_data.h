@@ -36,6 +36,9 @@ Author:		Shimoda Takaki, University of Tokyo, 2018
 #define YAXIS (1)	  //stage y axis
 #define NRPMDATA (2)
 
+// LONG TIMER
+#define TQ (1000 * 1000)
+
 // MATH PAR
 #define PI(n) (3.14159265358979323846 * (n))
 #define sign(a) (((a) < 0) ? -1 : ((a) > 0))
@@ -55,6 +58,7 @@ Author:		Shimoda Takaki, University of Tokyo, 2018
 #define SCAN_MODE (7)
 #define STEP_DISTURBANCE_MODE (8)
 #define TRAJECOTRY_MODE (9)
+#define ILC_MODE (10)
 
 //watch frequency
 #define WATCH_CURRENT 0
@@ -93,6 +97,9 @@ Author:		Shimoda Takaki, University of Tokyo, 2018
 //TC
 #define ALPHA (0.715390456663971)		 // 200 Hz LPF @1000 usec sampling
 #define INV2PITS (7.957747154594767e+02) //1/2/pi*FC(==5000)
+
+//ILC
+#define NDATAILC (800)
 
 // SYSTEM VAR
 extern int msr, cnt, set, calib;
@@ -188,6 +195,10 @@ extern float torque_ad, aspx, aspy, aspz;
 extern int is_drive;
 extern int cmode, xymode, kmode;
 extern int watch;
+
+//ILC VAR
+extern float f_ff;
+extern int flag_ILC;
 
 //DEBUG par
 extern float aux1, aux2, aux3, aux4, aux5, aux6, aux7;

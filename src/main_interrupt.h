@@ -26,3 +26,8 @@ interrupt void system_cint5(void);
 Timer 0 interrupt for motion control
 */
 interrupt void system_tint0(void);
+
+/*
+Timer 1 interrupt for motion control
+*/
+interrupt void system_tint1(void);

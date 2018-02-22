@@ -33,6 +33,11 @@ void system_init(void)
 	timer0_start();
 	timer0_enable_int();
 
+	timer1_init(TQ); // LONG CALCULATION
+	timer1_init_vector(system_tint1);
+	timer1_start();
+	timer1_enable_int();
+
 	system_fsm_init();
 }
 
@@ -114,6 +119,19 @@ void system_tint0(void)
 			msr += 1;
 		}
 		break;
+	case ILC_MODE:
+		if ((msr > -1) && (msr < NDATAILC))
+		{
+			if (msr < NDATAILC / 2)
+			{
+				theta_m_refx = theta_mox + Aref;
+			}
+			else
+			{
+				theta_m_refx = theta_mox;
+			}
+		}
+		break;
 	default:
 		theta_mox = theta_mx; //Origin
 		break;
@@ -129,7 +147,7 @@ void system_tint0(void)
 	}
 	if (sysmode_e == SYS_RUN)
 	{
-		e_theta_mx = theta_m_refx - theta_mx;
+		e_theta_mx = theta_m_refx_ff - theta_mx;
 
 		switch (cmode)
 		{
@@ -141,7 +159,7 @@ void system_tint0(void)
 		case POS_MODE:
 			if (xymode == XMODE)
 			{
-				motion_ctrl_pid(theta_m_refx, theta_mx, &iq_refx);
+				motion_ctrl_pid(theta_m_refx_ff, theta_mx, &iq_refx);
 			}
 			break;
 
@@ -151,6 +169,28 @@ void system_tint0(void)
 			{
 				motion_ctrl_pid(theta_m_refx_ff, theta_mx, &iq_refx);
 				iq_refx -= simulated_disturbance;
+			}
+			break;
+
+		case ILC_MODE:
+			if ((xymode == XMODE) && (msr > -1))
+			{
+				// FB calculation
+				motion_ctrl_pid(theta_m_refx_ff, theta_mx, &iq_refx);
+				// ILC calculation
+				f_ff = ilc(msr);
+				record_error_ilc(msr, e_theta_mx);
+				record_force_ilc(msr, iq_refx); //record FB force
+				// FF calculation
+				iq_refx += f_ff;
+				// post processing
+				msr += 1;
+				if (msr == NDATAILC)
+				{
+					msr = -1;
+					flag_ILC = 1;
+					cmode = POS_MODE;
+				}
 			}
 			break;
 
@@ -221,4 +261,33 @@ void system_tint0(void)
 
 	if (watch == WATCH_MOTION)
 		watch_data_8ch();
+}
+
+void system_tint1(void)
+{
+	unsigned int regs[2];
+
+	// MULTI-INT ON
+	regs[0] = CSR;
+	regs[1] = IRP;
+	int_enable();
+
+	if (sysmode_e == SYS_INI)
+	{
+		switch (cmode)
+		{
+		case ILC_MODE:
+			if (flag_ILC > 0)
+			{
+				set_ilc();
+				flag_ILC = 0;
+			}
+			break;
+		}
+	}
+
+	// MULTI-INT OFF
+	int_disable();
+	CSR = regs[0];
+	IRP = regs[1];
 }

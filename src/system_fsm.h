@@ -27,7 +27,8 @@ Author:		Shimoda Takaki, University of Tokyo, 2018
 */
 #include "ctrl_current.h"
 #include "ctrl_motion.h"
-
+#include "ctrl_fir.h"
+#include "ctrl_ilc.h"
 
 /*	INIT SYSTEM PROTECTION
 **	----------------------

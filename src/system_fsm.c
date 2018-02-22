@@ -200,6 +200,9 @@ void system_fsm_reset(void)
 	current_ctrl_reset();
 	motion_ctrl_reset();
 
+	// ILC RESET
+	reset_ilc();
+
 	// HARD RESET
 	motor_enc_reset(0);
 	motor_enc_reset(1);

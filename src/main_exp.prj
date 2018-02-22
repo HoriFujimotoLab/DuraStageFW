@@ -1,8 +1,8 @@
 [COMPONENT]
 LIB	"c67x_dsplib.lib" "c67x_fastmath.lib"	# :Wed Oct 04 03:39:46 2017
 OBJ	""	# Create:Wed Jun 08 18:33:17 2016
-HEADER	"c67x_fastmath.h" "ctrl_current.h" "ctrl_current_par.h" "ctrl_math.h" "ctrl_motion.h" "main_interrupt.h" "motor_enc.h" "motor_pem.h" "stage_adc.h" "stage_lin.h" "system_data.h" "system_fsm.h" "trajectory.h"	# "c67x_fastmath.h" "ctrl_current.h" "ctrl_current_par.h" "ctrl_math.h" "ctrl_motion.h" "ctrl_motion_par.h" "ctrl_trajectory.h" "main_interrupt.h" "motor_enc.h" "motor_pem.h" "stage_adc.h" "stage_lin.h" "system_data.h" "system_fsm.h":Mon Feb 12 13:10:29 2018
-SRC	"ctrl_current.c" "ctrl_math.c" "ctrl_motion.c" "main_exp.c" "main_interrupt.c" "motor_enc.c" "motor_pem.c" "stage_adc.c" "stage_lin.c" "system_data.c" "system_fsm.c"	# "ctrl_current.c" "ctrl_math.c" "ctrl_motion.c" "ctrl_trajectory.c" "main_exp.c" "main_interrupt.c" "motor_enc.c" "motor_pem.c" "stage_adc.c" "stage_lin.c" "system_data.c" "system_fsm.c":Mon Feb 12 13:10:29 2018
+HEADER	"c67x_fastmath.h" "ctrl_current.h" "ctrl_current_par.h" "ctrl_fir.h" "ctrl_ilc.h" "ctrl_ilc_par.h" "ctrl_math.h" "ctrl_motion.h" "main_interrupt.h" "motor_enc.h" "motor_pem.h" "stage_adc.h" "stage_lin.h" "system_data.h" "system_fsm.h" "trajectory.h"	# "c67x_fastmath.h" "ctrl_current.h" "ctrl_current_par.h" "ctrl_math.h" "ctrl_motion.h" "main_interrupt.h" "motor_enc.h" "motor_pem.h" "stage_adc.h" "stage_lin.h" "system_data.h" "system_fsm.h" "trajectory.h":Thu Feb 22 19:46:26 2018
+SRC	"ctrl_current.c" "ctrl_fir.c" "ctrl_ilc.c" "ctrl_math.c" "ctrl_motion.c" "main_exp.c" "main_interrupt.c" "motor_enc.c" "motor_pem.c" "stage_adc.c" "stage_lin.c" "system_data.c" "system_fsm.c"	# "ctrl_current.c" "ctrl_math.c" "ctrl_motion.c" "main_exp.c" "main_interrupt.c" "motor_enc.c" "motor_pem.c" "stage_adc.c" "stage_lin.c" "system_data.c" "system_fsm.c":Thu Feb 22 19:46:26 2018
 [CONFIGURE]
 PEOS_VER	"1_16"	# "1_17":Thu Oct 06 16:02:12 2016
 PROTECT	"OFF"	# Create:Wed Jun 08 18:33:17 2016
